@@ -1,10 +1,11 @@
-// import { getHypixelData } from "../lib/Util.jsx";
-import { cacheHypixelData } from "../LocalTesting/cacheHypixelData";
+import { getHypixelData } from "../lib/Util.jsx";
+// import { cacheHypixelData } from "../LocalTesting/cacheHypixelData";
 import Profile from "../Components/Profile";
 
 const ProfilePage = async () => {
-  const hypixelData = await cacheHypixelData();
-  console.log('server');
+//   const hypixelData = await cacheHypixelData();
+  const hypixelData = await getHypixelData();
+//   console.log('server');
   const sortItem = async () =>{
     const items = hypixelData;
     const categories = ["helmet", "chestplate", "leggings", "boots", "necklace", "cloak", "belt", "gloves", "weapon"];

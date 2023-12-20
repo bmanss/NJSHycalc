@@ -124,8 +124,8 @@ export async function getHypixelData() {
     skillCaps.CATACOMBS = 50;
 
     hypixelData.skillCaps = skillCaps;
-    localStorage.setItem("HypixelData", JSON.stringify(hypixelData));
-    localStorage.setItem("lastLoad", Date.now());
+    // localStorage.setItem("HypixelData", JSON.stringify(hypixelData));
+    // localStorage.setItem("lastLoad", Date.now());
     return hypixelData;
   } catch (err) {
     console.error("Error fetching JSON data:", err);
