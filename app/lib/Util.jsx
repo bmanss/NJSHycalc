@@ -1,11 +1,11 @@
 // import axios from "axios";
 import Pako from "pako";
-// import { getDocs, collection, getFirestore, terminate } from "firebase/firestore";
-// import { initializeApp } from "firebase/app";
+import { getDocs, collection, getFirestore, terminate } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
 import nbt from "nbt";
 import { Buffer } from "buffer";
-// import { firebaseConfig } from "../firestoreConfig.js";
+import { firebaseConfig } from "../firestoreConfig.js";
 import { loreColors } from "../constants/colors.js";
 
 // export async function fetchUUID(username) {
@@ -96,6 +96,43 @@ export async function filterItemList(hypixelItemList) {
   return filteredList;
 }
 
+export async function getHypixelData() {
+  try {
+    const fireStoreApp = initializeApp(firebaseConfig);
+    const firestoreDB = getFirestore(fireStoreApp);
+    const itemSnapshot = await getDocs(collection(firestoreDB, "items"));
+    const skillsSnapshot = await getDocs(collection(firestoreDB, "skills"));
+    const collectionsSnapshot = await getDocs(collection(firestoreDB, "collections"));
+    const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
+    itemSnapshot.forEach((doc) => {
+      hypixelData[doc.id] = doc.data();
+    });
+    skillsSnapshot.forEach((doc) => {
+      hypixelData.skills[doc.id] = doc.data();
+    });
+    collectionsSnapshot.forEach((doc) => {
+      hypixelData.collections[doc.id] = doc.data();
+    });
+
+    // close connection because data will be cached in local storage and connection is no longer needed
+    terminate(firestoreDB);
+
+    const skillCaps = {};
+    for (const skill of Object.keys(hypixelData.skills)) {
+      skillCaps[skill] = hypixelData.skills[skill].maxLevel;
+    }
+    skillCaps.CATACOMBS = 50;
+
+    hypixelData.skillCaps = skillCaps;
+    localStorage.setItem("HypixelData", JSON.stringify(hypixelData));
+    localStorage.setItem("lastLoad", Date.now());
+    return hypixelData;
+  } catch (err) {
+    console.error("Error fetching JSON data:", err);
+    throw err;
+  }
+}
+
 // export async function cacheHypixelData() {
 //   try {
 //     const fireStoreApp = initializeApp(firebaseConfig);
@@ -134,27 +171,24 @@ export async function filterItemList(hypixelItemList) {
 //   }
 // }
 
-
-export function parseLore(loreString,key) {
+export function parseLore(loreString, key) {
   const lines = loreString.split("\n");
-  const output = (
-    lines.map((line,index) => {
-      let symbolIndex = 0;
-      const lineOutput = [];
-      while (symbolIndex < line.length) {
-        let nextSymbol = symbolIndex + 1;
-        while (nextSymbol < line.length && line.charAt(nextSymbol) !== "§") nextSymbol++;
-        const color = loreColors[line.substring(symbolIndex, symbolIndex + 2)] ?? "white";
-        lineOutput.push(
-          <span key={`lineindex${index}-${symbolIndex}`} style={{ color: color }}>
-            {line.substring(symbolIndex + 2, nextSymbol)}
-          </span>
-        );
-        symbolIndex = nextSymbol;
-      }
-      lineOutput.push(<br key={`lineindex${index}-${symbolIndex}br`} />);
-      return lineOutput;
-    })
-  );
+  const output = lines.map((line, index) => {
+    let symbolIndex = 0;
+    const lineOutput = [];
+    while (symbolIndex < line.length) {
+      let nextSymbol = symbolIndex + 1;
+      while (nextSymbol < line.length && line.charAt(nextSymbol) !== "§") nextSymbol++;
+      const color = loreColors[line.substring(symbolIndex, symbolIndex + 2)] ?? "white";
+      lineOutput.push(
+        <span key={`lineindex${index}-${symbolIndex}`} style={{ color: color }}>
+          {line.substring(symbolIndex + 2, nextSymbol)}
+        </span>
+      );
+      symbolIndex = nextSymbol;
+    }
+    lineOutput.push(<br key={`lineindex${index}-${symbolIndex}br`} />);
+    return lineOutput;
+  });
   return output;
 }
