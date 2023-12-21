@@ -109,8 +109,8 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
   };
 
   async function validateProfile() {
-    const data = await fetchUUID(profileName);
-    console.log(data);
+    // const data = await fetchUUID(profileName);
+    // console.log(data);
     // if (profileName === undefined) {
     //   // make default profile god potion disabled by default
     //   setGodPotionEnabled(false);
