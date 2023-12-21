@@ -1,5 +1,5 @@
 import { getHypixelData } from "../lib/Util.jsx";
-// import { cacheHypixelData } from "../LocalTesting/cacheHypixelData";
+import { cacheHypixelData } from "../LocalTesting/cacheHypixelData";
 import Profile from "../Components/Profile";
 
 const ProfilePage = async () => {
@@ -34,7 +34,7 @@ const ProfilePage = async () => {
   
   return (
     <div>
-      <Profile sortedItems={sortedItems} skillsCaps={hypixelData.skillCaps}/>
+      <Profile data={hypixelData} sortedItems={sortedItems} skillCaps={hypixelData.skillCaps} baseCollections={hypixelData.collections}/>
     </div>
   );
 };

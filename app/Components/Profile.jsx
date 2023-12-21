@@ -18,8 +18,9 @@ import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 
-const Profile = ({ sortedItems,skillCaps,baseCollections }) => {
+const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
   const profileContext = useProfileContext();
+  console.log(data);
   console.log(skillCaps);
   console.log(baseCollections);
 //   profileContext.setBaseCollections(baseCollections);
