@@ -10,8 +10,8 @@ import { loreColors } from "../constants/colors.js";
 
 export async function fetchUUID(username) {
   
+  const url = `https://api.mojang.com/users/profiles/minecraft/${username}`;
   // const url = `/mojang/uuid/${username}`;
-  const url = `/mojang/uuid/${username}`;
   const response = await fetch(url);
   console.log(response);
   const data = await response.json();
