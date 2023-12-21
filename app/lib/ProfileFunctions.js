@@ -363,11 +363,13 @@ export function parseEssencePerks(perksData) {
   return perks;
 }
 
-export async function parseApiGear(playerGear, armorData, gearType) {
+export async function parseApiGear(playerGear, armorData, gearType,hypixelItems) {
+  // console.log(hypixelItems);
   const category = categoryGroup[gearType];
   armorData.forEach(async (data, index) => {
     if (Object.keys(data) < 1) return;
     const extraAttributes = data.tag.value.ExtraAttributes.value;
+    const armorType = category[index];
     let armorPiece = createGearPiece(undefined, extraAttributes.id.value, category[index]);
 
     armorPiece.modifier = extraAttributes.modifier?.value ?? "";
@@ -386,8 +388,8 @@ export async function parseApiGear(playerGear, armorData, gearType) {
       ? extraAttributes.baseStatBoostPercentage?.value / 100.0 + 1
       : undefined;
     armorPiece.starLevel = (extraAttributes.upgrade_level?.value || extraAttributes.dungeon_item_level?.value) ?? 0;
-
-    await addItemReferenceData(armorPiece);
+    const referenceData = hypixelItems[armorType][extraAttributes.id.value];
+    await addItemReferenceData(armorPiece,referenceData);
 
     // add gem slots after reference data has set the allowed slots
     if (extraAttributes.gems) {
@@ -406,16 +408,16 @@ export async function parseApiGear(playerGear, armorData, gearType) {
   });
 }
 
-export async function addItemReferenceData(item) {
-  const HypixelData = JSON.parse(localStorage.getItem("HypixelData"));
-  let reference = HypixelData?.[item.category]?.[item.id];
-  if (!reference) {
+export async function addItemReferenceData(item,referenceData) {
+  // const HypixelData = JSON.parse(localStorage.getItem("HypixelData"));
+  // let referenceData = HypixelData?.[item.category]?.[item.id];
+  if (!referenceData) {
     resetItem(item);
     return;
   }
-  item.name = reference?.name ?? "";
-  item.material = reference.material ?? undefined;
-  item.referenceCategory = reference.category?.toLowerCase() ?? undefined;
+  item.name = referenceData?.name ?? "";
+  item.material = referenceData.material ?? undefined;
+  item.referenceCategory = referenceData.category?.toLowerCase() ?? undefined;
   if (item.referenceCategory === "bow") {
   }
   item.arrow = "Flint";
@@ -424,25 +426,25 @@ export async function addItemReferenceData(item) {
   if (item.category === "weapon" && item.referenceCategory !== "bow") item.referenceCategory = "sword";
 
   // if item has tiered stats get the proper value from the stat array in the reference and save it into .stats
-  item.tieredStats = reference.tiered_stats ? true : false;
+  item.tieredStats = referenceData.tiered_stats ? true : false;
 
-  if (reference.essence_type && reference.essence_type === "CRIMSON") {
+  if (referenceData.essence_type && referenceData.essence_type === "CRIMSON") {
     item.itemType = "crimson";
-  } else if (reference.essence_type && reference.essence_type !== "CRIMSON") {
+  } else if (referenceData.essence_type && referenceData.essence_type !== "CRIMSON") {
     item.itemType = "dungeon";
   }
 
   item.baseStats =
-    (reference.tiered_stats
-      ? Object.entries(reference.tiered_stats).reduce((result, [key, value]) => {
+    (referenceData.tiered_stats
+      ? Object.entries(referenceData.tiered_stats).reduce((result, [key, value]) => {
           let boostPercentage = item.baseStatBoostPercentage ?? 1;
           result[key] = Math.ceil(value[item.itemTier > 0 ? item.itemTier - 1 : 0] * boostPercentage);
           return result;
         }, defaultStats())
-      : Object.assign(defaultStats(), reference.stats)) ?? defaultStats();
+      : Object.assign(defaultStats(), referenceData.stats)) ?? defaultStats();
   // item.dungeonItem = reference.dungeon_item ?? false;
-  item.tier = reference.tier ?? "COMMON";
-  item.ability_damage_scaling = reference.ability_damage_scaling ?? 1;
+  item.tier = referenceData.tier ?? "COMMON";
+  item.ability_damage_scaling = referenceData.ability_damage_scaling ?? 1;
 
   item.effects = [];
   const itemEffects = itemEffectsMap[item.id];
@@ -454,9 +456,9 @@ export async function addItemReferenceData(item) {
 
   // check for gem slots
   const gemSlotMap = new Map();
-  if (reference.gemstone_slots) {
+  if (referenceData.gemstone_slots) {
     item.gemSlots = {};
-    const slots = reference.gemstone_slots;
+    const slots = referenceData.gemstone_slots;
     slots.forEach((slot) => {
       let slotType = slot.slot_type;
       gemSlotMap.set(slot.slot_type, gemSlotMap.has(slotType) ? gemSlotMap.get(slotType) + 1 : 0);
@@ -469,7 +471,7 @@ export async function addItemReferenceData(item) {
     });
   }
 
-  if (reference.effectsLore) item.effectsLore = reference.effectsLore;
+  if (referenceData.effectsLore) item.effectsLore = referenceData.effectsLore;
 }
 
 export async function addGearModifierStats(gearPiece, playerskills) {
@@ -588,11 +590,11 @@ export async function addGearModifierStats(gearPiece, playerskills) {
   }
 }
 
-export async function calculateSkillLevels(profileData) {
+export async function calculateSkillLevels(profileData,hypixelSills) {
   const calculatedSkills = defaultSkillS();
   const playerSkillXpValues = profileData?.player_data?.experience;
   if (!playerSkillXpValues) return calculatedSkills;
-  const skillsData = JSON.parse(localStorage.getItem("HypixelData")).skills;
+  // const skillsData = JSON.parse(localStorage.getItem("HypixelData")).skills;
   const skillXpValues = {
     FARMING: 0,
     MINING: 0,
@@ -611,8 +613,8 @@ export async function calculateSkillLevels(profileData) {
   }
 
   for (let key in skillXpValues) {
-    if (key in skillsData) {
-      const skillLevelReqs = skillsData[key].levels;
+    if (key in hypixelSills) {
+      const skillLevelReqs = hypixelSills[key].levels;
       let finalLevel = 0;
       skillLevelReqs.forEach((level) => {
         if (skillXpValues[key] >= level.totalExpRequired) finalLevel++;
@@ -639,7 +641,7 @@ export async function calculateSkillLevels(profileData) {
 }
 
 export function parseCollectionsData(data, playerCollections) {
-  if (!data) return defaultCollections();
+  if (!data) return playerCollections;
 
   for (const [category, collections] of Object.entries(playerCollections)) {
     for (const [collection, info] of Object.entries(collections)) {
@@ -654,7 +656,6 @@ export function parseCollectionsData(data, playerCollections) {
       }
     }
   }
-
   return playerCollections;
 }
 
@@ -766,9 +767,9 @@ export function addStats(baseStats, newStats) {
   }
 }
 
-export function changeGearPiece(currentGear, newGear) {
+export function changeGearPiece(currentGear, newGear, newReferenceData) {
   // get new item's data
-  addItemReferenceData(newGear);
+  addItemReferenceData(newGear,newReferenceData);
 
   // reset modifiers if categories are not the same, mainly for changing from sword or bow
   if (currentGear.referenceCategory !== newGear.referenceCategory) resetModifiers(newGear);
@@ -889,8 +890,8 @@ export function getSlayerBonusStats(profileData) {
 }
 
 // TODO: Tuning
-export function parseAPIAccessoryBag(accessoryBagData, abiphoneContacts) {
-  const hypixelData = JSON.parse(localStorage.getItem("HypixelData"));
+export function parseAPIAccessoryBag(accessoryBagData, abiphoneContacts,hypixelAccessories) {
+  // const hypixelData = JSON.parse(localStorage.getItem("HypixelData"));
   const accessorySets = accessories.sets;
   const dynamicAccessories = accessories.dynamic;
   const unfilterdAccessories = {};
@@ -919,7 +920,7 @@ export function parseAPIAccessoryBag(accessoryBagData, abiphoneContacts) {
         if (blackListedTalisman.includes(id)) {
           accKeyword = id;
         }
-        const reference = hypixelData.accessories[id];
+        const reference = hypixelAccessories[id];
 
         if (tempId === "PARTY_HAT_CRAB_ANIMATED") id = "PARTY_HAT_CRAB_ANIMATED";
 

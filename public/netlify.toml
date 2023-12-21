@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/mojang/uuid/*"
+  to = "https://api.mojang.com/users/profiles/minecraft/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}

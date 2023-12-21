@@ -8,15 +8,29 @@ import { Buffer } from "buffer";
 import { firebaseConfig } from "../firestoreConfig.js";
 import { loreColors } from "../constants/colors.js";
 
-// export async function fetchUUID(username) {
-//   const url = `/mojang/uuid/${username}`;
-//   try {
-//     const response = await axios.get(url);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function fetchUUID(username) {
+  
+  // const url = `/mojang/uuid/${username}`;
+  const url = `/mojang/uuid/${username}`;
+  const response = await fetch(url);
+  console.log(response);
+  const data = await response.json();
+  
+  return data;
+  // try {
+  //   const response = await fetch(url);
+
+  //   if (!response.ok) {
+  //     // Handle non-successful response (e.g., 404 Not Found)
+  //     throw new Error(`Request failed with status ${response.status}`);
+  //   }
+
+  //   const data = await response.json();
+  //   return data;
+  // } catch (error) {
+  //   throw error;
+  // }
+}
 
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {

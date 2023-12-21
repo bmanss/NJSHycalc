@@ -1,12 +1,18 @@
-import { getHypixelData } from "../lib/Util.jsx";
-import { cacheHypixelData } from "../LocalTesting/cacheHypixelData";
-import Profile from "../Components/Profile";
+// import { getHypixelData } from "../lib/Util.jsx";
+import { cacheHypixelData } from "../../LocalTesting/cacheHypixelData";
+import Profile from "../../Components/Profile";
 
-const ProfilePage = async () => {
-//   const hypixelData = await cacheHypixelData();
-  const hypixelData = await getHypixelData();
-//   console.log('server');
-  const sortItem = async () =>{
+export default async function ProfilePage({params}) {
+  // const url = `https://api.mojang.com/users/profiles/minecraft/bigoofinator`;
+  // const response = await fetch(url);
+  // console.log(response);
+  // const data = await response.json();
+  // console.log(data);
+
+  const hypixelData = await cacheHypixelData();
+  const profileName = params.profileName.replaceAll('index.html','');
+  //   const hypixelData = await getHypixelData();
+  const sortItem = async () => {
     const items = hypixelData;
     const categories = ["helmet", "chestplate", "leggings", "boots", "necklace", "cloak", "belt", "gloves", "weapon"];
 
@@ -29,14 +35,12 @@ const ProfilePage = async () => {
       sortedItems[category][0].name = "Unequipped";
     });
     return sortedItems;
-  }
+  };
   const sortedItems = await sortItem();
-  
+
   return (
     <div>
-      <Profile data={hypixelData} sortedItems={sortedItems} skillCaps={hypixelData.skillCaps} baseCollections={hypixelData.collections}/>
+      <Profile profileName={profileName} data={hypixelData} sortedItems={sortedItems} skillCaps={hypixelData.skillCaps} baseCollections={hypixelData.collections} />
     </div>
   );
-};
-
-export default ProfilePage;
+}

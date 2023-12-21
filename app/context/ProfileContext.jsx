@@ -6,7 +6,10 @@ import * as ProfilesFunctions from "../lib/ProfileFunctions";
 const ProfileContext = createContext();
 let profilesData = {};
 let profiles = [];
-let baseCollections = {};
+
+let hypixelItems = {};
+let hypixelSkills = {};
+let hypixelCollections = {};
 
 const initialProfileState = {
   playerGear: ProfilesFunctions.defaultGear(),
@@ -83,11 +86,11 @@ const profileReducer = (state, action) => {
     default:
       break;
   }
-  ProfilesFunctions.finalStats(updatedState,updatedState.dungeonMode);
-//   const finalStats = ProfilesFunctions.getFinalStats(updatedState);
+  ProfilesFunctions.finalStats(updatedState, updatedState.dungeonMode);
+  //   const finalStats = ProfilesFunctions.getFinalStats(updatedState);
   // updatedState.finalPlayerStats = finalStats;
   // console.log(updatedState);
-//   console.log(ProfilesFunctions.finalStats(updatedState));
+  //   console.log(ProfilesFunctions.finalStats(updatedState));
   return updatedState;
 };
 
@@ -129,6 +132,15 @@ export const ProfileProvider = ({ children }) => {
     return profileState.dungeonMode;
   };
 
+  const setHypixelData = (items, skills, collections) => {
+    hypixelItems = items;
+    hypixelSkills = skills;
+    hypixelCollections = collections;
+  };
+  const getHypixelItem = (category, itemID) => {
+    return hypixelItems[category]?.[itemID];
+  };
+
   /**
    * Sets profile data based on the given UUID and profiles array.
    * Profiles are stored with cute names as keys.
@@ -151,10 +163,6 @@ export const ProfileProvider = ({ children }) => {
     profilesData = data;
   };
 
-  const setBaseCollections = (collectionData) =>{
-    baseCollections = collectionData;
-  }
-
   /**
    * Must be called after setting the profiles data with {@link setProfilesData}.
    * If called without cute name it will build a default profile.
@@ -173,16 +181,16 @@ export const ProfileProvider = ({ children }) => {
         profile?.inventory?.bag_contents?.talisman_bag && (await parseNBT(profile.inventory.bag_contents.talisman_bag.data)).value.i.value.value;
       const powerstone = profile?.accessory_bag_storage?.selected_power ?? "none";
       const tuningSlot_0 = profile?.accessory_bag_storage?.tuning && profile.accessory_bag_storage.tuning.slot_0;
-      const calculatedSkills = await ProfilesFunctions.calculateSkillLevels(profile);
+      const calculatedSkills = await ProfilesFunctions.calculateSkillLevels(profile,hypixelSkills);
       const abiphoneContacts = profile?.nether_island_player_data?.abiphone?.active_contacts;
       const collectionsData = profile?.collection && profile.collection;
       const essencePerks = profile?.player_data?.perks && ProfilesFunctions.parseEssencePerks(profile.player_data.perks);
       const petData = profile?.pets_data?.pets && ProfilesFunctions.parsePetApiData(profile.pets_data.pets);
-      (await armor) && ProfilesFunctions.parseApiGear(parsedGear, armor, "armor");
-      (await equipment) && ProfilesFunctions.parseApiGear(parsedGear, equipment, "equipment");
-      (await inventory) && ProfilesFunctions.parseApiGear(parsedGear, [inventory[0]], "weapon");
-      
-      parsedAccessories = accessoryBag && ProfilesFunctions.parseAPIAccessoryBag(accessoryBag, abiphoneContacts);
+      (await armor) && ProfilesFunctions.parseApiGear(parsedGear, armor, "armor",hypixelItems);
+      (await equipment) && ProfilesFunctions.parseApiGear(parsedGear, equipment, "equipment",hypixelItems);
+      (await inventory) && ProfilesFunctions.parseApiGear(parsedGear, [inventory[0]], "weapon",hypixelItems);
+
+      parsedAccessories = accessoryBag && ProfilesFunctions.parseAPIAccessoryBag(accessoryBag, abiphoneContacts,hypixelItems?.accessories);
 
       if (petData?.activePet) parsedGear.pet = ProfilesFunctions.parsePet(petData.activePet);
 
@@ -221,7 +229,7 @@ export const ProfileProvider = ({ children }) => {
       parsedProfile.playerGear = parsedGear;
       parsedProfile.playerSkills = calculatedSkills;
       parsedProfile.additionalMultiplers = ProfilesFunctions.allMultipliers();
-      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(collectionsData, ProfilesFunctions.defaultCollections(baseCollections));
+      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(collectionsData,ProfilesFunctions.defaultCollections(hypixelCollections));
       dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: parsedProfile });
     }
     // if no rawData build profile for default state
@@ -231,12 +239,12 @@ export const ProfileProvider = ({ children }) => {
         finalPlayerStats: { normal: ProfilesFunctions.defaultPlayerStats(), dungeon: ProfilesFunctions.defaultPlayerStats() },
         playerGear: ProfilesFunctions.defaultGear(),
         playerSkills: ProfilesFunctions.defaultSkillS(),
-        playerCollections: ProfilesFunctions.defaultCollections(baseCollections),
+        playerCollections: ProfilesFunctions.defaultCollections(hypixelCollections),
         statMultipliers: { ...ProfilesFunctions.initialStatMultipliers },
         damageMultipliers: { ...ProfilesFunctions.initialDamageMultipliers },
         additionalMultiplers: ProfilesFunctions.allMultipliers(),
         targetMob: "None",
-        powerstone: "None"
+        powerstone: "None",
       };
       dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: defaultProfile });
     }
@@ -261,8 +269,9 @@ export const ProfileProvider = ({ children }) => {
     getStatMultipliers: getStatMultipliers,
     getDamageMultiplers: getDamageMultiplers,
     getAdditionalMultiplers: getAdditionalMultiplers,
-    isDungeonMode:isDungeonMode,
-    setBaseCollections: setBaseCollections,
+    isDungeonMode: isDungeonMode,
+    setHypixelData: setHypixelData,
+    getHypixelItem: getHypixelItem,
     profiles: profiles,
     profileState: profileState,
   };

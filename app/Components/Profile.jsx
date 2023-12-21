@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
 // import { useParams, useNavigate } from "react-router-dom";
 // import { fetchUUID } from "../LocalTesting/fetchUUID";
@@ -18,12 +18,8 @@ import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 
-const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
+const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
   const profileContext = useProfileContext();
-  console.log(data);
-  console.log(skillCaps);
-  console.log(baseCollections);
-//   profileContext.setBaseCollections(baseCollections);
   const [playerUUID, setUUID] = useState("");
   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
@@ -36,17 +32,35 @@ const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
     active: "armor",
   });
   //   const { profileName } = useParams();
-  const profileName = null;
+  //   const profileName = null;
   //   const navigate = useNavigate();
   const [profileLoading, setProfileLoading] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
-//   const skillCaps = useRef(JSON.parse(localStorage.getItem("HypixelData")).skillCaps);
+  //   const skillCaps = useRef(JSON.parse(localStorage.getItem("HypixelData")).skillCaps);
 
   const [godPotionEnabled, setGodPotionEnabled] = useState(() => {
     return false;
   });
+
+  useEffect(() => {
+    // set profile context data on initial load
+    const hypixelItems = {
+      accessories: data.accessories ?? {},
+      belt: data.belt ?? {},
+      chestplate: data.chestplate ?? {},
+      cloak: data.cloak ?? {},
+      gloves: data.gloves ?? {},
+      helmet: data.helmet ?? {},
+      leggings: data.leggings ?? {},
+      boots: data.boots ?? {},
+      necklace: data.necklace ?? {},
+      weapon: data.weapon ?? {},
+    };
+    // console.log(data.collections);
+    profileContext.setHypixelData(hypixelItems, data.skills, data.collections);
+  }, []);
 
   async function getHypixelProfile(uuid) {
     // // check local storage first
@@ -57,7 +71,7 @@ const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
     //   setProfileData(recentProfile.data);
     // } else {
     //   // use this when local testing
-    //   // const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=543bfc94-e9c7-4f1e-8a52-c46747d0b1eb&uuid=${uuid}`);
+    //   // const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=&uuid=${uuid}`);
     //   const response = await fetch(`/.netlify/functions/api?uuid=${uuid}`);
     //   // throw error if player has no hypixel profile
     //   if (response.status !== 200) {
@@ -95,6 +109,8 @@ const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
   };
 
   async function validateProfile() {
+    const data = await fetchUUID(profileName);
+    console.log(data);
     // if (profileName === undefined) {
     //   // make default profile god potion disabled by default
     //   setGodPotionEnabled(false);
@@ -117,8 +133,10 @@ const Profile = ({ sortedItems,skillCaps,baseCollections,data }) => {
   }
 
   const loadDefault = () => {
-    profileContext.buildProfile();
-    setGodPotionEnabled(false);
+    async function test() {}
+    test();
+    // profileContext.buildProfile();
+    // setGodPotionEnabled(false);
     // navigate("/");
   };
 

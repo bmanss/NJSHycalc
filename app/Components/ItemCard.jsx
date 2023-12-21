@@ -67,7 +67,8 @@ const ItemCard = (props) => {
   };
   const handleGearChange = (category, newID) => {
     const newGearPiece = createGearPiece(profileContext.getGearPiece(category), newID, category);
-    changeGearPiece(profileContext.getGearPiece(category), newGearPiece);
+    const referenceData = profileContext.getHypixelItem(category,newID);
+    changeGearPiece(profileContext.getGearPiece(category), newGearPiece,referenceData);
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_PLAYER_GEAR_PIECE, payload: { category: category, newGearPiece: newGearPiece } });
   };
 
@@ -235,7 +236,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "ROUGH");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Rough {gemType.toLowerCase()}</div>
-                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/rough/${gemType.toLowerCase()}.png`} />
+                          <Image height={25} width={25} alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/rough/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -243,7 +244,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FINE");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Fine {gemType.toLowerCase()}</div>
-                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/fine/${gemType.toLowerCase()}.png`} />
+                          <Image height={25} width={25} alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/fine/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -251,7 +252,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FLAWED");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Flawed {gemType.toLowerCase()}</div>
-                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawed/${gemType.toLowerCase()}.png`} />
+                          <Image height={25} width={25} alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawed/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -259,7 +260,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FLAWLESS");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Flawless {gemType.toLowerCase()}</div>
-                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawless/${gemType.toLowerCase()}.png`} />
+                          <Image height={25} width={25} alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawless/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -267,7 +268,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "PERFECT");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Perfect {gemType.toLowerCase()}</div>
-                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/perfect/${gemType.toLowerCase()}.png`} />
+                          <Image height={25} width={25} alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/perfect/${gemType.toLowerCase()}.png`} />
                         </div>
                       </div>
                     ))}
