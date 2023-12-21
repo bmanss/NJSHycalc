@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 // import { useParams, useNavigate } from "react-router-dom";
 // import { fetchUUID } from "../LocalTesting/fetchUUID";
@@ -20,7 +20,9 @@ import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 
 const Profile = ({ sortedItems,skillCaps,baseCollections }) => {
   const profileContext = useProfileContext();
-  profileContext.setBaseCollections(baseCollections);
+  console.log(skillCaps);
+  console.log(baseCollections);
+//   profileContext.setBaseCollections(baseCollections);
   const [playerUUID, setUUID] = useState("");
   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
