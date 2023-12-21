@@ -41,10 +41,10 @@ export const InputCounter = ({ value, onChange, min, max, inputWidth, floating, 
         onBlur={(e) => updateValue(e.target.value)}></input>
       <span style={{ display: "flex", flexDirection: "column" }}>
         <button onClick={() => updateValue(parseFloat(counterValue) + (step || 1))}>
-          <Image width={15} height={15} src='/images/arrowUp.png' alt='arrowUp' />
+          <Image width={15} height={15} src='/arrowUp.png' alt='arrowUp' />
         </button>
         <button onClick={() => updateValue(parseFloat(counterValue) - (step || 1))}>
-          <Image width={15} height={15} src='/images/arrowDown.png' alt='arrowDown' />
+          <Image width={15} height={15} src='/arrowDown.png' alt='arrowDown' />
         </button>
       </span>
     </span>

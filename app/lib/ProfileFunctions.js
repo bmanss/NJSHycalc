@@ -285,10 +285,10 @@ export function defaultSkillS() {
   };
 }
 
-export function defaultCollections() {
+export function defaultCollections(baseCollections) {
   const collectons = {};
-  const hypixelCollectionData = JSON.parse(localStorage.getItem("HypixelData")).collections;
-  for (const [collectionCategory, collectionList] of Object.entries(hypixelCollectionData)) {
+  // const hypixelCollectionData = JSON.parse(localStorage.getItem("HypixelData")).collections;
+  for (const [collectionCategory, collectionList] of Object.entries(baseCollections)) {
     collectons[collectionCategory] = {};
     for (const [collection, collectionInfo] of Object.entries(collectionList)) {
       collectons[collectionCategory][collectionInfo.name] = {

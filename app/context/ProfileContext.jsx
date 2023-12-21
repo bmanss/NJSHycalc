@@ -6,6 +6,7 @@ import * as ProfilesFunctions from "../lib/ProfileFunctions";
 const ProfileContext = createContext();
 let profilesData = {};
 let profiles = [];
+let baseCollections = {};
 
 const initialProfileState = {
   playerGear: ProfilesFunctions.defaultGear(),
@@ -150,6 +151,10 @@ export const ProfileProvider = ({ children }) => {
     profilesData = data;
   };
 
+  const setBaseCollections = (collectionData) =>{
+    baseCollections = collectionData;
+  }
+
   /**
    * Must be called after setting the profiles data with {@link setProfilesData}.
    * If called without cute name it will build a default profile.
@@ -216,7 +221,7 @@ export const ProfileProvider = ({ children }) => {
       parsedProfile.playerGear = parsedGear;
       parsedProfile.playerSkills = calculatedSkills;
       parsedProfile.additionalMultiplers = ProfilesFunctions.allMultipliers();
-      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(collectionsData, ProfilesFunctions.defaultCollections());
+      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(collectionsData, ProfilesFunctions.defaultCollections(baseCollections));
       dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: parsedProfile });
     }
     // if no rawData build profile for default state
@@ -226,7 +231,7 @@ export const ProfileProvider = ({ children }) => {
         finalPlayerStats: { normal: ProfilesFunctions.defaultPlayerStats(), dungeon: ProfilesFunctions.defaultPlayerStats() },
         playerGear: ProfilesFunctions.defaultGear(),
         playerSkills: ProfilesFunctions.defaultSkillS(),
-        playerCollections: ProfilesFunctions.defaultCollections(),
+        playerCollections: ProfilesFunctions.defaultCollections(baseCollections),
         statMultipliers: { ...ProfilesFunctions.initialStatMultipliers },
         damageMultipliers: { ...ProfilesFunctions.initialDamageMultipliers },
         additionalMultiplers: ProfilesFunctions.allMultipliers(),
@@ -257,6 +262,7 @@ export const ProfileProvider = ({ children }) => {
     getDamageMultiplers: getDamageMultiplers,
     getAdditionalMultiplers: getAdditionalMultiplers,
     isDungeonMode:isDungeonMode,
+    setBaseCollections: setBaseCollections,
     profiles: profiles,
     profileState: profileState,
   };

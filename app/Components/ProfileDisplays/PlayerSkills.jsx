@@ -31,7 +31,7 @@ export const PlayerSkills = ({skillCaps}) => {
             inputWidth={"50px"}
             value={level}
             min={0}
-            max={skillCaps.current[skill] ?? 500}
+            max={skillCaps[skill] ?? 500}
             onChange={(value) => handleSkillLevelChange(skill, value)}
           />
         </span>

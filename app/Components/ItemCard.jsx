@@ -10,6 +10,7 @@ import { useProfileContext } from "../context/ProfileContext";
 import { ProfileActions } from "../context/ProfileContext";
 import { createGearPiece, changeGearPiece } from "../lib/ProfileFunctions";
 import { parseLore } from "../lib/Util";
+import Image from 'next/image';
 
 const ItemCard = (props) => {
   const profileContext = useProfileContext();
@@ -234,7 +235,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "ROUGH");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Rough {gemType.toLowerCase()}</div>
-                          <img alt='' className='Itemcard-Gemslots-Gem-image' src={`/images/gemstones/rough/${gemType.toLowerCase()}.png`} />
+                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/rough/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -242,7 +243,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FINE");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Fine {gemType.toLowerCase()}</div>
-                          <img alt='' className='Itemcard-Gemslots-Gem-image' src={`/images/gemstones/fine/${gemType.toLowerCase()}.png`} />
+                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/fine/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -250,7 +251,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FLAWED");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Flawed {gemType.toLowerCase()}</div>
-                          <img alt='' className='Itemcard-Gemslots-Gem-image' src={`/images/gemstones/flawed/${gemType.toLowerCase()}.png`} />
+                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawed/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -258,7 +259,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "FLAWLESS");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Flawless {gemType.toLowerCase()}</div>
-                          <img alt='' className='Itemcard-Gemslots-Gem-image' src={`/images/gemstones/flawless/${gemType.toLowerCase()}.png`} />
+                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/flawless/${gemType.toLowerCase()}.png`} />
                         </div>
                         <div
                           className='Itemcard-Gemslots-Gem-image-Container'
@@ -266,7 +267,7 @@ const ItemCard = (props) => {
                             updateGem(slotName, properties.type, gemType, "PERFECT");
                           }}>
                           <div className='Itemcard-Gemslots-Gem-image-text'>Perfect {gemType.toLowerCase()}</div>
-                          <img alt='' className='Itemcard-Gemslots-Gem-image' src={`/images/gemstones/perfect/${gemType.toLowerCase()}.png`} />
+                          <Image alt='' className='Itemcard-Gemslots-Gem-image' src={`/gemstones/perfect/${gemType.toLowerCase()}.png`} />
                         </div>
                       </div>
                     ))}

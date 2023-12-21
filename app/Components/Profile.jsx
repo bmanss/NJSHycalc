@@ -18,8 +18,9 @@ import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 
-const Profile = ({ sortedItems,skillsCaps }) => {
+const Profile = ({ sortedItems,skillCaps,baseCollections }) => {
   const profileContext = useProfileContext();
+  profileContext.setBaseCollections(baseCollections);
   const [playerUUID, setUUID] = useState("");
   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
@@ -38,7 +39,6 @@ const Profile = ({ sortedItems,skillsCaps }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
-  const skillCaps = skillsCaps;
 //   const skillCaps = useRef(JSON.parse(localStorage.getItem("HypixelData")).skillCaps);
 
   const [godPotionEnabled, setGodPotionEnabled] = useState(() => {
@@ -116,7 +116,7 @@ const Profile = ({ sortedItems,skillsCaps }) => {
   const loadDefault = () => {
     profileContext.buildProfile();
     setGodPotionEnabled(false);
-    navigate("/");
+    // navigate("/");
   };
 
   useEffect(() => {
