@@ -138,7 +138,7 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
   useEffect(() => {
     // if profile name but invalid uuid -> player not found
     // if valid uuid but no profile data -> unable to get player data
-    profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
+    profileData.hypixelProfiles && profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
     profileContext.buildActiveProfile();
   },[]);
 
