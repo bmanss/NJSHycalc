@@ -46,7 +46,7 @@ const page = async ({ params }) => {
   } else {
     hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
     // if database data is older than 1 minute get the new data from hypixel api
-    if (Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
+    if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
       // check if the response is ok and get the data as json, otherwise keep whatever it currently is
       hypixelProfileData = hypixelResponse?.ok ? await hypixelResponse.json() : hypixelProfileData;
