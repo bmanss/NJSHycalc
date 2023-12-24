@@ -23,27 +23,25 @@ const page = async ({ params }) => {
 
   const firestoreDB = admin.firestore();
 
-  //   const hypixelData = await getHypixelData();
+  // const hypixelData = await getHypixelData();
   const hypixelData = await cacheHypixelData();
-  const profileName = params.player;
+  const profileName = params?.player;
 
-  // fetch UUID if player name is specified do not cache as this data can change on each call
+  // // fetch UUID if player name is specified
   const UUIDResponse = profileName ? await fetch(`https://api.mojang.com/users/profiles/minecraft/${profileName}`) : null;
 
-  // make sure response is ok and get the id from it
+  // // make sure response is ok and get the id from it
   const UUID = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
 
-  // fetch hypixel profile data if UUID is valid
-  const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID}`;
-
-  // get api response cache for 1 minute
-  // const hypixelResponse = UUID ? await fetch(url,{ next: { revalidate:  60 }}) : null;
+  // // fetch hypixel profile data if UUID is valid
+  const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID ?? ''}`;
 
   let hypixelProfileData = null;
   // check if local cached should be used to return the data
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
-  } else {
+  } 
+  else if (UUID) {
     hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
@@ -62,7 +60,7 @@ const page = async ({ params }) => {
 
   // create profile information object to pass to profile component
   const profileData = {
-    name: params.player,
+    name: profileName,
     UUID: UUID,
     hypixelProfiles: hypixelProfileData,
   };
