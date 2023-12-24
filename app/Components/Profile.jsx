@@ -17,11 +17,13 @@ import { PlayerCombatGear } from "./ProfileDisplays/PlayerCombatGear";
 import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
+import { useRouter } from "next/navigation";
 
-const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
+const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => {
+  const router = useRouter();
   const profileContext = useProfileContext();
   const [playerUUID, setUUID] = useState("");
-  const [profileData, setProfileData] = useState(null);
+  //   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
     armor: true,
     baseStats: false,
@@ -88,6 +90,7 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
   }
 
   const navigateProfile = (player) => {
+    router.push(`/profile/${player}`);
     // setProfileLoading(true);
     // async function getNewProfile() {
     //   const uuid = await fetchUUID(player);
@@ -109,8 +112,8 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
   };
 
   async function validateProfile() {
-    const data = await fetchUUID(profileName);
-    console.log(data);
+    // const data = await fetchUUID(profileName);
+    // console.log(data);
     // if (profileName === undefined) {
     //   // make default profile god potion disabled by default
     //   setGodPotionEnabled(false);
@@ -132,17 +135,36 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
     // }
   }
 
+  useEffect(() => {
+    // if profile name but invalid uuid -> player not found
+    // if valid uuid but no profile data -> unable to get player data
+    profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
+    profileContext.buildActiveProfile();
+  },[]);
+
   const loadDefault = () => {
-    async function test() {}
+    async function test() {
+      profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
+      console.log(profileData.UUID, profileData.hypixelProfiles);
+      // setProfileData(dataa);
+      profileContext.buildActiveProfile();
+    }
     test();
     // profileContext.buildProfile();
     // setGodPotionEnabled(false);
     // navigate("/");
   };
 
+  //   useEffect(() => {
+  //     if (profileName != null && profileData.UUID === null) {
+  //       console.log("go back");
+  //       router.replace("/profile");
+  //     }
+  //   }, []);
+
   useEffect(() => {
     if (profileName) {
-      setProfileLoading(true);
+      //   setProfileLoading(true);
       validateProfile();
     } else {
       profileContext.buildProfile();
@@ -154,13 +176,13 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
     profileContext.buildActiveProfile();
   }
 
-  useEffect(() => {
-    if (profileData !== null) {
-      profileContext.setProfilesData({ UUID: playerUUID, profilesArray: profileData.profiles });
-      setGodPotionEnabled(true);
-    }
-    parseProfile();
-  }, [profileData]);
+  //   useEffect(() => {
+  //     if (profileData !== null) {
+  //       profileContext.setProfilesData({ UUID: playerUUID, profilesArray: profileData.profiles });
+  //       setGodPotionEnabled(true);
+  //     }
+  //     parseProfile();
+  //   }, [profileData]);
 
   const changeProfile = async (profile) => {
     profileContext.buildProfile(profile);
@@ -219,8 +241,8 @@ const Profile = ({ sortedItems, skillCaps, data, profileName }) => {
       <div style={{ height: "100vh" }}>
         <div className='InfoBar'>
           <div className='InfoBar-PlayerInfo'>
-            <div>{`${profileName ?? "Default-Profile"} `}</div>
-            {profileName && (
+            <div>{`${profileData.name && profileData.hypixelProfiles ? profileName : "Default-Profile"} `}</div>
+            {profileData.name && profileData.hypixelProfiles && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>On </div>
                 <div className={"InfoBar-Cutename"}>
