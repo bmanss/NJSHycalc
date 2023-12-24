@@ -8,6 +8,10 @@ import admin from "firebase-admin";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
+serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+serviceAccount.client_email = process.env.CLIENT_EMAIL;
+serviceAccount.client_id = process.env.CLIENT_ID;
+
 const fetchedProilfes = {};
 const page = async ({ params }) => {
   if (!admin.apps.length) {
@@ -36,7 +40,6 @@ const page = async ({ params }) => {
   // const hypixelResponse = UUID ? await fetch(url,{ next: { revalidate:  60 }}) : null;
 
   let hypixelProfileData = null;
-
   // check if local cached should be used to return the data
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
