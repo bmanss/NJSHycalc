@@ -148,6 +148,11 @@ export const ProfileProvider = ({ children }) => {
    * @param profilesArray - An array of profiles to process.
    */
   const setProfilesData = ({ UUID, profilesArray }) => {
+    if (!profilesArray){
+      profilesData = {};
+      profiles = [];
+      return;
+    }
     const data = {};
     for (let i = 0; i < profilesArray.length; i++) {
       const profileSlotData = {};
