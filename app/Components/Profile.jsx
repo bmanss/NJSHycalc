@@ -23,6 +23,7 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
   const router = useRouter();
   const profileContext = useProfileContext();
   const [playerUUID, setUUID] = useState("");
+  const [playerName, setPlayerName] = useState(profileData.name || "Default-Profile");
   //   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
     armor: true,
@@ -64,125 +65,34 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
     profileContext.setHypixelData(hypixelItems, data.skills, data.collections);
   }, []);
 
-  async function getHypixelProfile(uuid) {
-    // // check local storage first
-    // const recentProfile = JSON.parse(localStorage.getItem("cachedProfile"));
-    // const CACHE_DURATION = 60 * 1000;
-    // // load cached version
-    // if (recentProfile && recentProfile.uuid == uuid && Date.now() - recentProfile.data.lastCache < CACHE_DURATION) {
-    //   setProfileData(recentProfile.data);
-    // } else {
-    //   // use this when local testing
-    //   // const response = await fetch(`https://api.hypixel.net/v2/skyblock/profiles?key=&uuid=${uuid}`);
-    //   const response = await fetch(`/.netlify/functions/api?uuid=${uuid}`);
-    //   // throw error if player has no hypixel profile
-    //   if (response.status !== 200) {
-    //     setProfileLoading(false);
-    //     throw new Error("Error Fetching Profile Data");
-    //   }
-    //   const data = await response.json();
-    //   // load api version
-    //   const cachedProfile = { uuid: uuid, data: data.profiles };
-    //   localStorage.setItem("cachedProfile", JSON.stringify(cachedProfile));
-    //   setProfileData(data);
-    // }
-    // setProfileLoading(false);
-  }
-
   const navigateProfile = (player) => {
     router.push(`/profile/${player}`);
-    // setProfileLoading(true);
-    // async function getNewProfile() {
-    //   const uuid = await fetchUUID(player);
-    //   getHypixelProfile(uuid.id);
-    //   setUUID(uuid.id);
-    //   navigate(`/profile/${player}`);
-    // }
-    // getNewProfile().catch((error) => {
-    //   if (error.response && error.response.status) {
-    //     setErrorMessage(`Error ${error.response.status} unable to fetch profile.`);
-    //   } else {
-    //     setErrorMessage("Profile Not Found.");
-    //   }
-    //   setTimeout(() => {
-    //     setErrorMessage("");
-    //   }, 1500);
-    // });
-    // setPlayerSearch("");
   };
-
-  async function validateProfile() {
-    // const data = await fetchUUID(profileName);
-    // console.log(data);
-    // if (profileName === undefined) {
-    //   // make default profile god potion disabled by default
-    //   setGodPotionEnabled(false);
-    // } else {
-    //   try {
-    //     const data = await fetchUUID(profileName);
-    //     await getHypixelProfile(data.id);
-    //     setUUID(data.id);
-    //     setProfileLoading(false);
-    //     document.title = `Hycalc - ${profileName}`;
-    //   } catch (error) {
-    //     console.error("Error fetching UUID.");
-    //     setErrorMessage("Profile not found.");
-    //     setTimeout(() => {
-    //       setErrorMessage("");
-    //     }, 1500);
-    //     navigate("/");
-    //   }
-    // }
-  }
 
   useEffect(() => {
     // if profile name but invalid uuid -> player not found
     // if valid uuid but no profile data -> unable to get player data
-    profileData.hypixelProfiles && profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
-    profileContext.buildActiveProfile();
-  },[]);
+    if (profileData.hypixelProfiles?.profiles) {
+      profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
+      profileContext.buildActiveProfile();
+    } else {
+      loadDefault();
+      setPlayerName("Default-Profile");
+      profileContext.setProfilesData({ UUID: null, profilesArray: null });
+      profileContext.buildProfile();
+      if (profileData.name != null) setErrorMessage(!profileData.UUID ? "Unable to get profile UUID" : "Unable to get Hypixel profile data");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 1500);
+    }
+  }, []);
 
   const loadDefault = () => {
-    async function test() {
-      profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
-      console.log(profileData.UUID, profileData.hypixelProfiles);
-      // setProfileData(dataa);
-      profileContext.buildActiveProfile();
-    }
-    test();
-    // profileContext.buildProfile();
-    // setGodPotionEnabled(false);
-    // navigate("/");
+    // setPlayerName("Default-Profile");
+    // profileContext.setProfilesData({ UUID: null, profilesArray: null });
+    profileContext.buildProfile();
+    setGodPotionEnabled(false);
   };
-
-  //   useEffect(() => {
-  //     if (profileName != null && profileData.UUID === null) {
-  //       console.log("go back");
-  //       router.replace("/profile");
-  //     }
-  //   }, []);
-
-  useEffect(() => {
-    if (profileName) {
-      //   setProfileLoading(true);
-      validateProfile();
-    } else {
-      profileContext.buildProfile();
-      setGodPotionEnabled(false);
-    }
-  }, [profileName]);
-
-  async function parseProfile() {
-    profileContext.buildActiveProfile();
-  }
-
-  //   useEffect(() => {
-  //     if (profileData !== null) {
-  //       profileContext.setProfilesData({ UUID: playerUUID, profilesArray: profileData.profiles });
-  //       setGodPotionEnabled(true);
-  //     }
-  //     parseProfile();
-  //   }, [profileData]);
 
   const changeProfile = async (profile) => {
     profileContext.buildProfile(profile);
@@ -241,8 +151,8 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
       <div style={{ height: "100vh" }}>
         <div className='InfoBar'>
           <div className='InfoBar-PlayerInfo'>
-            <div>{`${profileData.name && profileData.hypixelProfiles ? profileName : "Default-Profile"} `}</div>
-            {profileData.name && profileData.hypixelProfiles && (
+            <div>{`${playerName} `}</div>
+            {profileContext.profiles.length > 0 && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>On </div>
                 <div className={"InfoBar-Cutename"}>
