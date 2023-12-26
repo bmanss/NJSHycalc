@@ -14,8 +14,9 @@ import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 import { useRouter } from "next/navigation";
-import InfoBarStyles from '../styles/InfoBar.module.scss'
-import StatBarStyles from '../styles/StatDisplays.module.scss'
+import InfoBarStyles from "../styles/InfoBar.module.scss";
+import StatBarStyles from "../styles/StatDisplays.module.scss";
+import { Suspense } from "react";
 
 const Profile = ({ sortedItems, data, profileData }) => {
   const router = useRouter();
@@ -77,7 +78,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
   const navigateProfile = (player) => {
     router.push(`/profile/${player}`);
   };
-  
+
   const loadDefault = () => {
     // setPlayerName("Default-Profile");
     // profileContext.setProfilesData({ UUID: null, profilesArray: null });
@@ -140,17 +141,17 @@ const Profile = ({ sortedItems, data, profileData }) => {
   return (
     <div>
       <div style={{ height: "100vh" }}>
-        <div className={InfoBarStyles['InfoBar']}>
-          <div className={InfoBarStyles['InfoBar-PlayerInfo']}>
+        <div className={InfoBarStyles["InfoBar"]}>
+          <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>
             <div>{`${playerName} `}</div>
             {profileContext.profiles.length > 0 && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>On </div>
                 <div className={InfoBarStyles["InfoBar-Cutename"]}>
                   {profileContext.profileState.activeProfile}
-                  <div className={InfoBarStyles['InfoBar-Cutename-Dropdown']}>
+                  <div className={InfoBarStyles["InfoBar-Cutename-Dropdown"]}>
                     {profileContext.profiles.map((profile) => (
-                      <div key={profile} onMouseDown={() => changeProfile(profile)} className={InfoBarStyles['InfoBar-Cutename-Dropdown-item']}>
+                      <div key={profile} onMouseDown={() => changeProfile(profile)} className={InfoBarStyles["InfoBar-Cutename-Dropdown-item"]}>
                         {profile}
                       </div>
                     ))}
@@ -164,20 +165,20 @@ const Profile = ({ sortedItems, data, profileData }) => {
             <input
               placeholder='Player Profile'
               value={playerSearch}
-              className={InfoBarStyles['InfoBar-Player-Search']}
+              className={InfoBarStyles["InfoBar-Player-Search"]}
               type='text'
               onChange={(e) => setPlayerSearch(e.target.value.trim())}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && playerSearch) navigateProfile(playerSearch);
               }}></input>
             <button
-              className={InfoBarStyles['InfoBar-Player-Search-button']}
+              className={InfoBarStyles["InfoBar-Player-Search-button"]}
               onClick={() => {
                 playerSearch && navigateProfile(playerSearch);
               }}>
               Load
             </button>
-            <button className={InfoBarStyles['InfoBar-Player-Search-button']} onClick={loadDefault}>
+            <button className={InfoBarStyles["InfoBar-Player-Search-button"]} onClick={loadDefault}>
               Default
             </button>
             <span style={{ color: "red" }}>{errorMessage}</span>
@@ -185,15 +186,15 @@ const Profile = ({ sortedItems, data, profileData }) => {
         </div>
         <div style={{ height: "100%" }}>
           <div style={{ display: "flex", height: "100%" }}>
-            <div className={StatBarStyles['StatsBar']}>
-              <div className={StatBarStyles['StatsBar-Header']}>Stats:</div>
+            <div className={StatBarStyles["StatsBar"]}>
+              <div className={StatBarStyles["StatsBar-Header"]}>Stats:</div>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-                <span className={StatBarStyles['StatToggle']}>
+                <span className={StatBarStyles["StatToggle"]}>
                   <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
                   <label htmlFor='checkbox'></label>
                 </span>
               </div>
-              <div className={StatBarStyles['StatsBar-ItemGroup']}>
+              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
                 <div>God Potion</div>
                 <div
                   className='enabledBox'
@@ -201,7 +202,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   onClick={handleGodPotion}
                 />
               </div>
-              <div className={StatBarStyles['StatsBar-ItemGroup']}>
+              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
                 <span>PowerStone: </span>
                 <SearchBox
                   maxWidth={"155px"}
@@ -219,10 +220,10 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
                 </span>
               ))}
-              <div className={StatBarStyles['StatsBar-Header']} style={{ marginTop: "10px" }}>
+              <div className={StatBarStyles["StatsBar-Header"]} style={{ marginTop: "10px" }}>
                 Damage Stats:
               </div>
-              <div className={StatBarStyles['StatsBar-ItemGroup']}>
+              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
                 <span>Target Mob</span>
                 <SearchBox
                   maxWidth={"155px"}
@@ -270,18 +271,14 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   Combat Gear
                 </span>
               </div>
-              {profileLoading ? (
-                <div style={{ color: "white", display: "flex", justifyContent: "center", alignItems: "center", height: "75%" }}>Loading</div>
-              ) : (
-                <div>
-                  {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
-                  {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
-                  {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
-                  {navDisplay.baseStats && <PlayerStats />}
-                  {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
-                  {navDisplay.collections && <PlayerCollections />}
-                </div>
-              )}
+              <div>
+                {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
+                {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
+                {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
+                {navDisplay.baseStats && <PlayerStats />}
+                {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
+                {navDisplay.collections && <PlayerCollections />}
+              </div>
             </div>
           </div>
         </div>
