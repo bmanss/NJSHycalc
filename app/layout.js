@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "./globals.scss";
+import "./styles/globals.scss";
 import { ProfileProvider } from "./context/ProfileContext";
 const inter = Inter({ subsets: ["latin"] });
 
