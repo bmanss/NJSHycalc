@@ -16,11 +16,11 @@
     "next": "14.0.4",
     "pako": "^2.1.0",
     "react": "^18",
-    "react-dom": "^18",
-    "sass": "^1.69.5"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "14.0.4"
+    "eslint-config-next": "14.0.4",
+    "sass": "^1.69.5"
   }
 }
