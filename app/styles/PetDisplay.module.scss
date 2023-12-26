@@ -1,0 +1,14 @@
+.petDisplay {
+    font-size: 14px;
+    background: black;
+    color: #dfdfdf;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-transform: capitalize;
+    height: fit-content;
+    width: 300px;
+  }

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import { trackedStats, statAlias } from "../constants/trackedStats";
 import { armorStatColor } from "../constants/colors";
@@ -11,6 +11,9 @@ import SearchBox from "./SearchBox";
 import { useProfileContext } from "../context/ProfileContext";
 import { ProfileActions } from "../context/ProfileContext";
 import { setNewPet, getPetStats } from "../lib/ProfileFunctions";
+import petStyles from "../styles/PetDisplay.module.scss";
+import itemCardStyles from "../styles/ItemCard.module.scss";
+
 const PetDisplay = () => {
   const profileContext = useProfileContext();
   const pet = profileContext.getGearPiece("pet");
@@ -29,7 +32,7 @@ const PetDisplay = () => {
     handlePetChange({ ...pet, abilities: pet.abilities });
   };
   return (
-    <div className='petDisplay' style={{borderColor:rarityColor[pet.tier]}}>
+    <div className={petStyles.petDisplay} style={{ borderColor: rarityColor[pet.tier] }}>
       <div className='minecraft-text' style={{ marginBottom: "5px" }}>
         PET
       </div>
@@ -47,7 +50,7 @@ const PetDisplay = () => {
         <span>
           <span>Rarity: </span>
           <select
-            className='itemCard-items-dropdown'
+            className={itemCardStyles['itemCard-items-dropdown']}
             value={pet.tier ?? "COMMON"}
             onChange={(e) => handlePetChange({ ...pet, tier: e.target.value })}>
             {tiers.slice(tiers.indexOf(pet.minRarity), tiers.indexOf(pet.maxRarity) + 1).map((tier) => (

@@ -18,10 +18,10 @@ export const PlayerCollections = () => {
       {Object.entries(profileContext.getCollections()).map(([category, collections]) => (
         <div key={category}>
           <span className='CollectionDisplay-Category'>{category.toLowerCase()}</span>
-          <div className='SkillsDisplay'>
+          <div className='TwoColumnGrid'>
             {Object.entries(collections).map(([collection, info]) => (
-              <span key={`${collection}-${info.amount}`} className='SkillsDisplay-ItemGroup'>
-                <span className='SkillsDisplay-Skill'>{collection.replaceAll("_", " ")} </span>
+              <span key={`${collection}-${info.amount}`} className='ItemWithCounter'>
+                <span>{collection.replaceAll("_", " ")} </span>
                 <InputCounter
                   inputWidth={"100px"}
                   value={parseInt(info.amount)}

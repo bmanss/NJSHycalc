@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Image from 'next/image';
+import styles from '../styles/InputCounter.module.scss'
 
 export const InputCounter = ({ value, onChange, min, max, inputWidth, floating, precision, step }) => {
   const [counterValue, setCounterValue] = useState(() => {
@@ -33,7 +34,7 @@ export const InputCounter = ({ value, onChange, min, max, inputWidth, floating, 
   }
 
   return (
-    <span className='inputCounter'>
+    <span className={styles['inputCounter']}>
       <input
         style={{ width: inputWidth && inputWidth }}
         value={counterValue}

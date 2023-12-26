@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { rarityColor } from "../constants/colors";
 import { tiers } from "../lib/ProfileFunctions";
+import styles from '../styles/SearchBox.module.scss'
 
 const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder, inputFontSize, maxWidth }) => {
   const item = selectedItem || itemList[0];
@@ -133,7 +134,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
 
   return (
     <div
-      className='SearchBox'
+      className={styles['SearchBox']}
       style={{ maxWidth: maxWidth && maxWidth }}
       onKeyDown={(e) => {
         handleKeyNavigation(e);
@@ -141,7 +142,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
       <div style={{ display: "flex", alignItems: "center" }}>
         <input
           type='text'
-          className='SearchBox-Input'
+          className={styles['SearchBox-Input']}
           onMouseDown={handleSearchBoxClick}
           onKeyDown={handleKeyDown}
           readOnly={!inputFocusedRef.current}
@@ -159,7 +160,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           tabIndex={0}
           onMouseDown={handleIndicatorClick}
           onBlur={() => handleFocusLost(indicatorFocusedRef)}
-          className='SearchBox-Dropdown-Indicator'>
+          className={styles['SearchBox-Dropdown-Indicator']}>
           {dropDownVisible ? "-" : "+"}
         </span>
       </div>
@@ -173,12 +174,12 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
             handleFocusLost(dropdownFocusedRef);
           }}
           tabIndex={0}
-          className='SearchBox-Dropdown'
+          className={styles['SearchBox-Dropdown']}
           ref={scrollRef}>
           {displayItems.map((item, index) => (
             <li
               onClick={() => handleItemSelect(index)}
-              className='SearchBox-Dropdown-item'
+              className={styles['SearchBox-Dropdown-item']}
               onMouseMoveCapture={() => setActiveIndex(index)}
               style={{ color: rarityColor[item.tier] ?? "white", backgroundColor: index === activeIndex && "rgb(32, 113, 124)" }}
               key={index}>

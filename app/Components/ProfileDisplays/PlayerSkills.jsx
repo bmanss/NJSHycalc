@@ -21,10 +21,10 @@ export const PlayerSkills = ({skillCaps}) => {
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: { ...updatedState } });
   };
   return (
-    <div className='SkillsDisplay'>
+    <div className='TwoColumnGrid'>
       {Object.entries(profileContext.getSkills()).map(([skill, level]) => (
-        <span key={`${skill}-${level}`} className='SkillsDisplay-ItemGroup'>
-          <span className='SkillsDisplay-Skill' key={skill}>
+        <span key={`${skill}-${level}`} className='ItemWithCounter'>
+          <span key={skill}>
             {skill.replaceAll("_", " ").toLowerCase()}{" "}
           </span>
           <InputCounter

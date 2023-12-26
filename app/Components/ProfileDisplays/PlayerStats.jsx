@@ -6,6 +6,7 @@ import InputCounter from "../InputCounter";
 import { statAlias } from "../../constants/trackedStats";
 import { addStats, removeStats, getPowerstoneStats } from "../../lib/ProfileFunctions";
 import { ProfileActions } from "../../context/ProfileContext";
+import styles from '../../styles/StatDisplays.module.scss'
 
 export const PlayerStats = () => {
   const profileContext = useProfileContext();
@@ -38,12 +39,12 @@ export const PlayerStats = () => {
     <div style={{ display: "flex", flexDirection: "column", rowGap: "5px" }}>
       <div>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <span className='SkillsDisplay-Category'>Base Stats: </span>
+          <span className={styles['Stat-Category']}>Base Stats: </span>
         </div>
-        <div className='BaseStats'>
+        <div className={styles['BaseStats']}>
           {Object.entries(trackedStats).map(([stat]) => (
-            <span key={`${stat}`} className='StatsBar-ItemGroup'>
-              <span className='StatsBar-Stat' style={{ color: trackedStats[stat].color ?? "white" }}>
+            <span key={`${stat}`} className={styles['StatsBar-ItemGroup']}>
+              <span className={styles['StatsBar-Stat']} style={{ color: trackedStats[stat].color ?? "white" }}>
                 {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : stat.replaceAll("_", " ").toLowerCase()}:{" "}
               </span>
               <InputCounter
@@ -57,8 +58,8 @@ export const PlayerStats = () => {
               />
             </span>
           ))}
-          <span key={`stat-MagicalPower`} className='StatsBar-ItemGroup'>
-            <span className='StatsBar-Stat' style={{ color: "white" }}>
+          <span key={`stat-MagicalPower`} className={styles['StatsBar-ItemGroup']}>
+            <span className={styles['StatsBar-Stat']} style={{ color: "white" }}>
               {" "}
               Magical Power:{" "}
             </span>
@@ -73,11 +74,11 @@ export const PlayerStats = () => {
         </div>
       </div>
       <div>
-        <span className='SkillsDisplay-Category'>Additional Stat Multipliers: </span>
-        <div className='BaseStats'>
+        <span className={styles['Stat-Category']}>Additional Stat Multipliers: </span>
+        <div className={styles['BaseStats']}>
           {Object.entries(profileContext.getStatMultipliers()).map(([stat, statValue]) => (
-            <span key={`${stat}-multi`} className='StatsBar-ItemGroup'>
-              <span className='StatsBar-Stat' style={{ color: trackedStats[stat].color ?? "white" }}>
+            <span key={`${stat}-multi`} className={styles['StatsBar-ItemGroup']}>
+              <span className={styles['StatsBar-Stat']} style={{ color: trackedStats[stat].color ?? "white" }}>
                 {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : stat.replaceAll("_", " ").toLowerCase()}:{" "}
               </span>
               <InputCounter
@@ -95,10 +96,10 @@ export const PlayerStats = () => {
         </div>
       </div>
       <div>
-        <span className='SkillsDisplay-Category'>Additional Damage Multipliers: </span>
-        <div className='BaseStats'>
-          <div className='SkillsDisplay-ItemGroup'>
-            <span className='StatsBar-Stat'>Normal Base Multi: </span>
+        <span className={styles['Stat-Category']}>Additional Damage Multipliers: </span>
+        <div className={styles['BaseStats']}>
+          <div className='ItemWithCounter'>
+            <span className={styles['StatsBar-Stat']}>Normal Base Multi: </span>
             <InputCounter
               floating={true}
               precision={3}
@@ -110,8 +111,8 @@ export const PlayerStats = () => {
               onChange={(value) => handleDamageMultiChange("regularBaseMulti", value)}
             />
           </div>
-          <div className='SkillsDisplay-ItemGroup'>
-            <span className='StatsBar-Stat'>Normal Post Multi: </span>
+          <div className='ItemWithCounter'>
+            <span className={styles['StatsBar-Stat']}>Normal Post Multi: </span>
             <InputCounter
               floating={true}
               precision={3}
@@ -122,8 +123,8 @@ export const PlayerStats = () => {
               onChange={(value) => handleDamageMultiChange("regularPostMulti", value)}
             />
           </div>
-          <div className='SkillsDisplay-ItemGroup'>
-            <span className='StatsBar-Stat'>Magic Base Multi: </span>
+          <div className='ItemWithCounter'>
+            <span className={styles['StatsBar-Stat']}>Magic Base Multi: </span>
             <InputCounter
               floating={true}
               precision={3}
@@ -134,8 +135,8 @@ export const PlayerStats = () => {
               onChange={(value) => handleDamageMultiChange("magicBaseMulti", value)}
             />
           </div>
-          <div className='SkillsDisplay-ItemGroup'>
-            <span className='StatsBar-Stat'>Magic Post Multi: </span>
+          <div className='ItemWithCounter'>
+            <span className={styles['StatsBar-Stat']}>Magic Post Multi: </span>
             <InputCounter
               floating={true}
               precision={3}

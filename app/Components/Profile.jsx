@@ -1,10 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import { fetchUUID } from "../LocalTesting/fetchUUID";
-import { fetchUUID } from "../lib/Util";
 import * as ProfilesFunctions from "../lib/ProfileFunctions";
-import { useRef } from "react";
 import SearchBox from "./SearchBox";
 import { powerstoneList } from "../constants/powerstones";
 import { mobList } from "../constants/mobs";
@@ -18,13 +14,13 @@ import { PlayerStats } from "./ProfileDisplays/PlayerStats";
 import { PlayerSkills } from "./ProfileDisplays/PlayerSkills";
 import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 import { useRouter } from "next/navigation";
+import InfoBarStyles from '../styles/InfoBar.module.scss'
+import StatBarStyles from '../styles/StatDisplays.module.scss'
 
-const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => {
+const Profile = ({ sortedItems, data, profileData }) => {
   const router = useRouter();
   const profileContext = useProfileContext();
-  const [playerUUID, setUUID] = useState("");
   const [playerName, setPlayerName] = useState(profileData.name || "Default-Profile");
-  //   const [profileData, setProfileData] = useState(null);
   const [navDisplay, setNavDisplay] = useState({
     armor: true,
     baseStats: false,
@@ -34,15 +30,10 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
     combatGear: false,
     active: "armor",
   });
-  //   const { profileName } = useParams();
-  //   const profileName = null;
-  //   const navigate = useNavigate();
   const [profileLoading, setProfileLoading] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
-  //   const skillCaps = useRef(JSON.parse(localStorage.getItem("HypixelData")).skillCaps);
-
   const [godPotionEnabled, setGodPotionEnabled] = useState(() => {
     return false;
   });
@@ -65,16 +56,12 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
     profileContext.setHypixelData(hypixelItems, data.skills, data.collections);
   }, []);
 
-  const navigateProfile = (player) => {
-    router.push(`/profile/${player}`);
-  };
-
+  // handle player data on component load
   useEffect(() => {
-    // if profile name but invalid uuid -> player not found
-    // if valid uuid but no profile data -> unable to get player data
     if (profileData.hypixelProfiles?.profiles) {
       profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
       profileContext.buildActiveProfile();
+      setGodPotionEnabled(true);
     } else {
       loadDefault();
       setPlayerName("Default-Profile");
@@ -87,6 +74,10 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
     }
   }, []);
 
+  const navigateProfile = (player) => {
+    router.push(`/profile/${player}`);
+  };
+  
   const loadDefault = () => {
     // setPlayerName("Default-Profile");
     // profileContext.setProfilesData({ UUID: null, profilesArray: null });
@@ -149,17 +140,17 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
   return (
     <div>
       <div style={{ height: "100vh" }}>
-        <div className='InfoBar'>
-          <div className='InfoBar-PlayerInfo'>
+        <div className={InfoBarStyles['InfoBar']}>
+          <div className={InfoBarStyles['InfoBar-PlayerInfo']}>
             <div>{`${playerName} `}</div>
             {profileContext.profiles.length > 0 && (
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div>On </div>
-                <div className={"InfoBar-Cutename"}>
+                <div className={InfoBarStyles["InfoBar-Cutename"]}>
                   {profileContext.profileState.activeProfile}
-                  <div className='InfoBar-Cutename-Dropdown'>
+                  <div className={InfoBarStyles['InfoBar-Cutename-Dropdown']}>
                     {profileContext.profiles.map((profile) => (
-                      <div key={profile} onMouseDown={() => changeProfile(profile)} className='InfoBar-Cutename-Dropdown-item'>
+                      <div key={profile} onMouseDown={() => changeProfile(profile)} className={InfoBarStyles['InfoBar-Cutename-Dropdown-item']}>
                         {profile}
                       </div>
                     ))}
@@ -173,20 +164,20 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
             <input
               placeholder='Player Profile'
               value={playerSearch}
-              className='InfoBar-Player-Search'
+              className={InfoBarStyles['InfoBar-Player-Search']}
               type='text'
               onChange={(e) => setPlayerSearch(e.target.value.trim())}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && playerSearch) navigateProfile(playerSearch);
               }}></input>
             <button
-              className='InfoBar-Player-Search-button'
+              className={InfoBarStyles['InfoBar-Player-Search-button']}
               onClick={() => {
                 playerSearch && navigateProfile(playerSearch);
               }}>
               Load
             </button>
-            <button className='InfoBar-Player-Search-button' onClick={loadDefault}>
+            <button className={InfoBarStyles['InfoBar-Player-Search-button']} onClick={loadDefault}>
               Default
             </button>
             <span style={{ color: "red" }}>{errorMessage}</span>
@@ -194,15 +185,15 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
         </div>
         <div style={{ height: "100%" }}>
           <div style={{ display: "flex", height: "100%" }}>
-            <div className='StatsBar'>
-              <div className='StatsBar-Header'>Stats:</div>
+            <div className={StatBarStyles['StatsBar']}>
+              <div className={StatBarStyles['StatsBar-Header']}>Stats:</div>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-                <span className='StatToggle'>
+                <span className={StatBarStyles['StatToggle']}>
                   <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
                   <label htmlFor='checkbox'></label>
                 </span>
               </div>
-              <div className='StatsBar-ItemGroup'>
+              <div className={StatBarStyles['StatsBar-ItemGroup']}>
                 <div>God Potion</div>
                 <div
                   className='enabledBox'
@@ -210,7 +201,7 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
                   onClick={handleGodPotion}
                 />
               </div>
-              <div className='StatsBar-ItemGroup'>
+              <div className={StatBarStyles['StatsBar-ItemGroup']}>
                 <span>PowerStone: </span>
                 <SearchBox
                   maxWidth={"155px"}
@@ -228,10 +219,10 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
                   <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
                 </span>
               ))}
-              <div className='StatsBar-Header' style={{ marginTop: "10px" }}>
+              <div className={StatBarStyles['StatsBar-Header']} style={{ marginTop: "10px" }}>
                 Damage Stats:
               </div>
-              <div className='StatsBar-ItemGroup'>
+              <div className={StatBarStyles['StatsBar-ItemGroup']}>
                 <span>Target Mob</span>
                 <SearchBox
                   maxWidth={"155px"}
@@ -287,7 +278,7 @@ const Profile = ({ sortedItems, skillCaps, data, profileName, profileData }) => 
                   {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
                   {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
                   {navDisplay.baseStats && <PlayerStats />}
-                  {navDisplay.skills && <PlayerSkills skillCaps={skillCaps} />}
+                  {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
                   {navDisplay.collections && <PlayerCollections />}
                 </div>
               )}
