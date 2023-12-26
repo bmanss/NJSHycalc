@@ -8,30 +8,6 @@ import { Buffer } from "buffer";
 import { firebaseConfig } from "../firestoreConfig.js";
 import { loreColors } from "../constants/colors.js";
 
-export async function fetchUUID(username) {
-  
-  const url = `https://api.mojang.com/users/profiles/minecraft/${username}`;
-  // const url = `/mojang/uuid/${username}`;
-  const response = await fetch(url);
-  console.log(response);
-  const data = await response.json();
-  
-  return data;
-  // try {
-  //   const response = await fetch(url);
-
-  //   if (!response.ok) {
-  //     // Handle non-successful response (e.g., 404 Not Found)
-  //     throw new Error(`Request failed with status ${response.status}`);
-  //   }
-
-  //   const data = await response.json();
-  //   return data;
-  // } catch (error) {
-  //   throw error;
-  // }
-}
-
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {
     nbt.parse(Pako.ungzip(Buffer.from(encodedData, "base64"), { to: "Uint8Array" }), (err, data) => {
@@ -138,52 +114,12 @@ export async function getHypixelData() {
     skillCaps.CATACOMBS = 50;
 
     hypixelData.skillCaps = skillCaps;
-    // localStorage.setItem("HypixelData", JSON.stringify(hypixelData));
-    // localStorage.setItem("lastLoad", Date.now());
     return hypixelData;
   } catch (err) {
     console.error("Error fetching JSON data:", err);
     throw err;
   }
 }
-
-// export async function cacheHypixelData() {
-//   try {
-//     const fireStoreApp = initializeApp(firebaseConfig);
-//     const firestoreDB = getFirestore(fireStoreApp);
-//     const itemSnapshot = await getDocs(collection(firestoreDB, "items"));
-//     const skillsSnapshot = await getDocs(collection(firestoreDB, "skills"));
-//     const collectionsSnapshot = await getDocs(collection(firestoreDB, "collections"));
-//     const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
-//     itemSnapshot.forEach((doc) => {
-//       hypixelData[doc.id] = doc.data();
-//     });
-//     skillsSnapshot.forEach((doc) => {
-//       hypixelData.skills[doc.id] = doc.data();
-//     });
-//     collectionsSnapshot.forEach((doc) => {
-//       hypixelData.collections[doc.id] = doc.data();
-//     });
-
-//     // close connection because data will be cached in local storage and connection is no longer needed
-//     terminate(firestoreDB);
-
-//     const skillCaps = {};
-//     for (const skill of Object.keys(hypixelData.skills)) {
-//       skillCaps[skill] = hypixelData.skills[skill].maxLevel;
-//     }
-//     skillCaps.CATACOMBS = 50;
-
-//     hypixelData.skillCaps = skillCaps;
-
-//     localStorage.setItem("HypixelData", JSON.stringify(hypixelData));
-//     localStorage.setItem("lastLoad", Date.now());
-
-//   } catch (err) {
-//     console.error("Error fetching JSON data:", err);
-//     throw err;
-//   }
-// }
 
 export function parseLore(loreString, key) {
   const lines = loreString.split("\n");
