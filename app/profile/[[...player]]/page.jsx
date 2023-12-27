@@ -1,5 +1,5 @@
 import React from "react";
-// import { getHypixelData } from "../lib/Util.jsx";
+import { getHypixelData } from "@/app/lib/Util";
 import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
@@ -8,12 +8,19 @@ import admin from "firebase-admin";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
-serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
 serviceAccount.client_email = process.env.CLIENT_EMAIL;
 serviceAccount.client_id = process.env.CLIENT_ID;
 
 const fetchedProilfes = {};
+
+let hypixelData = null;
+
 const page = async ({ params }) => {
+
+  if (hypixelData === null) hypixelData = await getHypixelData();
+
+  // const hypixelData = await cacheHypixelData();
   if (!admin.apps.length) {
     // Initialize Firebase Admin SDK only if it's not already initialized
     admin.initializeApp({
@@ -23,8 +30,7 @@ const page = async ({ params }) => {
 
   const firestoreDB = admin.firestore();
 
-  // const hypixelData = await getHypixelData();
-  const hypixelData = await cacheHypixelData();
+  // const hypixelData = await cacheHypixelData();
   const profileName = params?.player;
 
   // // fetch UUID if player name is specified
@@ -34,14 +40,13 @@ const page = async ({ params }) => {
   const UUID = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
 
   // // fetch hypixel profile data if UUID is valid
-  const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID ?? ''}`;
+  const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID ?? ""}`;
 
   let hypixelProfileData = null;
   // check if local cached should be used to return the data
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
-  } 
-  else if (UUID) {
+  } else if (UUID) {
     hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
@@ -94,7 +99,7 @@ const page = async ({ params }) => {
 
   return (
     <div>
-      <Profile profileData={profileData} profileName={profileName} data={hypixelData} sortedItems={sortedItems} skillCaps={hypixelData.skillCaps} />
+      <Profile profileData={profileData} data={hypixelData} sortedItems={sortedItems} />
     </div>
   );
 };
