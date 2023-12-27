@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import LoadingStyles from "./loading.module.scss";
 import StatBarStyles from "../../styles/StatDisplays.module.scss";
