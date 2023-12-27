@@ -30,8 +30,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
     combatGear: false,
     active: "armor",
   });
-  const [profileLoading, setProfileLoading] = useState(true);
-
   const [errorMessage, setErrorMessage] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
   const [godPotionEnabled, setGodPotionEnabled] = useState(() => {
@@ -72,7 +70,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
         setErrorMessage("");
       }, 1500);
     }
-    setProfileLoading(false);
   }, []);
 
   const navigateProfile = (player) => {
@@ -264,18 +261,12 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   Combat Gear
                 </span>
               </div>
-              {profileLoading ? (
-                <div style={{ backgroundColor: "red" }}>Loading</div>
-              ) : (
-                <div>
-                  {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
-                  {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
-                  {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
-                  {navDisplay.baseStats && <PlayerStats />}
-                  {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
-                  {navDisplay.collections && <PlayerCollections />}
-                </div>
-              )}
+              {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
+              {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
+              {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
+              {navDisplay.baseStats && <PlayerStats />}
+              {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
+              {navDisplay.collections && <PlayerCollections />}
             </div>
           </div>
         </div>
