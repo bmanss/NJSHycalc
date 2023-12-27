@@ -15,7 +15,7 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 const fetchedProilfes = {};
 
 let hypixelData = null;
-
+let sortedItems = null;
 const page = async ({ params }) => {
 
   if (hypixelData === null) hypixelData = await getHypixelData();
@@ -95,7 +95,9 @@ const page = async ({ params }) => {
     });
     return sortedItems;
   };
-  const sortedItems = await sortItem();
+
+
+  sortedItems = sortedItems || await sortItem();
 
   return (
     <div>
