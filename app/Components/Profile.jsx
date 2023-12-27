@@ -16,7 +16,6 @@ import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 import { useRouter } from "next/navigation";
 import InfoBarStyles from "../styles/InfoBar.module.scss";
 import StatBarStyles from "../styles/StatDisplays.module.scss";
-import { Suspense } from "react";
 
 const Profile = ({ sortedItems, data, profileData }) => {
   const router = useRouter();
@@ -31,7 +30,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
     combatGear: false,
     active: "armor",
   });
-  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
@@ -73,6 +72,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
         setErrorMessage("");
       }, 1500);
     }
+    setProfileLoading(false);
   }, []);
 
   const navigateProfile = (player) => {
@@ -242,13 +242,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
                 First Strike Crit: {parseFloat(profileContext.getFinalStats().hitValues?.firstStrikeCrit?.toFixed(2)).toLocaleString() ?? 0}
               </span>
               <span> Ability: {parseFloat(profileContext.getFinalStats().hitValues?.magic?.toFixed(2)).toLocaleString() ?? 0}</span>
-              {/* Special case for lion pet **no longer applicable since 0.19.8**  */}
-              {/* {profileContext.getFinalStats().hitValues?.magic !== profileContext.getFinalStats().hitValues?.magicFirstStrike && (
-                <span>
-                  {" "}
-                  Ability First Strike: {parseFloat(profileContext.getFinalStats().hitValues?.magicFirstStrike?.toFixed(2)).toLocaleString() ?? 0}
-                </span>
-              )} */}
             </div>
             <div className='ContentContainer'>
               <div className='ContentNav'>
@@ -271,14 +264,18 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   Combat Gear
                 </span>
               </div>
-              <div>
-                {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
-                {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
-                {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
-                {navDisplay.baseStats && <PlayerStats />}
-                {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
-                {navDisplay.collections && <PlayerCollections />}
-              </div>
+              {profileLoading ? (
+                <div style={{ backgroundColor: "red" }}>Loading</div>
+              ) : (
+                <div>
+                  {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
+                  {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
+                  {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
+                  {navDisplay.baseStats && <PlayerStats />}
+                  {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
+                  {navDisplay.collections && <PlayerCollections />}
+                </div>
+              )}
             </div>
           </div>
         </div>
