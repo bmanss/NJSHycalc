@@ -4,6 +4,7 @@ import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
+
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
