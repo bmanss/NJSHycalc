@@ -1,11 +1,9 @@
 import { Suspense } from "react";
-import LoadingTemp from "./LoadingTemp";
+import { ProfileProvider } from "@/app/context/ProfileContext";
 export default function Layout({ children }) {
   return (
     <>
-      <Suspense fallback={<LoadingTemp />}>
-        <main>{children}</main>
-      </Suspense>
+      <ProfileProvider>{children}</ProfileProvider>
     </>
   );
 }
