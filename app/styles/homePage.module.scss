@@ -1,0 +1,65 @@
+.main {
+  height: 100vh;
+  width: 100vw;
+  padding: 10px;
+}
+
+.headerText {
+  font-weight: bold;
+  color: rgb(0, 185, 185);
+  display: flex;
+  justify-content: center;
+}
+
+.profileSearch {
+  display: flex;
+  padding: 50px 0;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0px auto;
+  border-radius: 10px;
+  width: 50%;
+  input {
+    text-align: center;
+    font-size: 30px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid rgb(80, 80, 80);
+    border-radius: 5px;
+    outline: none;
+    color: white;
+    background-color: transparent;
+  }
+
+  button {
+    padding: 5px;
+    font-size: 25px;
+    border: 1px solid rgb(80, 80, 80);
+    border-radius: 5px;
+    width: 100%;
+    outline: none;
+    background-color: rgb(12, 80, 107);
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover,
+  input:hover,
+  input:focus {
+    border-color: aqua;
+  }
+}
+
+@media (max-width: 768px) {
+    .profileSearch{
+        width: 90%;
+    }
+}
+
+.displayGear{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
