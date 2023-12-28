@@ -1,8 +1,9 @@
 import { Suspense } from "react";
+import LoadingTemp from "./LoadingTemp";
 export default function Layout({ children }) {
   return (
     <>
-      <Suspense fallback={<p style={{backgroundColor:'red',width:'200px'}}> I am loadin</p>}>
+      <Suspense fallback={<LoadingTemp />}>
         <main>{children}</main>
       </Suspense>
     </>
