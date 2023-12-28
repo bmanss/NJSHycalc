@@ -1,8 +1,8 @@
 import React from "react";
-import LoadingStyles from "./styles/loading.module.scss";
-import StatBarStyles from "./styles/StatDisplays.module.scss";
-import ItemCardStyles from "./styles/ItemCard.module.scss";
-import InfoBarStyles from "./styles/InfoBar.module.scss"
+import LoadingStyles from "../../styles/loading.module.scss";
+import StatBarStyles from "../../styles/StatDisplays.module.scss";
+import ItemCardStyles from "../../styles/ItemCard.module.scss";
+import InfoBarStyles from "../../styles/InfoBar.module.scss"
 const loading = () => {
   return (
     <div style={{ height: "100vh", color: "white" }}>
