@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { trackedStats, statAlias } from "../constants/trackedStats";
 import { armorStatColor } from "../constants/colors";
 import InputCounter from "./InputCounter";
@@ -14,9 +14,9 @@ import { setNewPet, getPetStats } from "../lib/ProfileFunctions";
 import petStyles from "../styles/PetDisplay.module.scss";
 import itemCardStyles from "../styles/ItemCard.module.scss";
 
-const PetDisplay = () => {
+const PetDisplay = ({ displayOnlyPet }) => {
   const profileContext = useProfileContext();
-  const pet = profileContext.getGearPiece("pet");
+  const pet = displayOnlyPet || profileContext.getGearPiece("pet");
 
   const handlePetChange = (pet) => {
     if (profileContext.getGearPiece("pet").name !== pet.name) {
@@ -37,28 +37,39 @@ const PetDisplay = () => {
         PET
       </div>
       <br />
-      <SearchBox selectedItem={pet} itemList={petList()} onItemChange={(value) => handlePetChange({ ...pet, name: value })} />
+      {displayOnlyPet ? (
+        <span style={{ color: rarityColor[pet.tier] }}>{pet.name}</span>
+      ) : (
+        <SearchBox selectedItem={pet} itemList={petList()} onItemChange={(value) => handlePetChange({ ...pet, name: value })} />
+      )}
+
       <div style={{ marginLeft: "5px" }}>
         <div className='flex-row' style={{ alignItems: "center" }}>
           <span>Level: </span>
           <InputCounter
             value={pet.level}
+            isStatic={displayOnlyPet ? true : false}
             min={1}
             max={pet.name === "GOLDEN DRAGON" ? 200 : 100}
-            onChange={(value) => handlePetChange({ ...pet, level: value })}></InputCounter>
+            onChange={(value) => handlePetChange({ ...pet, level: value })}
+          />
         </div>
         <span>
           <span>Rarity: </span>
-          <select
-            className={itemCardStyles['itemCard-items-dropdown']}
-            value={pet.tier ?? "COMMON"}
-            onChange={(e) => handlePetChange({ ...pet, tier: e.target.value })}>
-            {tiers.slice(tiers.indexOf(pet.minRarity), tiers.indexOf(pet.maxRarity) + 1).map((tier) => (
-              <option style={{ color: "white" }} key={tier} value={tier}>
-                {tier}
-              </option>
-            ))}
-          </select>
+          {displayOnlyPet ? (
+            <span>{pet.tier}</span>
+          ) : (
+            <select
+              className={itemCardStyles["itemCard-items-dropdown"]}
+              value={pet.tier ?? "COMMON"}
+              onChange={(e) => handlePetChange({ ...pet, tier: e.target.value })}>
+              {tiers.slice(tiers.indexOf(pet.minRarity), tiers.indexOf(pet.maxRarity) + 1).map((tier) => (
+                <option style={{ color: "white" }} key={tier} value={tier}>
+                  {tier}
+                </option>
+              ))}
+            </select>
+          )}
         </span>
         <div>
           {Object.entries(pet.stats).map(
@@ -98,14 +109,16 @@ const PetDisplay = () => {
               )
           )}
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ paddingBottom: "3px", marginRight: "5px" }}>Item: </div>
-          <SearchBox
-            itemList={petItemsList()}
-            selectedItem={pet.item?.name ?? "none"}
-            onItemChange={(value) => handlePetChange({ ...pet, item: value })}
-          />
-        </div>
+        {!displayOnlyPet && (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ paddingBottom: "3px", marginRight: "5px" }}>Item: </div>
+            <SearchBox
+              itemList={petItemsList()}
+              selectedItem={pet.item?.name ?? "none"}
+              onItemChange={(value) => handlePetChange({ ...pet, item: value })}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

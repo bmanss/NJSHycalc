@@ -13,12 +13,8 @@ import { parseLore } from "../lib/Util";
 import Image from 'next/image';
 import styles from '../styles/ItemCard.module.scss'
 
-const ItemCard = (props) => {
+const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly}) => {
   const profileContext = useProfileContext();
-  const gearPiece = props.gearPiece;
-  const reforgeList = props.reforgeList;
-  const enchantmentList = props.enchantmentList;
-
   const [selectedEnchant, setSelectedEnchant] = useState(enchantmentList && enchantmentList[0]);
   const [enchantMaxLevels, setEnchantMaxLevels] = useState(selectedEnchant && selectedEnchant.maxLevels);
   const [selectedLevel, setSelectedLevel] = useState(1);
@@ -43,22 +39,22 @@ const ItemCard = (props) => {
 
   const addEnchant = () => {
     const updatedEnchants = {
-      ...props.gearPiece.enchantments,
+      ...gearPiece.enchantments,
       [selectedEnchant.name]: selectedLevel,
     };
-    updateModifier(props.gearPiece.category, "enchantments", updatedEnchants);
+    updateModifier(gearPiece.category, "enchantments", updatedEnchants);
   };
   const removeEnchant = () => {
-    if (selectedEnchant.name in props.gearPiece.enchantments) {
+    if (selectedEnchant.name in gearPiece.enchantments) {
       const updatedEnchants = {
-        ...props.gearPiece.enchantments,
+        ...gearPiece.enchantments,
       };
       delete updatedEnchants[selectedEnchant.name];
-      updateModifier(props.gearPiece.category, "enchantments", updatedEnchants);
+      updateModifier(gearPiece.category, "enchantments", updatedEnchants);
     }
   };
   const clearEnchant = () => {
-    updateModifier(props.gearPiece.category, "enchantments", {});
+    updateModifier(gearPiece.category, "enchantments", {});
   };
 
   const handleEnchantChange = (value) => {
@@ -83,7 +79,7 @@ const ItemCard = (props) => {
 
   return (
     <div className={styles['itemCard']} style={{ border: `2px solid ${rarityColor[gearPiece.tier]}` }}>
-      <span className='minecraft-text'>{props.gearPiece.category ?? ""}</span>
+      <span className='minecraft-text'>{gearPiece.category ?? ""}</span>
       <div className='flex-column'>
         <div className='flex-column'>
           {/* Stars Visual*/}
@@ -103,12 +99,14 @@ const ItemCard = (props) => {
             </span>
           )}
           {/* Item list */}
-          <SearchBox
+          {itemList ? (<SearchBox
             recombob={gearPiece.rarityUpgrades}
-            itemList={props.itemList}
-            selectedItem={props.gearPiece}
-            onItemChange={(value) => handleGearChange(gearPiece.category, value)}
-          />
+            itemList={itemList}
+            selectedItem={gearPiece}
+            onItemChange={(value) => handleGearChange(gearPiece.categorsy, value)}
+          />) 
+          : <span style={{padding:'3px 0',color:rarityColor[gearPiece.tier] ?? 'white'}}>{gearPiece.name}</span> }
+          
 
           {/* Arrow list if bow */}
           {gearPiece.referenceCategory === "bow" && (
@@ -156,6 +154,7 @@ const ItemCard = (props) => {
               <span style={{ marginRight: "5px", paddingTop: "5px" }}>Stars: </span>
               <InputCounter
                 value={gearPiece.starLevel}
+                isStatic={displayOnly ? true : false}
                 min={0}
                 max={10}
                 onChange={(value) => updateModifier(gearPiece.category, "starLevel", value)}
@@ -168,6 +167,7 @@ const ItemCard = (props) => {
               <span style={{ marginRight: "5px", paddingTop: "5px" }}>Books: </span>
               <InputCounter
                 value={gearPiece.hotPotatoCount}
+                isStatic={displayOnly ? true : false}
                 min={0}
                 max={15}
                 onChange={(value) => updateModifier(gearPiece.category, "hotPotatoCount", value)}
@@ -294,7 +294,7 @@ const ItemCard = (props) => {
                     handleEnchantChange(value);
                   }}
                 />
-                <InputCounter value={selectedLevel} min={1} max={enchantMaxLevels} onChange={(value) => setSelectedLevel(value)} />
+                <InputCounter value={selectedLevel} min={1} isStatic={displayOnly ? true : false} max={enchantMaxLevels} onChange={(value) => setSelectedLevel(value)} />
               </div>
               <div className={styles['itemCard-enchant-buttons']}>
                 <button onClick={addEnchant}>Add</button>
