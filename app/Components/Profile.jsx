@@ -261,12 +261,14 @@ const Profile = ({ sortedItems, data, profileData }) => {
                   Combat Gear
                 </span>
               </div>
-              {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
-              {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
-              {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
-              {navDisplay.baseStats && <PlayerStats />}
-              {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
-              {navDisplay.collections && <PlayerCollections />}
+              <div className='ContentContainer-Display'>
+                {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
+                {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
+                {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
+                {navDisplay.baseStats && <PlayerStats />}
+                {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
+                {navDisplay.collections && <PlayerCollections />}
+              </div>
             </div>
           </div>
         </div>
