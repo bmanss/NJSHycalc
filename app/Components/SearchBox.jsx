@@ -78,7 +78,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   const handleSearchBoxClick = () => {
     if (!inputFocusedRef.current) {
       setDropdownVisible(true);
-      setDisplayItemName("");
+      // setDisplayItemName("");
       inputFocusedRef.current = true;
     }
   };
@@ -152,7 +152,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
             color: !inputFocusedRef.current && rarityColor[tier],
             cursor: dropDownVisible ? "text" : "pointer",
           }}
-          placeholder={actualItem.current !== "" ? placeholder || "Type to search" : "loading"}
+          placeholder={placeholder || "Type to search"}
           value={`${displayItemName.replaceAll("_", " ").toLowerCase()}`}
           onChange={handleInputChange}
         />
