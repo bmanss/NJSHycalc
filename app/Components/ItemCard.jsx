@@ -103,7 +103,7 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
             recombob={gearPiece.rarityUpgrades}
             itemList={itemList}
             selectedItem={gearPiece}
-            onItemChange={(value) => handleGearChange(gearPiece.categorsy, value)}
+            onItemChange={(value) => handleGearChange(gearPiece.category, value)}
           />) 
           : <span style={{padding:'3px 0',color:rarityColor[gearPiece.tier] ?? 'white'}}>{gearPiece.name}</span> }
           
