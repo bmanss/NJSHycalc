@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { rarityColor, armorStatColor, gemCutColor, loreColors } from "../constants/colors";
 import { trackedStats, statAlias } from "../constants/trackedStats";
@@ -10,10 +10,10 @@ import { useProfileContext } from "../context/ProfileContext";
 import { ProfileActions } from "../context/ProfileContext";
 import { createGearPiece, changeGearPiece } from "../lib/ProfileFunctions";
 import { parseLore } from "../lib/Util";
-import Image from 'next/image';
-import styles from '../styles/ItemCard.module.scss'
+import Image from "next/image";
+import styles from "../styles/ItemCard.module.scss";
 
-const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly}) => {
+const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOnly }) => {
   const profileContext = useProfileContext();
   const [selectedEnchant, setSelectedEnchant] = useState(enchantmentList && enchantmentList[0]);
   const [enchantMaxLevels, setEnchantMaxLevels] = useState(selectedEnchant && selectedEnchant.maxLevels);
@@ -64,8 +64,8 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
   };
   const handleGearChange = (category, newID) => {
     const newGearPiece = createGearPiece(profileContext.getGearPiece(category), newID, category);
-    const referenceData = profileContext.getHypixelItem(category,newID);
-    changeGearPiece(profileContext.getGearPiece(category), newGearPiece,referenceData);
+    const referenceData = profileContext.getHypixelItem(category, newID);
+    changeGearPiece(profileContext.getGearPiece(category), newGearPiece, referenceData);
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_PLAYER_GEAR_PIECE, payload: { category: category, newGearPiece: newGearPiece } });
   };
 
@@ -78,7 +78,7 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
   };
 
   return (
-    <div className={styles['itemCard']} style={{ border: `2px solid ${rarityColor[gearPiece.tier]}` }}>
+    <div className={styles["itemCard"]} style={{ border: `2px solid ${rarityColor[gearPiece.tier]}` }}>
       <span className='minecraft-text'>{gearPiece.category ?? ""}</span>
       <div className='flex-column'>
         <div className='flex-column'>
@@ -99,19 +99,21 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
             </span>
           )}
           {/* Item list */}
-          {itemList ? (<SearchBox
-            recombob={gearPiece.rarityUpgrades}
-            itemList={itemList}
-            selectedItem={gearPiece}
-            onItemChange={(value) => handleGearChange(gearPiece.category, value)}
-          />) 
-          : <span style={{padding:'3px 0',color:rarityColor[gearPiece.tier] ?? 'white'}}>{gearPiece.name}</span> }
-          
+          {itemList ? (
+            <SearchBox
+              recombob={gearPiece.rarityUpgrades}
+              itemList={itemList}
+              selectedItem={gearPiece}
+              onItemChange={(value) => handleGearChange(gearPiece.category, value)}
+            />
+          ) : (
+            <span style={{ padding: "3px 0", color: rarityColor[gearPiece.tier] ?? "white" }}>{gearPiece.name}</span>
+          )}
 
           {/* Arrow list if bow */}
           {gearPiece.referenceCategory === "bow" && (
             <span className='flex-row' style={{ alignItems: "center" }}>
-              <span className={styles['ItemCard-properties']} style={{ marginBottom: "3px", marginRight: "5px", marginLeft: "5px" }}>
+              <span className={styles["ItemCard-properties"]} style={{ marginBottom: "3px", marginRight: "5px", marginLeft: "5px" }}>
                 Arrow:{" "}
               </span>
               <SearchBox
@@ -123,19 +125,15 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
           )}
         </div>
         {/* Reforges */}
-        <div className={styles['ItemCard-properties']} style={{ marginLeft: "5px" }}>
-          <div style={{ display: "flex" }}>
-            <span className={styles['ItemCard-stat']}>Reforge:</span>
-            <select
-            className={styles['itemCard-reforge-dropdown']}
-              value={gearPiece.modifier}
-              onChange={(e) => updateModifier(gearPiece.category, "modifier", e.target.value)}>
-              {reforgeList.map((reforge) => (
-                <option key={reforge} value={reforge}>
-                  {reforge}
-                </option>
-              ))}
-            </select>
+        <div className={styles["ItemCard-properties"]} style={{ marginLeft: "5px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span className={styles["ItemCard-stat"]}>Reforge:</span>
+            <SearchBox
+              itemList={reforgeList}
+              placeholder={'Select Reforge'}
+              selectedItem={gearPiece.modifier}
+              onItemChange={(e) => updateModifier(gearPiece.category, "modifier", e)}
+            />
           </div>
           {/* recombob */}
           <div className='flex-row' style={{ alignItems: "center" }}>
@@ -181,20 +179,20 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
                 trackedStats[stat] !== undefined &&
                 value !== 0 && (
                   <div key={stat} className='flex-row'>
-                    <span className={styles['ItemCard-stat']}>{statAlias[stat] ? statAlias[stat] : stat.replaceAll("_", " ").toLowerCase()}: </span>
+                    <span className={styles["ItemCard-stat"]}>{statAlias[stat] ? statAlias[stat] : stat.replaceAll("_", " ").toLowerCase()}: </span>
                     <span style={{ color: armorStatColor[stat] ?? "#00ff1a", marginRight: "5px" }}>{`${value.toFixed(2)}`}</span>
                     {/* potato books stats */}
                     {stat === "HEALTH" && gearPiece.miscStats.HEALTH ? (
-                      <span className={styles['ItemCard-stat']} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.HEALTH})`}</span>
+                      <span className={styles["ItemCard-stat"]} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.HEALTH})`}</span>
                     ) : null}
                     {stat === "DEFENSE" && gearPiece.miscStats.DEFENSE ? (
-                      <span className={styles['ItemCard-stat']} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.DEFENSE})`}</span>
+                      <span className={styles["ItemCard-stat"]} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.DEFENSE})`}</span>
                     ) : null}
                     {stat === "STRENGTH" && gearPiece.miscStats.STRENGTH ? (
-                      <span className={styles['ItemCard-stat']} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.STRENGTH})`}</span>
+                      <span className={styles["ItemCard-stat"]} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.STRENGTH})`}</span>
                     ) : null}
                     {stat === "DAMAGE" && gearPiece.miscStats.DAMAGE ? (
-                      <span className={styles['ItemCard-stat']} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.DAMAGE})`}</span>
+                      <span className={styles["ItemCard-stat"]} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.DAMAGE})`}</span>
                     ) : null}
 
                     {/* Reforge stats additions */}
@@ -217,65 +215,95 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
 
           {/* Gem slots */}
           {gearPiece.gemSlots && (
-            <div className={styles['Itemcard-Gemslots']}>
+            <div className={styles["Itemcard-Gemslots"]}>
               {Object.entries(gearPiece.gemSlots).map(([slotName, properties]) => (
-                <span className={styles['Itemcard-Gemslots-Gem']} key={slotName}>
-                  <span className={styles['Itemcard-Gemslots-Popup']}>
+                <span className={styles["Itemcard-Gemslots-Gem"]} key={slotName}>
+                  <span className={styles["Itemcard-Gemslots-Popup"]}>
                     {gemstoneSlots[properties.type].gems.map((gemType) => (
-                      <div key={`${slotName}${gemType}`} className={styles['Itemcard-Gemslots-Gems-Container']}>
+                      <div key={`${slotName}${gemType}`} className={styles["Itemcard-Gemslots-Gems-Container"]}>
                         <div
-                        className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, undefined, undefined);
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Remove {gemType.toLowerCase()}</div>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-Remove']}>X</div>
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Remove {gemType.toLowerCase()}</div>
+                          <div className={styles["Itemcard-Gemslots-Gem-image-Remove"]}>X</div>
                         </div>
                         <div
-                          className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, gemType, "ROUGH");
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Rough {gemType.toLowerCase()}</div>
-                          <Image height={25} width={25} alt='' className={styles['Itemcard-Gemslots-Gem-image']} src={`/gemstones/rough/${gemType.toLowerCase()}.png`} />
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Rough {gemType.toLowerCase()}</div>
+                          <Image
+                            height={25}
+                            width={25}
+                            alt=''
+                            className={styles["Itemcard-Gemslots-Gem-image"]}
+                            src={`/gemstones/rough/${gemType.toLowerCase()}.png`}
+                          />
                         </div>
                         <div
-                          className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, gemType, "FINE");
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Fine {gemType.toLowerCase()}</div>
-                          <Image height={25} width={25} alt='' className={styles['Itemcard-Gemslots-Gem-image']} src={`/gemstones/fine/${gemType.toLowerCase()}.png`} />
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Fine {gemType.toLowerCase()}</div>
+                          <Image
+                            height={25}
+                            width={25}
+                            alt=''
+                            className={styles["Itemcard-Gemslots-Gem-image"]}
+                            src={`/gemstones/fine/${gemType.toLowerCase()}.png`}
+                          />
                         </div>
                         <div
-                          className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, gemType, "FLAWED");
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Flawed {gemType.toLowerCase()}</div>
-                          <Image height={25} width={25} alt='' className={styles['Itemcard-Gemslots-Gem-image']} src={`/gemstones/flawed/${gemType.toLowerCase()}.png`} />
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawed {gemType.toLowerCase()}</div>
+                          <Image
+                            height={25}
+                            width={25}
+                            alt=''
+                            className={styles["Itemcard-Gemslots-Gem-image"]}
+                            src={`/gemstones/flawed/${gemType.toLowerCase()}.png`}
+                          />
                         </div>
                         <div
-                          className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, gemType, "FLAWLESS");
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Flawless {gemType.toLowerCase()}</div>
-                          <Image height={25} width={25} alt='' className={styles['Itemcard-Gemslots-Gem-image']} src={`/gemstones/flawless/${gemType.toLowerCase()}.png`} />
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawless {gemType.toLowerCase()}</div>
+                          <Image
+                            height={25}
+                            width={25}
+                            alt=''
+                            className={styles["Itemcard-Gemslots-Gem-image"]}
+                            src={`/gemstones/flawless/${gemType.toLowerCase()}.png`}
+                          />
                         </div>
                         <div
-                          className={styles['Itemcard-Gemslots-Gem-image-Container']}
+                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                           onClick={() => {
                             updateGem(slotName, properties.type, gemType, "PERFECT");
                           }}>
-                          <div className={styles['Itemcard-Gemslots-Gem-image-text']}>Perfect {gemType.toLowerCase()}</div>
-                          <Image height={25} width={25} alt='' className={styles['Itemcard-Gemslots-Gem-image']} src={`/gemstones/perfect/${gemType.toLowerCase()}.png`} />
+                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Perfect {gemType.toLowerCase()}</div>
+                          <Image
+                            height={25}
+                            width={25}
+                            alt=''
+                            className={styles["Itemcard-Gemslots-Gem-image"]}
+                            src={`/gemstones/perfect/${gemType.toLowerCase()}.png`}
+                          />
                         </div>
                       </div>
                     ))}
                   </span>
                   <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>[</span>
-                  <span className={styles['Itemcard-Gemslots-Gem-Symbol']} style={{ color: gemstones[properties.gem]?.color ?? "#828282" }}>
+                  <span className={styles["Itemcard-Gemslots-Gem-Symbol"]} style={{ color: gemstones[properties.gem]?.color ?? "#828282" }}>
                     {gemstoneSlots[properties.type].symbol}
                   </span>
                   <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>]</span>
@@ -294,9 +322,15 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
                     handleEnchantChange(value);
                   }}
                 />
-                <InputCounter value={selectedLevel} min={1} isStatic={displayOnly ? true : false} max={enchantMaxLevels} onChange={(value) => setSelectedLevel(value)} />
+                <InputCounter
+                  value={selectedLevel}
+                  min={1}
+                  isStatic={displayOnly ? true : false}
+                  max={enchantMaxLevels}
+                  onChange={(value) => setSelectedLevel(value)}
+                />
               </div>
-              <div className={styles['itemCard-enchant-buttons']}>
+              <div className={styles["itemCard-enchant-buttons"]}>
                 <button onClick={addEnchant}>Add</button>
                 <button onClick={removeEnchant}>Remove</button>
                 <button onClick={clearEnchant}>Clear</button>
@@ -304,12 +338,12 @@ const ItemCard = ({itemList,gearPiece,reforgeList,enchantmentList, displayOnly})
             </div>
           )}
           {/* display enchants on item */}
-          <div className={styles['itemCard-enchant-container']}>
+          <div className={styles["itemCard-enchant-container"]}>
             {gearPiece.enchantments &&
               Object.entries(gearPiece.enchantments).map(([enchant, level], index) => (
                 <span key={enchant}>
                   {index % 2 === 0 && <br />}
-                  <span className={styles['itemCard-enchant']}>{`${enchant.replaceAll("_", " ").toLowerCase()} ${level} `}</span>
+                  <span className={styles["itemCard-enchant"]}>{`${enchant.replaceAll("_", " ").toLowerCase()} ${level} `}</span>
                 </span>
               ))}
           </div>
