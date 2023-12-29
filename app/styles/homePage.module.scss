@@ -2,6 +2,7 @@
   height: 100vh;
   width: 100vw;
   padding: 10px;
+
 }
 
 .headerText {
@@ -19,7 +20,7 @@
   gap: 10px;
   margin: 0px auto;
   border-radius: 10px;
-  width: 50%;
+  width: 60%;
   input {
     text-align: center;
     font-size: 30px;
@@ -39,7 +40,8 @@
     border-radius: 5px;
     width: 100%;
     outline: none;
-    background-color: rgb(12, 80, 107);
+    // background-color:transparent;
+    background-color:rgb(5, 5, 5);
     color: white;
     cursor: pointer;
   }
@@ -51,7 +53,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 650px) {
     .profileSearch{
         width: 90%;
     }

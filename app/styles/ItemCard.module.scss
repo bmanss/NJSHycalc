@@ -11,7 +11,7 @@
 }
 
 .itemCard {
-    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.74);
     color: #dfdfdf;
     border: 2px solid blueviolet;
     border-radius: 10px;
@@ -38,7 +38,7 @@
 
 .itemCard-reforge-dropdown {
     font-size: 14px;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.74);
     color: #dfdfdf;
     text-transform: capitalize;
     padding-bottom: 10px;
@@ -47,9 +47,13 @@
     border-radius: 5px;
 }
 
+.itemCard-reforge-dropdown:focus{
+    background-color: black
+}
+
 .itemCard-items-dropdown {
 
-    background-color: black;
+    background-color: transparent;
     color: #dfdfdf;
     font-family: 'Minecraft', sans-serif;
     text-transform: capitalize;
