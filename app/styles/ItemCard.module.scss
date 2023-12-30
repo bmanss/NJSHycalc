@@ -96,8 +96,9 @@
     margin-right: 12px;
     padding: 5px;
     color: rgb(255, 255, 255);
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .itemCard-enchant-buttons button:hover {
