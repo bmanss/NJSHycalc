@@ -4,8 +4,6 @@ import { ProfileProvider } from "./context/ProfileContext";
 import HomeDisplayItems from "./Components/HomeDisplayItems";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import forestImage from  "../public/forest.png"
-import Image from "next/image";
 export default function Home() {
   const router = useRouter();
   const playerName = useRef(''); 
@@ -25,7 +23,6 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <Image src={forestImage} fill style={{objectFit:'cover',zIndex:'-1'}} placeholder="blur"/>
       <h1 className={styles.headerText}>HyCalc</h1>
       <form className={styles.profileSearch} onSubmit={(e) => loadProfile(e)}>
         <input onChange={(e) => playerName.current = e.target.value} placeholder='Player Name' type='text' />

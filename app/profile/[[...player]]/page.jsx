@@ -4,8 +4,6 @@ import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
-import forestImage from "../../../public/forest.png"
-import Image from "next/image";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -102,7 +100,6 @@ const page = async ({ params }) => {
 
   return (
     <div>
-      <Image src={forestImage} fill style={{objectFit:'cover',zIndex:'-1'}} placeholder="blur"/>
       <Profile profileData={profileData} data={hypixelData} sortedItems={sortedItems} />
     </div>
   );
