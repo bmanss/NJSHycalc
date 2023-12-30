@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body className={inter.className}>
-        {/* <Image src={forestImage} fill style={{ objectFit: "cover", zIndex: "-1" }} placeholder='blur' /> */}
+        <Image src={forestImage} fill style={{ objectFit: "cover", zIndex: "-1" }} placeholder='blur' />
         {children}
       </body>
     </html>
