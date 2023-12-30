@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./styles/globals.scss";
-import forestImage from  "../public/forest.png"
+import forestImage from "../public/forest.png";
 import Image from "next/image";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body className={inter.className}>
-      <Image src={forestImage} fill style={{objectFit:'cover',zIndex:'-1'}}/>
+        <Image src={forestImage} fill style={{ objectFit: "cover", zIndex: "-1" }} placeholder='blur' />
         {children}
       </body>
     </html>
