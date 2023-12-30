@@ -13,11 +13,11 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 
 const fetchedProilfes = {};
 
-let hypixelData =  await getHypixelData();
+let hypixelData = null;
 let sortedItems = null;
 const page = async ({ params }) => {
 
-  // if (hypixelData === null) hypixelData = await getHypixelData();
+  if (hypixelData === null) hypixelData = await getHypixelData();
 
   // const hypixelData = await cacheHypixelData();
   if (!admin.apps.length) {
