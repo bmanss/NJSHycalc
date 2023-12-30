@@ -18,7 +18,7 @@ export default function Home() {
   }
 
   useEffect(() =>{
-    // router.prefetch(`/profile`);
+    router.prefetch(`/profile`);
   },[router])
 
   return (
