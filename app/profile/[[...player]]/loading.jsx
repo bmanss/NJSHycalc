@@ -3,9 +3,12 @@ import LoadingStyles from "../../styles/loading.module.scss";
 import StatBarStyles from "../../styles/StatDisplays.module.scss";
 import ItemCardStyles from "../../styles/ItemCard.module.scss";
 import InfoBarStyles from "../../styles/InfoBar.module.scss"
+import forestImage from "../../../public/forest.png"
+import Image from "next/image";
 const loading = () => {
   return (
     <div style={{ height: "100vh", color: "white" }}>
+      <Image src={forestImage} fill style={{objectFit:'cover',zIndex:'-1'}} placeholder="blur"/>
       <div className={InfoBarStyles["InfoBar"]}>
         <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>Loading Player</div>
       </div>
