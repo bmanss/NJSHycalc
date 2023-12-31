@@ -4,6 +4,7 @@ import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
+import { GET } from "@/app/api/items/route";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -13,11 +14,16 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 
 const fetchedProilfes = {};
 
+// Do something with the data
+// console.log(data);
 let hypixelData = null;
 let sortedItems = null;
 const page = async ({ params }) => {
-
-  if (hypixelData === null) hypixelData = await getHypixelData();
+  if (hypixelData === null) {
+    // hypixelData = await getHypixelData();
+    const response = await GET();
+    hypixelData = await response.json();
+  }
 
   // const hypixelData = await cacheHypixelData();
   if (!admin.apps.length) {
@@ -28,7 +34,6 @@ const page = async ({ params }) => {
   }
 
   const firestoreDB = admin.firestore();
-
   // const hypixelData = await cacheHypixelData();
   const profileName = params?.player;
 
@@ -96,7 +101,7 @@ const page = async ({ params }) => {
   };
 
 
-  sortedItems = sortedItems || await sortItem();
+  sortedItems = sortedItems || (await sortItem());
 
   return (
     <div>
