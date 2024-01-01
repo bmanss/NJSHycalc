@@ -1,9 +1,10 @@
 import React from "react";
 import { getHypixelData } from "@/app/lib/Util";
-import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
+import { getFirestoreDB } from "@/app/firestoreConfig";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -13,23 +14,21 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 
 const fetchedProilfes = {};
 
-// Do something with the data
-// console.log(data);
 let hypixelData = null;
 let sortedItems = null;
 const page = async ({ params }) => {
-
-  hypixelData = hypixelData || (await getHypixelData());
-  // const hypixelData = await cacheHypixelData();
-  if (!admin.apps.length) {
-    // Initialize Firebase Admin SDK only if it's not already initialized
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
+  let firestoreDB = getFirestoreDB();
+  if (process.env.NODE_ENV === "production") {
+    if (!admin.apps.length) {
+      // Initialize Firebase Admin SDK only if it's not already initialized
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
+    firestoreDB = admin.firestore();
   }
 
-  const firestoreDB = admin.firestore();
-  // const hypixelData = await cacheHypixelData();
+  hypixelData = hypixelData || (await getHypixelData());
   const profileName = params?.player;
 
   // // fetch UUID if player name is specified
@@ -46,7 +45,9 @@ const page = async ({ params }) => {
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
   } else if (UUID) {
-    hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
+    const profileDocRef = doc(firestoreDB, "profileData", UUID);
+    const profileSnapshot = await getDoc(profileDocRef);
+    hypixelProfileData = profileSnapshot.data();
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -58,7 +59,7 @@ const page = async ({ params }) => {
         lastFetched: Date.now(),
         hypixelProfile: hypixelProfileData,
       };
-      firestoreDB.collection("profileData").doc(UUID).set(hypixelProfileData);
+      setDoc(profileDocRef,hypixelProfileData);
     }
   }
 

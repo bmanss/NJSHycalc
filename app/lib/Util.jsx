@@ -1,11 +1,10 @@
 // import axios from "axios";
 import Pako from "pako";
-import { getDocs, collection, getFirestore, terminate } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-
+import { getDocs, collection, terminate } from "firebase/firestore";
+import { getFirestoreDB } from "../firestoreConfig.js";
 import nbt from "nbt";
 import { Buffer } from "buffer";
-import { firebaseConfig } from "../firestoreConfig.js";
+
 import { loreColors } from "../constants/colors.js";
 
 export async function parseNBT(encodedData) {
@@ -88,8 +87,7 @@ export async function filterItemList(hypixelItemList) {
 
 export async function getHypixelData() {
   try {
-    const fireStoreApp = initializeApp(firebaseConfig);
-    const firestoreDB = getFirestore(fireStoreApp);
+    const firestoreDB = getFirestoreDB();
     const itemSnapshot = await getDocs(collection(firestoreDB, "items"));
     const skillsSnapshot = await getDocs(collection(firestoreDB, "skills"));
     const collectionsSnapshot = await getDocs(collection(firestoreDB, "collections"));
@@ -105,7 +103,7 @@ export async function getHypixelData() {
     });
 
     // close connection because data will be cached in local storage and connection is no longer needed
-    terminate(firestoreDB);
+    // terminate(firestoreDB);
 
     const skillCaps = {};
     for (const skill of Object.keys(hypixelData.skills)) {

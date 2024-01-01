@@ -4,6 +4,10 @@ import { ProfileProvider } from "./context/ProfileContext";
 import HomeDisplayItems from "./Components/HomeDisplayItems";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { updateDatabaseItems } from "./LocalTesting/updateDatabaseItems";
+
+
+updateDatabaseItems();
 export default function Home() {
   const router = useRouter();
   const playerName = useRef(''); 
