@@ -19,12 +19,8 @@ const fetchedProilfes = {};
 let hypixelData = null;
 let sortedItems = null;
 const page = async ({ params }) => {
-  if (hypixelData === null) {
-    // hypixelData = await getHypixelData();
-    const response = await GET();
-    hypixelData = await response.json();
-  }
-
+  
+  hypixelData = hypixelData || (await getHypixelData());
   // const hypixelData = await cacheHypixelData();
   if (!admin.apps.length) {
     // Initialize Firebase Admin SDK only if it's not already initialized
@@ -99,7 +95,6 @@ const page = async ({ params }) => {
     });
     return sortedItems;
   };
-
 
   sortedItems = sortedItems || (await sortItem());
 
