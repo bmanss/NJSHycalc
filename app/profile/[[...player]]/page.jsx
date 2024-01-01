@@ -4,7 +4,6 @@ import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
-import { GET } from "@/app/api/items/route";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -19,7 +18,7 @@ const fetchedProilfes = {};
 let hypixelData = null;
 let sortedItems = null;
 const page = async ({ params }) => {
-  
+
   hypixelData = hypixelData || (await getHypixelData());
   // const hypixelData = await cacheHypixelData();
   if (!admin.apps.length) {
