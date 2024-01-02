@@ -1,10 +1,12 @@
 import React from "react";
 import { getHypixelData } from "@/app/lib/Util";
+import { cacheHypixelData } from "@/app/LocalTesting/cacheHypixelData";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
-import { getFirestoreDB } from "@/app/firestoreConfig";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { initializeApp, getApps } from "firebase/app";
+import { firebaseConfig } from "@/app/firestoreConfig";
+import { doc, getDoc, setDoc, connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -14,10 +16,13 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 
 const fetchedProilfes = {};
 
+// Do something with the data
 let hypixelData = null;
 let sortedItems = null;
+let firestoreDB;
 const page = async ({ params }) => {
-  let firestoreDB = getFirestoreDB();
+
+  // const hypixelData = await cacheHypixelData();
   if (process.env.NODE_ENV === "production") {
     if (!admin.apps.length) {
       // Initialize Firebase Admin SDK only if it's not already initialized
@@ -26,8 +31,22 @@ const page = async ({ params }) => {
       });
     }
     firestoreDB = admin.firestore();
+  } else {
+    // Development mode
+    if (!firestoreDB){
+      if (!getApps().length) {
+        // Initialize Firebase with the config object if not already initialized
+        const fireStoreApp = initializeApp(firebaseConfig);
+        firestoreDB = getFirestore(fireStoreApp);
+      } else {
+        firestoreDB = getFirestore();
+      }
+      // Connect to the Firestore emulator
+      connectFirestoreEmulator(firestoreDB, 'localhost', 8080);
+    }
   }
 
+  // const hypixelData = await cacheHypixelData();
   hypixelData = hypixelData || (await getHypixelData());
   const profileName = params?.player;
 
@@ -45,9 +64,14 @@ const page = async ({ params }) => {
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
   } else if (UUID) {
-    const profileDocRef = doc(firestoreDB, "profileData", UUID);
-    const profileSnapshot = await getDoc(profileDocRef);
-    hypixelProfileData = profileSnapshot.data();
+    if (process.env.NODE_ENV === 'production'){
+      hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
+    }
+    else {
+      const profileDocRef = doc(firestoreDB, "profileData", UUID);
+      const profileSnapshot = await getDoc(profileDocRef);
+      hypixelProfileData = profileSnapshot.data();
+    }
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -59,7 +83,13 @@ const page = async ({ params }) => {
         lastFetched: Date.now(),
         hypixelProfile: hypixelProfileData,
       };
-      setDoc(profileDocRef,hypixelProfileData);
+      if (process.env.NODE_ENV === 'production'){
+        firestoreDB.collection("profileData").doc(UUID).set(hypixelProfileData);
+      }
+      else {
+        const profileDocRef = doc(firestoreDB, "profileData", UUID);
+        setDoc(profileDocRef, hypixelProfileData);
+      }
     }
   }
 

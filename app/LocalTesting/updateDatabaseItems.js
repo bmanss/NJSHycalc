@@ -1,7 +1,6 @@
 import axios from "axios";
 import { itemsToRemove, customItems } from "../constants/items";
 import { doc,setDoc } from "firebase/firestore";
-import { getFirestoreDB } from "../firestoreConfig";
 
 async function filterItemList(hypixelItemList) {
   const filteredList = {
@@ -113,7 +112,9 @@ async function filterItemList(hypixelItemList) {
 }
 
 export async function updateDatabaseItems() {
-  const firestoreDB = getFirestoreDB();
+  const fireStoreApp = initializeApp(firebaseConfig);
+  const firestoreDB = getFirestore(fireStoreApp);
+  connectFirestoreEmulator(firestoreDB, "localhost", 8080);
   const [skillsApi, skyblockItems, collectionsApi] = await Promise.all([
     axios.get("https://api.hypixel.net/resources/skyblock/skills"),
     axios.get("https://api.hypixel.net/resources/skyblock/items"),
