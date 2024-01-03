@@ -1,13 +1,10 @@
 // import axios from "axios";
 import Pako from "pako";
-import { getDocs, collection, getFirestore } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-
 import nbt from "nbt";
 import { Buffer } from "buffer";
-import { firebaseConfig } from "../firestoreConfig.js";
 import { loreColors } from "../constants/colors.js";
 import { getCollection,getCollectionWithAdmin } from "./DatabaseMethods.js";
+
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {
     nbt.parse(Pako.ungzip(Buffer.from(encodedData, "base64"), { to: "Uint8Array" }), (err, data) => {
@@ -18,72 +15,6 @@ export async function parseNBT(encodedData) {
       }
     });
   });
-}
-
-export async function filterItemList(hypixelItemList) {
-  const filteredList = {
-    helmet: {},
-    chestplate: {},
-    leggings: {},
-    boots: {},
-    weapon: {},
-    necklace: {},
-    cloak: {},
-    belt: {},
-    gloves: {},
-    accessories: {},
-  };
-
-  hypixelItemList.forEach((item) => {
-    item.name = item.name.replace(/[^a-zA-Z0-9\s/]/g, "");
-    if (item.id.includes("STARRED")) item.name = `⚚ ${item.name}`;
-
-    switch (item.category) {
-      case "HELMET":
-        filteredList.helmet[item.id] = item;
-        break;
-      case "CHESTPLATE":
-        filteredList.chestplate[item.id] = item;
-        break;
-      case "LEGGINGS":
-        filteredList.leggings[item.id] = item;
-        break;
-      case "BOOTS":
-        filteredList.boots[item.id] = item;
-        break;
-      case "SWORD":
-      case "BOW":
-      case "FISHING_WEAPON":
-        filteredList.weapon[item.id] = item;
-        break;
-      case "NECKLACE":
-        filteredList.necklace[item.id] = item;
-        break;
-      case "CLOAK":
-        filteredList.cloak[item.id] = item;
-        break;
-      case "BELT":
-        filteredList.belt[item.id] = item;
-        break;
-      case "BRACELET":
-        item.category = "GLOVES";
-        filteredList.gloves[item.id] = item;
-        break;
-      case "GLOVES":
-        filteredList.gloves[item.id] = item;
-        break;
-      case "ACCESSORY":
-        filteredList.accessories[item.id] = item;
-        break;
-      default:
-        if (item.hasOwnProperty("stats")) {
-          filteredList.weapon[item.id] = item;
-        }
-        break;
-    }
-  });
-
-  return filteredList;
 }
 
 export async function getHypixelData(firestoreDB,useAdmin) {
