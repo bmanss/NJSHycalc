@@ -1,7 +1,8 @@
 import axios from "axios";
 import { itemsToRemove, customItems } from "../constants/items";
-import { doc,setDoc } from "firebase/firestore";
-
+import { initializeApp } from "firebase/app";
+import { doc,setDoc,getFirestore,connectFirestoreEmulator } from "firebase/firestore";
+import { firebaseConfig } from "../firestoreConfig";
 async function filterItemList(hypixelItemList) {
   const filteredList = {
     helmet: {},
