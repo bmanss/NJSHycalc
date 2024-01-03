@@ -48,7 +48,8 @@ const page = async ({ params }) => {
   }
 
   // const hypixelData = await cacheHypixelData();
-  hypixelData = hypixelData || (await getHypixelData());
+  const useAdminDB = process.env.NODE_ENV === 'production';
+  hypixelData = hypixelData || (await getHypixelData(firestoreDB,useAdminDB));
   const profileName = params?.player;
 
   // // fetch UUID if player name is specified
