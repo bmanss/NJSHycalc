@@ -7,7 +7,7 @@ import nbt from "nbt";
 import { Buffer } from "buffer";
 import { firebaseConfig } from "../firestoreConfig.js";
 import { loreColors } from "../constants/colors.js";
-
+import { getCollection,getCollectionWithAdmin } from "./DatabaseMethods.js";
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {
     nbt.parse(Pako.ungzip(Buffer.from(encodedData, "base64"), { to: "Uint8Array" }), (err, data) => {
@@ -86,13 +86,14 @@ export async function filterItemList(hypixelItemList) {
   return filteredList;
 }
 
-export async function getHypixelData() {
+export async function getHypixelData(firestoreDB,useAdmin) {
   try {
-    const fireStoreApp = initializeApp(firebaseConfig);
-    const firestoreDB = getFirestore(fireStoreApp);
-    const itemSnapshot = await getDocs(collection(firestoreDB, "items"));
-    const skillsSnapshot = await getDocs(collection(firestoreDB, "skills"));
-    const collectionsSnapshot = await getDocs(collection(firestoreDB, "collections"));
+    
+    // set which method to use for getting collection data
+    const getDBCollection = useAdmin ? getCollectionWithAdmin : getCollection;
+    const itemSnapshot = await getDBCollection(firestoreDB,"items");
+    const skillsSnapshot = await getDBCollection(firestoreDB,"skills");
+    const collectionsSnapshot = await getDBCollection(firestoreDB,"collections");
     const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
     itemSnapshot.forEach((doc) => {
       hypixelData[doc.id] = doc.data();
@@ -103,9 +104,6 @@ export async function getHypixelData() {
     collectionsSnapshot.forEach((doc) => {
       hypixelData.collections[doc.id] = doc.data();
     });
-
-    // close connection because data will be cached in local storage and connection is no longer needed
-    // terminate(firestoreDB);
 
     const skillCaps = {};
     for (const skill of Object.keys(hypixelData.skills)) {
