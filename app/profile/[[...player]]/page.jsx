@@ -6,7 +6,8 @@ import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
 import { initializeApp, getApps } from "firebase/app";
 import { firebaseConfig } from "@/app/firestoreConfig";
-import { doc, getDoc, setDoc, connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { fetchProfile,setProfile,fetchProfileWithAdmin,setProfileWithAdmin } from "@/app/lib/DatabaseMethods";
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -64,14 +65,7 @@ const page = async ({ params }) => {
   if (UUID && fetchedProilfes[UUID] && Date.now() - fetchedProilfes[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProilfes[UUID].hypixelProfile;
   } else if (UUID) {
-    if (process.env.NODE_ENV === 'production'){
-      hypixelProfileData = (await firestoreDB.collection("profileData").doc(UUID).get()).data();
-    }
-    else {
-      const profileDocRef = doc(firestoreDB, "profileData", UUID);
-      const profileSnapshot = await getDoc(profileDocRef);
-      hypixelProfileData = profileSnapshot.data();
-    }
+    hypixelProfileData = process.env.NODE_ENV === 'production' ? await fetchProfileWithAdmin(firestoreDB,UUID) : await fetchProfile(firestoreDB,UUID);
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -84,11 +78,10 @@ const page = async ({ params }) => {
         hypixelProfile: hypixelProfileData,
       };
       if (process.env.NODE_ENV === 'production'){
-        firestoreDB.collection("profileData").doc(UUID).set(hypixelProfileData);
+        setProfileWithAdmin(firestoreDB,UUID,hypixelProfileData);
       }
       else {
-        const profileDocRef = doc(firestoreDB, "profileData", UUID);
-        setDoc(profileDocRef, hypixelProfileData);
+        setProfile(firestoreDB,UUID,hypixelProfileData);
       }
     }
   }
