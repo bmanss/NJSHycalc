@@ -1,5 +1,5 @@
 const black = "§0";
-const darkBlue = "§1";
+const blue = "§9";
 const darkGreen = "§2";
 const teal = "§3";
 const darkRed = "§4";
@@ -7,7 +7,7 @@ const magenta = "§5";
 const orange = "§6";
 const gray = "§7";
 const darkGray = "§8";
-const mediumBlue = "§9";
+const mediumBlue = "§1";
 const green = "§a";
 const lightBlue = "§b";
 const red = "§c";
@@ -42,6 +42,12 @@ const incrementAllStatMultipliers = (profileState, value) => {
   for (const [stat, _] of Object.entries(profileState.statMultipliers)) {
     profileState.statMultipliers[stat] += value;
   }
+};
+
+const damageAgainstMobDesc = (amount, mobList) => {
+  return `${gray}Deal ${green}${amount}% ${gray}against ${mobList.map((mob) => {
+    return mob + " ";
+  })}`;
 };
 
 const buffWeapon = (profileState, stats) => {
@@ -133,8 +139,61 @@ export const effects = {
     enabled: true,
     description: `${gray}Kill Zombies to accumulate\n${gray}defense against them.`,
   },
+  DAMAGE_AGAINST_MOBS: (effectAmount, displayAmount, mobList) => {
+    return {
+      name: `§6Ability:`,
+      enabled: true,
+      description: damageAgainstMobDesc(displayAmount, mobList),
+      processEffect: (profileState) => {
+        if (mobList.includes(profileState.targetMob)) {
+          modifyPostMultiplier(profileState, effectAmount);
+        }
+      },
+    };
+  },
+  HEART_STOPPER: {
+    name: `§6Ability: Heartstopper`,
+    enabled: false,
+    description: `${gray}You have ${yellow}4 Ⓞ tickers
+                  ${gray}Blocking clears ${yellow}1 Ⓞ ${gray}and heals ${red}60❤${gray}.
+                  ${gray}Once all tickers are cleared,
+                  ${gray}your next attack is empowered
+                  ${gray}for ${red}250% damage.
+                  ${darkGray}Tickers refill after 5 seconds`,
+    processEffect: (profileState) => {
+      modifyBaseMultiplier(profileState, 3.5);
+    },
+  },
+  SOULCRY: (soulFlowCost, ferocityAmount) => {
+    return {
+      name: `§6Ability: Soulcry`,
+      enabled: false,
+      description: `${gray}Gain ${red}+${ferocityAmount}⫽ Ferocity ${gray}against
+                    ${gray}Endermen for ${green}4s
+                    ${darkGray}Soulflow Cost: ${teal}${soulFlowCost}
+                    ${darkGray}Mana Cost: ${teal}200
+                    ${darkGray}Cooldown: ${green}4s`,
+      processEffect: (profileState) => {
+        modifyStats(profileState, { FEROCITY: ferocityAmount });
+      },
+    };
+  },
+  RAMPART_CRIMSON: {
+    name: "§6Ability:",
+    enabled: true,
+    description: `${gray}Grants ${red}+50❤ Health, 
+                  ${red}+20❁ Strength${gray}, and ${blue}+15☠ Crit
+                  ${blue}Damage ${gray}while on the ${red}Crimson 
+                  ${red}Isle.`,
+    processEffect: (profileState) => {
+      modifyStats(profileState, { HEALTH: 50,STRENGTH:20, CRITICAL_DAMAGE:15});
+    },
+  },
 };
 
+/**
+ * Map an Item's ID to its ingame effects
+ */
 export const itemEffectsMap = {
   WARDEN_HELMET: [effects.BRUTE_FORCE],
   SUPERIOR_DRAGON_HELMET: [effects.SUPERIOR_BLOOD],
@@ -148,4 +207,13 @@ export const itemEffectsMap = {
   REAPER_CHESTPLATE: [effects.ENRAGE, effects.TROLLING_THE_REAPER, effects.ZOMBIE_BULWARK],
   REAPER_LEGGINGS: [effects.ENRAGE, effects.TROLLING_THE_REAPER, effects.ZOMBIE_BULWARK],
   REAPER_BOOTS: [effects.ENRAGE, effects.TROLLING_THE_REAPER, effects.ZOMBIE_BULWARK],
+  RAMPART_HELMET: [effects.RAMPART_CRIMSON],
+  RAMPART_CHESTPLATE: [effects.RAMPART_CRIMSON],
+  RAMPART_LEGGINGS: [effects.RAMPART_CRIMSON],
+  RAMPART_BOOTS: [effects.RAMPART_CRIMSON],
+  VOIDWALKER_KATANA: [effects.DAMAGE_AGAINST_MOBS(1.5, 150, ["Enderman"])],
+  VOIDEDGE_KATANA: [effects.DAMAGE_AGAINST_MOBS(2, 200, ["Enderman"]), effects.SOULCRY(1, 200)],
+  VORPAL_KATANA: [effects.DAMAGE_AGAINST_MOBS(2.5, 250, ["Enderman"]), effects.SOULCRY(1, 300)],
+  ATOMSPLIT_KATANA: [effects.DAMAGE_AGAINST_MOBS(3, 300, ["Enderman"]), effects.SOULCRY(2, 400)],
+  SCORPION_FOIL: [effects.DAMAGE_AGAINST_MOBS(2.5, 250, ["Spider"]), effects.HEART_STOPPER],
 };
