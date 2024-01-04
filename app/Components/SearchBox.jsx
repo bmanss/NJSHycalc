@@ -78,7 +78,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   const handleSearchBoxClick = () => {
     if (!inputFocusedRef.current) {
       setDropdownVisible(true);
-      // setDisplayItemName("");
+      setDisplayItemName("");
       inputFocusedRef.current = true;
     }
   };
