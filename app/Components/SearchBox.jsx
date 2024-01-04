@@ -57,7 +57,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
     setDropdownVisible(false);
     dropdownFocusedRef.current = false;
     setDisplayItems(completeList.current);
-    !selectedItem && setDisplayItemName(item.name || item);
+    setDisplayItemName(item.name || item);
     onItemChange && onItemChange(item.id || item);
   };
 
