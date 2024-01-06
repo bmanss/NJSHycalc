@@ -197,7 +197,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
 
                     {/* Reforge stats additions */}
                     {gearPiece.reforgeStats[stat] && (
-                      <span style={{ color: "blue", marginRight: "1px" }}>{`(${gearPiece.reforgeStats[stat] > 0 ? "+" : ""}${
+                      <span style={{color: "#0048ff", marginRight: "1px" }}>{`(${gearPiece.reforgeStats[stat] > 0 ? "+" : ""}${
                         gearPiece.reforgeStats[stat]
                       })`}</span>
                     )}
@@ -373,6 +373,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
               </div>
               <div>
                 {effect.description && parseLore(effect.description, effect.name)}
+                {effect.valued && effect.valuedDisplay(() => profileContext.dispatchProfileUpdate({ type: ProfileActions.UPDATE_STATS}))}
                 <br />
               </div>
             </div>
