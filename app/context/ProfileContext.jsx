@@ -39,6 +39,7 @@ export const ProfileActions = {
   SET_TARGET_MOB: "SET_TARGET_MOB",
   SET_DUNGEON_MODE: "SET_DUNGEON_MODE",
   SET_ADDITIONAL_MULIPLIERS: "SET_ADDITIONAL_MULIPLIERS",
+  UPDATE_STATS: "UPDATE_STATS"
 };
 
 const profileReducer = (state, action) => {
@@ -83,6 +84,9 @@ const profileReducer = (state, action) => {
     case ProfileActions.SET_DUNGEON_MODE:
       updatedState = { ...state, dungeonMode: action.payload };
       break;
+    case ProfileActions.UPDATE_STATS:
+      updatedState = { ...state };
+      break;
     default:
       break;
   }
@@ -97,7 +101,7 @@ const profileReducer = (state, action) => {
 export const ProfileProvider = ({ children }) => {
   const [profileState, dispatchProfileUpdate] = useReducer(profileReducer, initialProfileState);
 
-  // quick accessors for componenets so the entire path does not need to be typed out
+  // quick accessors for components so the entire path does not need to be typed out
   const getGearPiece = (type) => {
     return profileState.playerGear[type];
   };
@@ -256,7 +260,7 @@ export const ProfileProvider = ({ children }) => {
   };
 
   const buildActiveProfile = async () => {
-    buildProfile(profileState.activeProfile);
+    await buildProfile(profileState.activeProfile);
   };
 
   const contextValues = {
