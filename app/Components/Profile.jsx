@@ -85,6 +85,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
 
   const changeProfile = async (profile) => {
     profileContext.buildProfile(profile);
+    setGodPotionEnabled(true);
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_ACTIVE_PROFILE, payload: profile });
   };
 
