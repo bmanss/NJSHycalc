@@ -9,7 +9,7 @@ import { accessories } from "../constants/accessories.js";
 import { arrows } from "../constants/arrows.js";
 import { gemstones } from "../constants/gemStones.js";
 import { essencePerks } from "../constants/essencePerks.js";
-import { itemEffectsMap } from "../constants/effects.js";
+import { itemEffectsMap } from "../constants/effects.jsx";
 
 export const tiers = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY", "MYTHIC", "DIVINE", "SPECIAL", "VERY_SPECIAL", "UNOBTAINABLE"];
 
@@ -1521,12 +1521,16 @@ export function finalStats(profileState) {
     if (ability.postEffect && tiers.indexOf(pet.tier) >= tiers.indexOf(ability.minRarity) && ability.enabled) postEffects.push(ability);
   }
 
+  // track tiered effects to update their descriptions later
+  const tieredEffects = [];
+
   // ability order; armor effects -> pet effects -> post pet effects -> post armor effects
   for (const [_, properties] of Object.entries(playerGear)) {
     const itemEffects = properties.effects;
     // update armor set counter
     if (itemEffects) {
       for (const effect of itemEffects) {
+        if (effect.tiered) tieredEffects.push(effect);
         if (!effect.enabled) continue;
         if (effect.setEffect) {
           armorSets[effect.name] = armorSets[effect.name] ? armorSets[effect.name] + 1 : 1;
@@ -1539,6 +1543,11 @@ export function finalStats(profileState) {
         }
       }
     }
+  }
+
+  // update tiered effect description once the numbers of items with that tier is recorded
+  for (const effect of tieredEffects){
+    effect.updateDescription(armorSets[effect.name])
   }
 
   profileState.armorSets = armorSets;
