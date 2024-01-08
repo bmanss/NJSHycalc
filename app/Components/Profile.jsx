@@ -4,6 +4,7 @@ import * as ProfilesFunctions from "../lib/ProfileFunctions";
 import SearchBox from "./SearchBox";
 import { powerstoneList } from "../constants/powerstones";
 import { mobList } from "../constants/mobs";
+import { formatStat, formatValue } from "../lib/Util";
 import { trackedStats, statAlias } from "../constants/trackedStats";
 import { useProfileContext } from "../context/ProfileContext";
 import { ProfileActions } from "../context/ProfileContext";
@@ -213,7 +214,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
               {Object.entries(trackedStats).map(([stat]) => (
                 <span key={stat}>
                   <span style={{ color: trackedStats[stat].color ?? "white" }}>
-                    {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : stat.replaceAll("_", " ").toLowerCase()}:{" "}
+                    {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : formatStat(stat)}:{" "}
                   </span>
                   <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
                 </span>
@@ -232,14 +233,11 @@ const Profile = ({ sortedItems, data, profileData }) => {
                 />
               </div>
               {/* damage stats */}
-              <span> Regular: {parseFloat(profileContext.getFinalStats().hitValues?.regular?.toFixed(2)).toLocaleString() ?? 0}</span>
-              <span> Crit: {parseFloat(profileContext.getFinalStats().hitValues?.critHit?.toFixed(2)).toLocaleString() ?? 0}</span>
-              <span> First Strike: {parseFloat(profileContext.getFinalStats().hitValues?.firstStrike?.toFixed(2)).toLocaleString() ?? 0}</span>
-              <span>
-                {" "}
-                First Strike Crit: {parseFloat(profileContext.getFinalStats().hitValues?.firstStrikeCrit?.toFixed(2)).toLocaleString() ?? 0}
-              </span>
-              <span> Ability: {parseFloat(profileContext.getFinalStats().hitValues?.magic?.toFixed(2)).toLocaleString() ?? 0}</span>
+              <span> Regular: {formatValue(profileContext.getFinalStats().hitValues?.regular)}</span>
+              <span> Crit: {formatValue(profileContext.getFinalStats().hitValues.critHit)}</span>
+              <span> First Strike: {formatValue(profileContext.getFinalStats().hitValues.firstStrike)}</span>
+              <span> First Strike Crit: {formatValue(profileContext.getFinalStats().hitValues.firstStrikeCrit)}</span>
+              <span> Ability: {formatValue(profileContext.getFinalStats().hitValues.magic)}</span>
             </div>
             <div className='ContentContainer'>
               <div className='ContentNav'>

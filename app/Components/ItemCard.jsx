@@ -12,7 +12,7 @@ import { createGearPiece, changeGearPiece } from "../lib/ProfileFunctions";
 import { parseLore } from "../lib/Util";
 import Image from "next/image";
 import styles from "../styles/ItemCard.module.scss";
-
+import { formatStat,formatValue } from "../lib/Util";
 const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOnly }) => {
   const profileContext = useProfileContext();
   const [selectedEnchant, setSelectedEnchant] = useState(enchantmentList && enchantmentList[0]);
@@ -176,11 +176,11 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
           {gearPiece.nonDungeonStats &&
             Object.entries(gearPiece.nonDungeonStats).map(
               ([stat, value]) =>
-                trackedStats[stat] !== undefined &&
+              value !== undefined &&
                 value !== 0 && (
                   <div key={stat} className='flex-row'>
-                    <span className={styles["ItemCard-stat"]}>{statAlias[stat] ? statAlias[stat] : stat.replaceAll("_", " ").toLowerCase()}: </span>
-                    <span style={{ color: armorStatColor[stat] ?? "#00ff1a", marginRight: "5px" }}>{`${value.toFixed(2)}`}</span>
+                    <span className={styles["ItemCard-stat"]}>{statAlias[stat] ? statAlias[stat] : formatStat(stat)}: </span>
+                    <span style={{ color: armorStatColor[stat] ?? "#00ff1a", marginRight: "5px" }}>{formatValue(value.toFixed(2))}</span>
                     {/* potato books stats */}
                     {stat === "HEALTH" && gearPiece.miscStats.HEALTH ? (
                       <span className={styles["ItemCard-stat"]} style={{ color: "yellow" }}>{`(+${gearPiece.miscStats.HEALTH})`}</span>
@@ -207,7 +207,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
 
                     {/* Dungeon stats additions */}
                     {gearPiece.generalCategory !== "equipment" && gearPiece.itemType === "dungeon" && gearPiece.dungeonStats[stat] > 0 && (
-                      <span style={{ color: "grey" }}>{`(+${gearPiece.dungeonStats[stat].toFixed(2)})`}</span>
+                      <span style={{ color: "grey" }}>{`(+${formatValue(gearPiece.dungeonStats[stat])})`}</span>
                     )}
                   </div>
                 )
@@ -343,7 +343,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
               Object.entries(gearPiece.enchantments).map(([enchant, level], index) => (
                 <span key={enchant}>
                   {index % 2 === 0 && <br />}
-                  <span className={styles["itemCard-enchant"]}>{`${enchant.replaceAll("_", " ").toLowerCase()} ${level} `}</span>
+                  <span className={styles["itemCard-enchant"]}>{`${formatStat(enchant)} ${level} `}</span>
                 </span>
               ))}
           </div>

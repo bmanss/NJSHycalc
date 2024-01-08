@@ -17,6 +17,18 @@ export async function parseNBT(encodedData) {
   });
 }
 
+export const formatStat = (stat) =>{
+  return stat.replaceAll("_", " ").toLowerCase();
+}
+
+export const formatValue = (value) =>{
+  value = parseFloat(value).toFixed(2);
+  return parseFloat(value).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 export async function getHypixelData(firestoreDB,useAdmin) {
   try {
     
