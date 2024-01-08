@@ -15,7 +15,7 @@ export const tiers = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY", "MYTHIC
 
 // dungeon stats that do or do not scale with dungeon multiplier
 const dungeonNonBoostedStats = ["CRITICAL_CHANCE", "ATTACK_SPEED", "FEROCITY", "ABILITY_DAMAGE_PERCENT", "TRUE_DEFENSE"];
-const dungeonBoostedStats = ["HEALTH", "DEFENSE", "INTELLIGENCE", "STRENGTH", "CRITICAL_DAMAGE", "WALK_SPEED", "DAMAGE"];
+const dungeonBoostedStats = ["HEALTH", "DEFENSE", "INTELLIGENCE", "STRENGTH", "CRITICAL_DAMAGE", "WALK_SPEED", "DAMAGE", "WEAPON_ABILITY_DAMAGE"];
 
 // weapons that for some reason do no benefit from multipliers
 const MODIFIER_EXCLUDED_MAGIC_WEAPONS = ["ASPECT_OF_THE_DRAGON", "GOLEM_SWORD"];
@@ -104,6 +104,7 @@ const initialGearState = {
   itemType: "normal",
   starLevel: 0,
   dungeonStarModifier: 0,
+  dungeonModifier: 0,
   effects: [],
 };
 
@@ -579,6 +580,7 @@ export async function addGearModifierStats(gearPiece, playerskills) {
     const dungeonStarModifier = (gearPiece.starLevel > 5 ? 50 : 10 * gearPiece.starLevel) / 100;
     const dungeonModifier = 1 + (catacombValues.StatModifier[playerskills.CATACOMBS] + dungeonStarAdditive) / 100;
     gearPiece.dungeonStarModifier = dungeonStarModifier;
+    gearPiece.dungeonModifier = dungeonModifier;
     // stats that only get the effects of stars multiple up to 5 so a max of 1.5x boost
     for (const stat of dungeonNonBoostedStats) {
       gearPiece.dungeonStats[stat] = gearPiece.dungeonStats[stat] * (1 + dungeonStarModifier);
@@ -1280,20 +1282,20 @@ function calculatePetLevel(petXp, tier) {
   return level;
 }
 
-export function calculateDamage(profileState) {
+export function calculateDamage(profileState,dungeonMode) {
   const playerGear = profileState.playerGear;
   const playerSkills = profileState.playerSkills;
   const targetMob = profileState.targetMob;
   const stats = profileState.finalStats;
-
+  const weapon = playerGear.weapon;
   const damageType = stats.hitValues;
-  if (playerGear.weapon.name === "Unequipped") {
+  if (weapon.name === "Unequipped") {
     return;
   }
 
   const multipliers = profileState.damageMultipliers;
   const abilityDamagePercent = 1 + stats.ABILITY_DAMAGE_PERCENT / 100;
-  const enchantList = enchantments[playerGear.weapon.referenceCategory];
+  const enchantList = enchantments[weapon.referenceCategory];
 
   if (playerSkills.COMBAT > 50) {
     const value = 2 + (playerSkills.COMBAT - 50) * 0.01;
@@ -1305,11 +1307,11 @@ export function calculateDamage(profileState) {
     multipliers.magicBaseMulti += value;
   }
 
-  if (stats.godPotion && playerGear.weapon.referenceCategory === "bow") {
+  if (stats.godPotion && weapon.referenceCategory === "bow") {
     multipliers.regularBaseMulti += 0.8;
   }
 
-  const enchants = Object.entries(playerGear.weapon.enchantments);
+  const enchants = Object.entries(weapon.enchantments);
 
   for (const [enchant, level] of enchants) {
     const enchantValue = enchantList[enchant][level] / 100;
@@ -1401,10 +1403,10 @@ export function calculateDamage(profileState) {
   damageType.firstStrikeCrit = damageType.firstStrike * (1 + (stats.CRITICAL_DAMAGE * stats.critEffectiveness) / 100.0);
 
   // do magic damage calculations if the weapon has ability damage TODO:dungeon?
-  if (playerGear.weapon?.nonDungeonStats?.WEAPON_ABILITY_DAMAGE) {
-    const weaponAbilityDamage = playerGear.weapon.nonDungeonStats.WEAPON_ABILITY_DAMAGE;
-    const abilityDamage = weaponAbilityDamage * (1 + (stats.INTELLIGENCE / 100.0) * playerGear.weapon.ability_damage_scaling) * abilityDamagePercent;
-    if (MODIFIER_EXCLUDED_MAGIC_WEAPONS.includes(playerGear.weapon.id)) {
+  if (weapon?.nonDungeonStats?.WEAPON_ABILITY_DAMAGE) {
+    const weaponAbilityDamage = dungeonMode ? weapon.dungeonStats.WEAPON_ABILITY_DAMAGE : weapon.nonDungeonStats.WEAPON_ABILITY_DAMAGE;
+    const abilityDamage = weaponAbilityDamage * (1 + (stats.INTELLIGENCE / 100.0) * weapon.ability_damage_scaling) * abilityDamagePercent;
+    if (MODIFIER_EXCLUDED_MAGIC_WEAPONS.includes(weapon.id)) {
       damageType.magic = abilityDamage * stats.ABILITY_MULTIPLIER;
       damageType.magicFirstStrike = damageType.magic;
     } else {
@@ -1847,7 +1849,7 @@ export function finalStats(profileState) {
     }
   }
 
-  calculateDamage(profileState);
+  calculateDamage(profileState,dungeonMode);
 
   return { normal: finalStats, dungeon: finalStats };
 }
