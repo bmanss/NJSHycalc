@@ -5,7 +5,7 @@ const blue = "§9";
 const darkGreen = "§2";
 const teal = "§3";
 const darkRed = "§4";
-const magenta = "§5";
+const purple = "§5";
 const orange = "§6";
 const gray = "§7";
 const darkGray = "§8";
@@ -13,7 +13,7 @@ const mediumBlue = "§1";
 const green = "§a";
 const lightBlue = "§b";
 const red = "§c";
-const lightMagenta = "§e";
+const magenta = "§e";
 const yellow = "§e";
 const white = "§f";
 
@@ -66,7 +66,7 @@ const buffWeapon = (profileState, stats) => {
   }
 };
 
-function valuedTemplate(text) {
+function valuedTemplate(text, maxValue) {
   return {
     valued: true,
     value: 0,
@@ -75,6 +75,7 @@ function valuedTemplate(text) {
       return (
         <EffectInput
           value={this.value}
+          max={maxValue}
           text={this.valuedText}
           onChange={(e) => {
             this.value = e;
@@ -95,12 +96,30 @@ export const valuedEffects = {
                   ${darkGreen} Emeralds${gray}. This blade becomes
                   ${gray}stronger as you carry more
                   ${orange}coins ${gray}in your purse.`,
-    processEffect(profileState){
+    processEffect(profileState) {
       const purse = this.value;
-      const dmg = 2.5 * (purse ** (1/4));
+      const dmg = 2.5 * purse ** (1 / 4);
       profileState.playerGear.weapon.nonDungeonStats.DAMAGE += dmg;
       profileState.finalStats.DAMAGE += dmg;
-    }
+    },
+  },
+  GREED: {
+    ...valuedTemplate("Paid:",100000000),
+    name: "§6Ability: Greed",
+    enabled: true,
+    description: `${gray}The ${teal}ability damage bonus 
+                  ${gray}of this item is dependent 
+                  ${gray}on the price paid for 
+                  ${gray}it at the ${purple}Dark Auction! 
+                  ${gray}The maximum bonus of this item is 
+                  ${teal}26000 ${gray}if the bid was 
+                  ${orange}100,000,000 coins ${gray}or higher!`,
+    processEffect(profileState) {
+      const abilityDmg = 26000 * (this.value / 100000000);
+      const weapon = profileState.playerGear.weapon;
+      weapon.nonDungeonStats.WEAPON_ABILITY_DAMAGE += abilityDmg;
+      weapon.dungeonStats.WEAPON_ABILITY_DAMAGE += abilityDmg * weapon.dungeonModifier;
+    },
   },
 };
 
@@ -366,4 +385,5 @@ export const itemEffectsMap = {
   MAGMA_LORD_GAUNTLET: [effects.TIERED_FIREPROOF, effects.TIERED_LORDS_BLESSING, effects.LAVA_SEA_CREATURE(5, 0.1)],
   CROWN_OF_GREED: [effects.CROWN_OF_GREED],
   EMERALD_BLADE: [valuedEffects.EMERALD_BLADE],
+  MIDAS_STAFF: [valuedEffects.GREED],
 };
