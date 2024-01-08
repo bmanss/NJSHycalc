@@ -55,6 +55,7 @@ export const trackedStats = {
 
 export const statAlias = {
     WALK_SPEED: 'Speed',
+    WEAPON_ABILITY_DAMAGE: 'Weapon Ability',
     ABILITY_DAMAGE_PERCENT: 'Ability Damage',
     CRITICAL_CHANCE: 'Crit Chance',
     CRITICAL_DAMAGE: 'Crit Damage',
