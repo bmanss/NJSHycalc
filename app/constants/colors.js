@@ -4,7 +4,7 @@ export const loreColors = {
   "§2": "#00aa00", // green
   "§3": "#00aaaa", // teal
   "§4": "#aa0000", // red
-  "§5": "#aa00aa", // magenta
+  "§5": "#aa00aa", // purple
   "§6": "#ffaa00", // orange
   "§7": "#aaaaaa", // gray
   "§8": "#555555", // dark gray
@@ -53,4 +53,5 @@ export const armorStatColor = {
   DAMAGE: "#f75252",
   ABILITY_MULTIPLIER: "#00ff1a",
   ABILITY_DAMAGE_PERCENT: "#f75252",
+  WEAPON_ABILITY_DAMAGE: '#00aaaa'
 };
