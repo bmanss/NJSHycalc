@@ -17,6 +17,7 @@ import { PlayerCollections } from "./ProfileDisplays/PlayerCollections";
 import { useRouter } from "next/navigation";
 import InfoBarStyles from "../styles/InfoBar.module.scss";
 import StatBarStyles from "../styles/StatDisplays.module.scss";
+import LoadingSkeleton from "../Components/LoadingSkeleton";
 
 const Profile = ({ sortedItems, data, profileData }) => {
   const router = useRouter();
@@ -36,7 +37,9 @@ const Profile = ({ sortedItems, data, profileData }) => {
   const [godPotionEnabled, setGodPotionEnabled] = useState(() => {
     return false;
   });
+  const [loading, setLoading] = useState(true);
 
+  // handle player data on component load
   useEffect(() => {
     // set profile context data on initial load
     const hypixelItems = {
@@ -51,12 +54,8 @@ const Profile = ({ sortedItems, data, profileData }) => {
       necklace: data.necklace ?? {},
       weapon: data.weapon ?? {},
     };
-    // console.log(data.collections);
     profileContext.setHypixelData(hypixelItems, data.skills, data.collections);
-  }, []);
 
-  // handle player data on component load
-  useEffect(() => {
     if (profileData.hypixelProfiles?.profiles) {
       profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
       profileContext.buildActiveProfile();
@@ -71,6 +70,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
         setErrorMessage("");
       }, 1500);
     }
+    setLoading(false);
   }, []);
 
   const navigateProfile = (player) => {
@@ -137,142 +137,146 @@ const Profile = ({ sortedItems, data, profileData }) => {
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_DUNGEON_MODE, payload: event });
   };
 
-  return (
-    <div>
-      <div style={{ height: "100vh" }}>
-        <div className={InfoBarStyles["InfoBar"]}>
-          <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>
-            <div>{`${playerName} `}</div>
-            {profileContext.profiles.length > 0 && (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div>On </div>
-                <div className={InfoBarStyles["InfoBar-Cutename"]}>
-                  {profileContext.profileState.activeProfile}
-                  <div className={InfoBarStyles["InfoBar-Cutename-Dropdown"]}>
-                    {profileContext.profiles.map((profile) => (
-                      <div key={profile} onMouseDown={() => changeProfile(profile)} className={InfoBarStyles["InfoBar-Cutename-Dropdown-item"]}>
-                        {profile}
-                      </div>
-                    ))}
+  if (loading) {
+    return <LoadingSkeleton />;
+  } else {
+    return (
+      <div>
+        <div style={{ height: "100vh" }}>
+          <div className={InfoBarStyles["InfoBar"]}>
+            <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>
+              <div>{`${playerName} `}</div>
+              {profileContext.profiles.length > 0 && (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div>On </div>
+                  <div className={InfoBarStyles["InfoBar-Cutename"]}>
+                    {profileContext.profileState.activeProfile}
+                    <div className={InfoBarStyles["InfoBar-Cutename-Dropdown"]}>
+                      {profileContext.profiles.map((profile) => (
+                        <div key={profile} onMouseDown={() => changeProfile(profile)} className={InfoBarStyles["InfoBar-Cutename-Dropdown-item"]}>
+                          {profile}
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                  {/* <div> Playing {profileContext.profilesData[selectedProfile]?.gameMode ?? "Normal"}</div> */}
                 </div>
-                {/* <div> Playing {profileContext.profilesData[selectedProfile]?.gameMode ?? "Normal"}</div> */}
-              </div>
-            )}
-          </div>
-          <div style={{ display: "flex", columnGap: "10px" }}>
-            <input
-              placeholder='Player Profile'
-              value={playerSearch}
-              className={InfoBarStyles["InfoBar-Player-Search"]}
-              type='text'
-              onChange={(e) => setPlayerSearch(e.target.value.trim())}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && playerSearch) navigateProfile(playerSearch);
-              }}></input>
-            <button
-              className={InfoBarStyles["InfoBar-Player-Search-button"]}
-              onClick={() => {
-                playerSearch && navigateProfile(playerSearch);
-              }}>
-              Load
-            </button>
-            <button className={InfoBarStyles["InfoBar-Player-Search-button"]} onClick={loadDefault}>
-              Default
-            </button>
-            <span style={{ color: "red" }}>{errorMessage}</span>
-          </div>
-        </div>
-        <div style={{ height: "100%" }}>
-          <div style={{ display: "flex", height: "100%" }}>
-            <div className={StatBarStyles["StatsBar"]}>
-              <div className={StatBarStyles["StatsBar-Header"]}>Stats:</div>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-                <span className={StatBarStyles["StatToggle"]}>
-                  <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
-                  <label htmlFor='checkbox'></label>
-                </span>
-              </div>
-              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                <div>God Potion</div>
-                <div
-                  className='enabledBox'
-                  style={{ backgroundColor: godPotionEnabled ? "#2bff00" : "#ff0000", borderRadius: "2px" }}
-                  onClick={handleGodPotion}
-                />
-              </div>
-              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                <span>PowerStone: </span>
-                <SearchBox
-                  maxWidth={"155px"}
-                  placeholder={"Powerstone"}
-                  itemList={powerstoneList()}
-                  selectedItem={profileContext.getPowerStone()}
-                  onItemChange={(value) => handlePowerstoneChange(value)}
-                />
-              </div>
-              {Object.entries(trackedStats).map(([stat]) => (
-                <span key={stat}>
-                  <span style={{ color: trackedStats[stat].color ?? "white" }}>
-                    {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : formatStat(stat)}:{" "}
-                  </span>
-                  <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
-                </span>
-              ))}
-              <div className={StatBarStyles["StatsBar-Header"]} style={{ marginTop: "10px" }}>
-                Damage Stats:
-              </div>
-              <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                <span>Target Mob</span>
-                <SearchBox
-                  maxWidth={"155px"}
-                  placeholder={"Mob Type"}
-                  itemList={mobList()}
-                  selectedItem={profileContext.getTargetMob()}
-                  onItemChange={(value) => handleMobChange(value)}
-                />
-              </div>
-              {/* damage stats */}
-              <span> Regular: {formatValue(profileContext.getFinalStats().hitValues?.regular)}</span>
-              <span> Crit: {formatValue(profileContext.getFinalStats().hitValues.critHit)}</span>
-              <span> First Strike: {formatValue(profileContext.getFinalStats().hitValues.firstStrike)}</span>
-              <span> First Strike Crit: {formatValue(profileContext.getFinalStats().hitValues.firstStrikeCrit)}</span>
-              <span> Ability: {formatValue(profileContext.getFinalStats().hitValues.magic)}</span>
+              )}
             </div>
-            <div className='ContentContainer'>
-              <div className='ContentNav'>
-                <span className={`ContentNav-Option ${navDisplay.baseStats && "active"}`} onMouseDown={() => handleNavChange("baseStats")}>
-                  Stat Extras
-                </span>
-                <span className={`ContentNav-Option ${navDisplay.skills && "active"}`} onMouseDown={() => handleNavChange("skills")}>
-                  Skills
-                </span>
-                <span className={`ContentNav-Option ${navDisplay.collections && "active"}`} onMouseDown={() => handleNavChange("collections")}>
-                  Collections
-                </span>
-                <span className={`ContentNav-Option ${navDisplay.armor && "active"}`} onMouseDown={() => handleNavChange("armor")}>
-                  Armor
-                </span>
-                <span className={`ContentNav-Option ${navDisplay.equipment && "active"}`} onMouseDown={() => handleNavChange("equipment")}>
-                  Equipment
-                </span>
-                <span className={`ContentNav-Option ${navDisplay.combatGear && "active"}`} onMouseDown={() => handleNavChange("combatGear")}>
-                  Combat Gear
-                </span>
+            <div style={{ display: "flex", columnGap: "10px" }}>
+              <input
+                placeholder='Player Profile'
+                value={playerSearch}
+                className={InfoBarStyles["InfoBar-Player-Search"]}
+                type='text'
+                onChange={(e) => setPlayerSearch(e.target.value.trim())}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && playerSearch) navigateProfile(playerSearch);
+                }}></input>
+              <button
+                className={InfoBarStyles["InfoBar-Player-Search-button"]}
+                onClick={() => {
+                  playerSearch && navigateProfile(playerSearch);
+                }}>
+                Load
+              </button>
+              <button className={InfoBarStyles["InfoBar-Player-Search-button"]} onClick={loadDefault}>
+                Default
+              </button>
+              <span style={{ color: "red" }}>{errorMessage}</span>
+            </div>
+          </div>
+          <div style={{ height: "100%" }}>
+            <div style={{ display: "flex", height: "100%" }}>
+              <div className={StatBarStyles["StatsBar"]}>
+                <div className={StatBarStyles["StatsBar-Header"]}>Stats:</div>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
+                  <span className={StatBarStyles["StatToggle"]}>
+                    <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
+                    <label htmlFor='checkbox'></label>
+                  </span>
+                </div>
+                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                  <div>God Potion</div>
+                  <div
+                    className='enabledBox'
+                    style={{ backgroundColor: godPotionEnabled ? "#2bff00" : "#ff0000", borderRadius: "2px" }}
+                    onClick={handleGodPotion}
+                  />
+                </div>
+                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                  <span>PowerStone: </span>
+                  <SearchBox
+                    maxWidth={"155px"}
+                    placeholder={"Powerstone"}
+                    itemList={powerstoneList()}
+                    selectedItem={profileContext.getPowerStone()}
+                    onItemChange={(value) => handlePowerstoneChange(value)}
+                  />
+                </div>
+                {Object.entries(trackedStats).map(([stat]) => (
+                  <span key={stat}>
+                    <span style={{ color: trackedStats[stat].color ?? "white" }}>
+                      {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : formatStat(stat)}:{" "}
+                    </span>
+                    <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
+                  </span>
+                ))}
+                <div className={StatBarStyles["StatsBar-Header"]} style={{ marginTop: "10px" }}>
+                  Damage Stats:
+                </div>
+                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                  <span>Target Mob</span>
+                  <SearchBox
+                    maxWidth={"155px"}
+                    placeholder={"Mob Type"}
+                    itemList={mobList()}
+                    selectedItem={profileContext.getTargetMob()}
+                    onItemChange={(value) => handleMobChange(value)}
+                  />
+                </div>
+                {/* damage stats */}
+                <span> Regular: {formatValue(profileContext.getFinalStats().hitValues?.regular)}</span>
+                <span> Crit: {formatValue(profileContext.getFinalStats().hitValues.critHit)}</span>
+                <span> First Strike: {formatValue(profileContext.getFinalStats().hitValues.firstStrike)}</span>
+                <span> First Strike Crit: {formatValue(profileContext.getFinalStats().hitValues.firstStrikeCrit)}</span>
+                <span> Ability: {formatValue(profileContext.getFinalStats().hitValues.magic)}</span>
               </div>
-              <div className='ContentContainer-Display'>
-                {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
-                {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
-                {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
-                {navDisplay.baseStats && <PlayerStats />}
-                {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
-                {navDisplay.collections && <PlayerCollections />}
+              <div className='ContentContainer'>
+                <div className='ContentNav'>
+                  <span className={`ContentNav-Option ${navDisplay.baseStats && "active"}`} onMouseDown={() => handleNavChange("baseStats")}>
+                    Stat Extras
+                  </span>
+                  <span className={`ContentNav-Option ${navDisplay.skills && "active"}`} onMouseDown={() => handleNavChange("skills")}>
+                    Skills
+                  </span>
+                  <span className={`ContentNav-Option ${navDisplay.collections && "active"}`} onMouseDown={() => handleNavChange("collections")}>
+                    Collections
+                  </span>
+                  <span className={`ContentNav-Option ${navDisplay.armor && "active"}`} onMouseDown={() => handleNavChange("armor")}>
+                    Armor
+                  </span>
+                  <span className={`ContentNav-Option ${navDisplay.equipment && "active"}`} onMouseDown={() => handleNavChange("equipment")}>
+                    Equipment
+                  </span>
+                  <span className={`ContentNav-Option ${navDisplay.combatGear && "active"}`} onMouseDown={() => handleNavChange("combatGear")}>
+                    Combat Gear
+                  </span>
+                </div>
+                <div className='ContentContainer-Display'>
+                  {navDisplay.armor && <PlayerArmor sortedItems={sortedItems} />}
+                  {navDisplay.equipment && <PlayerEquipment sortedItems={sortedItems} />}
+                  {navDisplay.combatGear && <PlayerCombatGear sortedItems={sortedItems} />}
+                  {navDisplay.baseStats && <PlayerStats />}
+                  {navDisplay.skills && <PlayerSkills skillCaps={data.skillCaps} />}
+                  {navDisplay.collections && <PlayerCollections />}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 export default Profile;
