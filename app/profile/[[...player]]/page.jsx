@@ -1,12 +1,13 @@
 import React from "react";
-import { getHypixelData } from "@/app/lib/Util";
+import { getHypixelData, sortItems } from "@/app/lib/Util";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
 import { initializeApp, getApps } from "firebase/app";
 import { firebaseConfig } from "@/app/firestoreConfig";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
-import { fetchProfile,setProfile,fetchProfileWithAdmin,setProfileWithAdmin } from "@/app/lib/DatabaseMethods";
+import { fetchProfile, setProfile, fetchProfileWithAdmin, setProfileWithAdmin } from "@/app/lib/DatabaseMethods";
+export const revalidate = 3600
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -17,11 +18,7 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 const fetchedProfiles = {};
 
 // Do something with the data
-let hypixelData = null;
-let sortedItems = null;
 let firestoreDB;
-const page = async ({ params }) => {
-
   // use admin firestore for production to connect to remote firebase db
   if (process.env.NODE_ENV === "production") {
     if (!admin.apps.length) {
@@ -33,7 +30,7 @@ const page = async ({ params }) => {
     firestoreDB = admin.firestore();
   } else {
     // Development mode
-    if (!firestoreDB){
+    if (!firestoreDB) {
       if (!getApps().length) {
         // Initialize Firebase with the config object if not already initialized
         const fireStoreApp = initializeApp(firebaseConfig);
@@ -42,13 +39,17 @@ const page = async ({ params }) => {
         firestoreDB = getFirestore();
       }
       // Connect to the Firestore emulator
-      connectFirestoreEmulator(firestoreDB, 'localhost', 8080);
+      connectFirestoreEmulator(firestoreDB, "localhost", 8080);
     }
   }
 
   // const hypixelData = await cacheHypixelData();
-  const useAdminDB = process.env.NODE_ENV === 'production';
-  hypixelData = hypixelData || (await getHypixelData(firestoreDB,useAdminDB));
+  const useAdminDB = process.env.NODE_ENV === "production";
+
+const hypixelData = (await getHypixelData(firestoreDB, useAdminDB));
+const sortedItems = await sortItems(hypixelData);
+const page = async ({ params }) => {
+  
   const profileName = params?.player;
 
   // // fetch UUID if player name is specified
@@ -65,7 +66,8 @@ const page = async ({ params }) => {
   if (UUID && fetchedProfiles[UUID] && Date.now() - fetchedProfiles[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProfiles[UUID].hypixelProfile;
   } else if (UUID) {
-    hypixelProfileData = process.env.NODE_ENV === 'production' ? await fetchProfileWithAdmin(firestoreDB,UUID) : await fetchProfile(firestoreDB,UUID);
+    hypixelProfileData =
+      process.env.NODE_ENV === "production" ? await fetchProfileWithAdmin(firestoreDB, UUID) : await fetchProfile(firestoreDB, UUID);
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -74,18 +76,17 @@ const page = async ({ params }) => {
 
       hypixelProfileData.lastCache = Date.now();
 
-      // cache recently fetched profile 
+      // cache recently fetched profile
       fetchedProfiles[UUID] = {
         lastFetched: Date.now(),
         hypixelProfile: hypixelProfileData,
       };
 
       // choose correct method depending on NODE_ENV
-      if (process.env.NODE_ENV === 'production'){
-        setProfileWithAdmin(firestoreDB,UUID,hypixelProfileData);
-      }
-      else {
-        setProfile(firestoreDB,UUID,hypixelProfileData);
+      if (process.env.NODE_ENV === "production") {
+        setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
+      } else {
+        setProfile(firestoreDB, UUID, hypixelProfileData);
       }
     }
   }
@@ -98,32 +99,7 @@ const page = async ({ params }) => {
   };
 
   // sort the hundreds of items on the server to pass to the client profile component
-  const sortItem = async () => {
-    const items = hypixelData;
-    const categories = ["helmet", "chestplate", "leggings", "boots", "necklace", "cloak", "belt", "gloves", "weapon"];
-
-    const sortedItems = {};
-
-    categories.forEach((category) => {
-      sortedItems[category] = Object.entries(items[category]).map(([item, props]) => ({
-        name: props.name,
-        id: props.id,
-        tier: props.tier,
-      }));
-
-      // Add an empty string element to the beginning of the array
-      sortedItems[category].unshift({ name: "", tier: "COMMON", id: "none" });
-
-      // Sort the items by name
-      sortedItems[category].sort((a, b) => a.name.localeCompare(b.name));
-
-      // set the empty string element to the 'unequipped' option
-      sortedItems[category][0].name = "Unequipped";
-    });
-    return sortedItems;
-  };
-
-  sortedItems = sortedItems || (await sortItem());
+  
 
   return (
     <div>

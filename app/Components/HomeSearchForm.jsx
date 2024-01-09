@@ -10,7 +10,7 @@ const HomeSearchForm = () => {
     <form className={styles.profileSearch} action={() => redirectPlayer(playerName)}>
       <input onChange={(e) => setPlayerName(e.target.value)} placeholder='Player Name' type='text' />
       <button>Load</button>
-      <button action={() => redirectDefault(playerName)}>No Profile</button>
+      <button onClick={() => redirectDefault(playerName)}>No Profile</button>
     </form>
   );
 };
