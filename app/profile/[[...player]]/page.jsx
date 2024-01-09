@@ -28,12 +28,21 @@ let firestoreDB;
 let hypixelData;
 let sortedItems;
 const page = async ({ params }) => {
+  const setProfileData = async (firestoreDB, UUID, hypixelProfileData) => {
+    if (process.env.NODE_ENV === "production") {
+      return setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
+    } else {
+      return setProfile(firestoreDB, UUID, hypixelProfileData);
+    }
+  };
   try {
     const useAdminDB = process.env.NODE_ENV === "production";
     // use admin firestore for production to connect to remote firebase db
     if (process.env.NODE_ENV === "production") {
+      console.log("admin");
       firestoreDB = admin.firestore();
     } else {
+      console.log("client");
       // Development mode
       if (!getApps()?.length) {
         // Initialize Firebase with the config object if not already initialized
@@ -86,11 +95,9 @@ const page = async ({ params }) => {
         };
 
         // choose correct method depending on NODE_ENV
-        if (process.env.NODE_ENV === "production") {
-          // setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
-        } else {
-          // setProfile(firestoreDB, UUID, hypixelProfileData);
-        }
+        setProfileData(firestoreDB, UUID, hypixelProfileData).catch((error) => {
+          console.error("Error setting profile data:", error);
+        });
       }
     }
 
