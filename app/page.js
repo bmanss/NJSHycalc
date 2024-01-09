@@ -28,6 +28,10 @@ export default function Home() {
   }
 
   useEffect(() =>{
+    setLoading(false);
+  },[]);
+
+  useEffect(() =>{
     router.prefetch(`/profile`);
   },[router])
 
