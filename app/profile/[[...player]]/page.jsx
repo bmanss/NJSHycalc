@@ -87,9 +87,9 @@ const page = async ({ params }) => {
 
         // choose correct method depending on NODE_ENV
         if (process.env.NODE_ENV === "production") {
-          setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
+          // setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
         } else {
-          setProfile(firestoreDB, UUID, hypixelProfileData);
+          // setProfile(firestoreDB, UUID, hypixelProfileData);
         }
       }
     }
