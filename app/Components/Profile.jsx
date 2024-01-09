@@ -20,6 +20,8 @@ import StatBarStyles from "../styles/StatDisplays.module.scss";
 import LoadingSkeleton from "../Components/LoadingSkeleton";
 
 const Profile = ({ sortedItems, data, profileData }) => {
+  console.log('data',data);
+  console.log('profiledata',profileData);
   const router = useRouter();
   const profileContext = useProfileContext();
   const [playerName, setPlayerName] = useState(profileData.name || "Default-Profile");
