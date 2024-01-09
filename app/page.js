@@ -31,9 +31,9 @@ export default function Home() {
     setLoading(false);
   },[]);
 
-  useEffect(() =>{
-    router.prefetch(`/profile`);
-  },[router])
+  // useEffect(() =>{
+  //   router.prefetch(`/profile`);
+  // },[router])
 
   if (loading){
     return <LoadingSkeleton/>
