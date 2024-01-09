@@ -11,10 +11,12 @@ export const revalidate = 3600;
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
+// set service account creds
 serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
 serviceAccount.client_email = process.env.CLIENT_EMAIL;
 serviceAccount.client_id = process.env.CLIENT_ID;
 
+// temp store fetched profiles for the session
 const fetchedProfiles = {};
 
 // Do something with the data
@@ -48,16 +50,20 @@ const useAdminDB = process.env.NODE_ENV === "production";
 
 const page = async ({ params }) => {
   const hypixelData = await getHypixelData(firestoreDB, useAdminDB);
+
+  // sort the hundreds of items on the server to pass to the client profile component
   const sortedItems = await sortItems(hypixelData);
+
+  // get profile name from params if there
   const profileName = params?.player;
 
-  // // fetch UUID if player name is specified
+  // fetch UUID if player name is specified
   const UUIDResponse = profileName ? await fetch(`https://api.mojang.com/users/profiles/minecraft/${profileName}`) : null;
 
-  // // make sure response is ok and get the id from it
+  // make sure response is ok and get the id from it
   const UUID = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
 
-  // // fetch hypixel profile data if UUID is valid
+  // fetch hypixel profile data if UUID is valid
   const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID ?? ""}`;
 
   let hypixelProfileData = null;
@@ -96,8 +102,6 @@ const page = async ({ params }) => {
     UUID: UUID,
     hypixelProfiles: hypixelProfileData,
   };
-
-  // sort the hundreds of items on the server to pass to the client profile component
 
   return (
     <div>
