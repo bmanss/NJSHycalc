@@ -16,14 +16,14 @@ serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\
 serviceAccount.client_email = process.env.CLIENT_EMAIL;
 serviceAccount.client_id = process.env.CLIENT_ID;
 
-if (process.env.NODE_ENV === "production") {
-  // Initialize Firebase Admin SDK only if it's not already initialized
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
+// if (process.env.NODE_ENV === "production") {
+//   // Initialize Firebase Admin SDK only if it's not already initialized
+//   admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//   });
+// }
 // temp store fetched profiles for the session
-const fetchedProfiles = {};
+// const fetchedProfiles = {};
 let firestoreDB;
 let hypixelData;
 let sortedItems;
@@ -35,10 +35,16 @@ const page = async ({ params }) => {
       return setProfile(firestoreDB, UUID, hypixelProfileData);
     }
   };
+  
   try {
     const useAdminDB = process.env.NODE_ENV === "production";
     // use admin firestore for production to connect to remote firebase db
     if (process.env.NODE_ENV === "production") {
+      if (!admin.apps.length) {
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+        });
+      }
       console.log("admin");
       firestoreDB = admin.firestore();
     } else {
@@ -75,9 +81,10 @@ const page = async ({ params }) => {
 
     let hypixelProfileData = null;
     // check if local cached should be used to return the data
-    if (UUID && fetchedProfiles[UUID] && Date.now() - fetchedProfiles[UUID].lastFetched < CACHE_DURATION) {
-      hypixelProfileData = fetchedProfiles[UUID].hypixelProfile;
-    } else if (UUID) {
+    // if (UUID && fetchedProfiles[UUID] && Date.now() - fetchedProfiles[UUID].lastFetched < CACHE_DURATION) {
+    //   hypixelProfileData = fetchedProfiles[UUID].hypixelProfile;
+    // }
+    if (UUID) {
       hypixelProfileData =
         process.env.NODE_ENV === "production" ? await fetchProfileWithAdmin(firestoreDB, UUID) : await fetchProfile(firestoreDB, UUID);
       // if database data is older than 1 minute get the new data from hypixel api
@@ -89,10 +96,10 @@ const page = async ({ params }) => {
         hypixelProfileData.lastCache = Date.now();
 
         // cache recently fetched profile
-        fetchedProfiles[UUID] = {
-          lastFetched: Date.now(),
-          hypixelProfile: hypixelProfileData,
-        };
+        // fetchedProfiles[UUID] = {
+        //   lastFetched: Date.now(),
+        //   hypixelProfile: hypixelProfileData,
+        // };
 
         // choose correct method depending on NODE_ENV
         setProfileData(firestoreDB, UUID, hypixelProfileData).catch((error) => {
