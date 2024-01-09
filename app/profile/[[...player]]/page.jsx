@@ -48,12 +48,12 @@ if (process.env.NODE_ENV === "production") {
 // const hypixelData = await cacheHypixelData();
 const useAdminDB = process.env.NODE_ENV === "production";
 
+const hypixelData = await getHypixelData(firestoreDB, useAdminDB);
+
+// sort the hundreds of items on the server to pass to the client profile component
+const sortedItems = await sortItems(hypixelData);
+
 const page = async ({ params }) => {
-  const hypixelData = await getHypixelData(firestoreDB, useAdminDB);
-
-  // sort the hundreds of items on the server to pass to the client profile component
-  const sortedItems = await sortItems(hypixelData);
-
   // get profile name from params if there
   const profileName = params?.player;
 
