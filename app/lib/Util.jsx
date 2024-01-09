@@ -31,7 +31,6 @@ export const formatValue = (value) => {
 };
 
 export const sortItems = cache(async (items) => {
-  console.log('sort');
   const categories = ["helmet", "chestplate", "leggings", "boots", "necklace", "cloak", "belt", "gloves", "weapon"];
 
   const sortedItems = {};
@@ -56,7 +55,6 @@ export const sortItems = cache(async (items) => {
 });
 
 export const getHypixelData = cache(async (firestoreDB, useAdmin) => {
-  console.log('items');
   try {
     // set which method to use for getting collection data
     const getDBCollection = useAdmin ? getCollectionWithAdmin : getCollection;
