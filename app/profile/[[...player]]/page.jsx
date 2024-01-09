@@ -19,41 +19,40 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 // temp store fetched profiles for the session
 const fetchedProfiles = {};
 
-// Do something with the data
 let firestoreDB;
-// use admin firestore for production to connect to remote firebase db
-if (process.env.NODE_ENV === "production") {
-  if (!admin.apps.length) {
-    // Initialize Firebase Admin SDK only if it's not already initialized
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-  }
-  firestoreDB = admin.firestore();
-} else {
-  // Development mode
-  if (!firestoreDB) {
-    if (!getApps().length) {
-      // Initialize Firebase with the config object if not already initialized
-      const fireStoreApp = initializeApp(firebaseConfig);
-      firestoreDB = getFirestore(fireStoreApp);
-    } else {
-      firestoreDB = getFirestore();
-    }
-    // Connect to the Firestore emulator
-    connectFirestoreEmulator(firestoreDB, "localhost", 8080);
-  }
-}
-
-// const hypixelData = await cacheHypixelData();
-const useAdminDB = process.env.NODE_ENV === "production";
-
-const hypixelData = await getHypixelData(firestoreDB, useAdminDB);
-
-// sort the hundreds of items on the server to pass to the client profile component
-const sortedItems = await sortItems(hypixelData);
+let hypixelData;
+let sortedItems;
 
 const page = async ({ params }) => {
+  const useAdminDB = process.env.NODE_ENV === "production";
+  // use admin firestore for production to connect to remote firebase db
+  if (process.env.NODE_ENV === "production") {
+    if (!admin.apps.length) {
+      // Initialize Firebase Admin SDK only if it's not already initialized
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
+    firestoreDB = admin.firestore();
+  } else {
+    // Development mode
+    if (!firestoreDB) {
+      if (!getApps().length) {
+        // Initialize Firebase with the config object if not already initialized
+        const fireStoreApp = initializeApp(firebaseConfig);
+        firestoreDB = getFirestore(fireStoreApp);
+      } else {
+        firestoreDB = getFirestore();
+      }
+      // Connect to the Firestore emulator
+      connectFirestoreEmulator(firestoreDB, "localhost", 8080);
+    }
+  }
+
+  hypixelData = hypixelData || await getHypixelData(firestoreDB, useAdminDB);
+
+  // sort the hundreds of items on the server to pass to the client profile component
+  sortedItems = sortedItems || await sortItems(hypixelData);
   // get profile name from params if there
   const profileName = params?.player;
 
