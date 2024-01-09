@@ -107,7 +107,9 @@ const page = async ({ params }) => {
       </div>
     );
   } catch (error) {
-    <div>{JSON.stringify({ error: error })}</div>;
+    <div>
+      <p>Error: {error.message}</p>
+    </div>;
   }
 };
 
