@@ -6,7 +6,7 @@ import admin from "firebase-admin";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { firebaseConfig } from "@/app/firestoreConfig";
 import { getFirestore } from "firebase-admin/firestore";
-import { fetchProfile, setProfile, fetchProfileWithAdmin, setProfileWithAdmin } from "@/app/lib/DatabaseMethods";
+import { fetchProfile, setProfile, getUUID, setUUID } from "@/app/lib/DatabaseMethods";
 import { getLocalFirestore } from "@/app/firestoreConfig";
 export const revalidate = 3600;
 // 1 min in milliseconds
@@ -46,14 +46,20 @@ const page = async ({ params }) => {
 
   // get profile name from params if there
   const profileName = params?.player;
-
+  // const UUID = profileName ? recentUUID[profileName] : null;
+  let UUID;
   if (profileName && !recentUUID.hasOwnProperty(profileName)) {
-    // fetch UUID if player name is specified
-    const UUIDResponse = profileName ? await fetch(`https://api.mojang.com/users/profiles/minecraft/${profileName}`) : null;
-    recentUUID[profileName] = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
+    // try to get from firebase first
+    UUID = await getUUID(firestoreDB, profileName, useAdminDB);
+    if (!UUID) {
+      const UUIDResponse = profileName ? await fetch(`https://api.mojang.com/users/profiles/minecraft/${profileName}`) : null;
+      UUID = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
+      UUID && setUUID(firestoreDB, UUID, profileName, useAdminDB);
+    }
+    recentUUID[profileName] = UUID;
+  } else {
+    UUID = recentUUID[profileName];
   }
-
-  const UUID = profileName ? recentUUID[profileName] : null;
 
   // fetch hypixel profile data if UUID is valid
   const url = `https://api.hypixel.net/v2/skyblock/profiles?key=${process.env.HYPIXEL_API_KEY}&uuid=${UUID ?? ""}`;
@@ -63,7 +69,7 @@ const page = async ({ params }) => {
   if (UUID && fetchedProfiles[UUID] && Date.now() - fetchedProfiles[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProfiles[UUID].hypixelProfile;
   } else if (UUID) {
-    hypixelProfileData = useAdminDB ? await fetchProfileWithAdmin(firestoreDB, UUID) : await fetchProfile(firestoreDB, UUID);
+    hypixelProfileData = await fetchProfile(firestoreDB, UUID, useAdminDB);
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -78,11 +84,7 @@ const page = async ({ params }) => {
         hypixelProfile: hypixelProfileData,
       };
 
-      if (process.env.NODE_ENV === "production") {
-        setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
-      } else {
-        setProfile(firestoreDB, UUID, hypixelProfileData);
-      }
+      setProfile(firestoreDB, UUID, hypixelProfileData, useAdminDB);
     }
   }
 
