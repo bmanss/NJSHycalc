@@ -3,7 +3,7 @@ import Pako from "pako";
 import nbt from "nbt";
 import { Buffer } from "buffer";
 import { loreColors } from "../constants/colors.js";
-import { getCollection, getCollectionWithAdmin } from "./DatabaseMethods.js";
+import { getCollection } from "./DatabaseMethods.js";
 import { cache } from "react";
 
 export async function parseNBT(encodedData) {
@@ -57,10 +57,9 @@ export const sortItems = cache(async (items) => {
 export const getHypixelData = cache(async (firestoreDB, useAdmin) => {
   try {
     // set which method to use for getting collection data
-    const getDBCollection = useAdmin ? getCollectionWithAdmin : getCollection;
-    const itemSnapshot = await getDBCollection(firestoreDB, "items");
-    const skillsSnapshot = await getDBCollection(firestoreDB, "skills");
-    const collectionsSnapshot = await getDBCollection(firestoreDB, "collections");
+    const itemSnapshot = await getCollection(firestoreDB, "items", useAdmin);
+    const skillsSnapshot = await getCollection(firestoreDB, "skills", useAdmin);
+    const collectionsSnapshot = await getCollection(firestoreDB, "collections", useAdmin);
     const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
     itemSnapshot.forEach((doc) => {
       hypixelData[doc.id] = doc.data();
