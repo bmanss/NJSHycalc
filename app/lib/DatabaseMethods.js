@@ -16,7 +16,7 @@ export function setProfile(firestore, UUID, data) {
   setDoc(profileDocRef, data);
 }
 
-export function setProfileWithAdmin(adminFirestore, UUID, data) {
+export async function setProfileWithAdmin(adminFirestore, UUID, data) {
     adminFirestore.collection("profileData").doc(UUID).set(data);
 }
 

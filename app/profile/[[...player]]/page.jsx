@@ -3,9 +3,9 @@ import { getHypixelData, sortItems } from "@/app/lib/Util";
 import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { firebaseConfig } from "@/app/firestoreConfig";
-import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase-admin/firestore";
 import { fetchProfile, setProfile, fetchProfileWithAdmin, setProfileWithAdmin } from "@/app/lib/DatabaseMethods";
 export const revalidate = 3600;
 // 1 min in milliseconds
@@ -19,40 +19,50 @@ serviceAccount.client_id = process.env.CLIENT_ID;
 // temp store fetched profiles for the session
 const fetchedProfiles = {};
 
-let firestoreDB;
+const apps = getApps();
+
+if (!apps.length) {
+  // Initialize Firebase Admin SDK only if it's not already initialized
+  initializeApp({
+    credential: cert(serviceAccount),
+  });
+}
+
 let hypixelData;
 let sortedItems;
 
 const page = async ({ params }) => {
-  const useAdminDB = process.env.NODE_ENV === "production";
+  const firestoreDB = getFirestore();
+  // const useAdminDB = process.env.NODE_ENV === "production";
   // use admin firestore for production to connect to remote firebase db
-  if (process.env.NODE_ENV === "production") {
-    if (!admin.apps.length) {
-      // Initialize Firebase Admin SDK only if it's not already initialized
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
-    }
-    firestoreDB = admin.firestore();
-  } else {
-    // Development mode
-    if (!firestoreDB) {
-      if (!getApps().length) {
-        // Initialize Firebase with the config object if not already initialized
-        const fireStoreApp = initializeApp(firebaseConfig);
-        firestoreDB = getFirestore(fireStoreApp);
-      } else {
-        firestoreDB = getFirestore();
-      }
-      // Connect to the Firestore emulator
-      connectFirestoreEmulator(firestoreDB, "localhost", 8080);
-    }
-  }
+  // if (process.env.NODE_ENV === "production") {
+  //   if (!admin.apps.length) {
+  //     // Initialize Firebase Admin SDK only if it's not already initialized
+  //     admin.initializeApp({
+  //       credential: cert(serviceAccount),
+  //     });
+  //   }
+  //   firestoreDB = admin.firestore();
+  // }
+  // else {
+  //   // Development mode
+  //   if (!firestoreDB) {
+  //     if (!getApps().length) {
+  //       // Initialize Firebase with the config object if not already initialized
+  //       const fireStoreApp = initializeApp(firebaseConfig);
+  //       firestoreDB = getFirestore(fireStoreApp);
+  //     } else {
+  //       firestoreDB = getFirestore();
+  //     }
+  //     // Connect to the Firestore emulator
+  //     connectFirestoreEmulator(firestoreDB, "localhost", 8080);
+  //   }
+  // }
 
-  hypixelData = hypixelData || await getHypixelData(firestoreDB, useAdminDB);
+  hypixelData = hypixelData || (await getHypixelData(firestoreDB, true));
 
   // sort the hundreds of items on the server to pass to the client profile component
-  sortedItems = sortedItems || await sortItems(hypixelData);
+  sortedItems = sortedItems || (await sortItems(hypixelData));
   // get profile name from params if there
   const profileName = params?.player;
 
@@ -70,8 +80,7 @@ const page = async ({ params }) => {
   if (UUID && fetchedProfiles[UUID] && Date.now() - fetchedProfiles[UUID].lastFetched < CACHE_DURATION) {
     hypixelProfileData = fetchedProfiles[UUID].hypixelProfile;
   } else if (UUID) {
-    hypixelProfileData =
-      process.env.NODE_ENV === "production" ? await fetchProfileWithAdmin(firestoreDB, UUID) : await fetchProfile(firestoreDB, UUID);
+    hypixelProfileData = await fetchProfileWithAdmin(firestoreDB, UUID);
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
       const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
@@ -86,12 +95,7 @@ const page = async ({ params }) => {
         hypixelProfile: hypixelProfileData,
       };
 
-      // choose correct method depending on NODE_ENV
-      if (process.env.NODE_ENV === "production") {
-        setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
-      } else {
-        setProfile(firestoreDB, UUID, hypixelProfileData);
-      }
+      await setProfileWithAdmin(firestoreDB, UUID, hypixelProfileData);
     }
   }
 
