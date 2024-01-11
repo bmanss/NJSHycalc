@@ -5,6 +5,7 @@ import { Buffer } from "buffer";
 import { loreColors } from "../constants/colors.js";
 import { getCollection } from "./DatabaseMethods.js";
 import { cache } from "react";
+import { unstable_cache } from 'next/cache';
 
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {
@@ -54,36 +55,38 @@ export const sortItems = cache(async (items) => {
   return sortedItems;
 });
 
-export const getHypixelData = cache(async (firestoreDB, useAdmin) => {
-  try {
-    // set which method to use for getting collection data
-    const itemSnapshot = await getCollection(firestoreDB, "items", useAdmin);
-    const skillsSnapshot = await getCollection(firestoreDB, "skills", useAdmin);
-    const collectionsSnapshot = await getCollection(firestoreDB, "collections", useAdmin);
-    const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
-    itemSnapshot.forEach((doc) => {
-      hypixelData[doc.id] = doc.data();
-    });
-    skillsSnapshot.forEach((doc) => {
-      hypixelData.skills[doc.id] = doc.data();
-    });
-    collectionsSnapshot.forEach((doc) => {
-      hypixelData.collections[doc.id] = doc.data();
-    });
+export const getHypixelData = unstable_cache(async (firestoreDB, useAdmin) => {
+  console.log("cached items");
+  // try {
+  // set which method to use for getting collection data
+  const itemSnapshot = await getCollection(firestoreDB, "items", useAdmin);
+  const skillsSnapshot = await getCollection(firestoreDB, "skills", useAdmin);
+  const collectionsSnapshot = await getCollection(firestoreDB, "collections", useAdmin);
+  const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
+  itemSnapshot.forEach((doc) => {
+    hypixelData[doc.id] = doc.data();
+  });
+  skillsSnapshot.forEach((doc) => {
+    hypixelData.skills[doc.id] = doc.data();
+  });
+  collectionsSnapshot.forEach((doc) => {
+    hypixelData.collections[doc.id] = doc.data();
+  });
 
-    const skillCaps = {};
-    for (const skill of Object.keys(hypixelData.skills)) {
-      skillCaps[skill] = hypixelData.skills[skill].maxLevel;
-    }
-    skillCaps.CATACOMBS = 50;
-
-    hypixelData.skillCaps = skillCaps;
-    return hypixelData;
-  } catch (err) {
-    console.error("Error fetching JSON data:", err);
-    throw err;
+  const skillCaps = {};
+  for (const skill of Object.keys(hypixelData.skills)) {
+    skillCaps[skill] = hypixelData.skills[skill].maxLevel;
   }
-});
+  skillCaps.CATACOMBS = 50;
+
+  hypixelData.skillCaps = skillCaps;
+  return hypixelData;
+  // } catch (err) {
+  //   console.error("Error fetching JSON data:", err);
+  //   return null;
+  //   // throw err;
+  // }
+},{revalidate: 3600});
 
 export function parseLore(loreString, key) {
   const lines = loreString.split("\n");

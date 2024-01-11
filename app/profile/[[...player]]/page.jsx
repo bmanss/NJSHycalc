@@ -4,11 +4,9 @@ import Profile from "@/app/Components/Profile";
 import serviceAccount from "@/firebaseServiceCred";
 import admin from "firebase-admin";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { firebaseConfig } from "@/app/firestoreConfig";
-import { getFirestore } from "firebase-admin/firestore";
 import { fetchProfile, setProfile, getUUID, setUUID } from "@/app/lib/DatabaseMethods";
 import { getLocalFirestore } from "@/app/firestoreConfig";
-export const revalidate = 3600;
+
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -22,27 +20,21 @@ const fetchedProfiles = {};
 const recentUUID = {};
 
 const apps = getApps();
-
-if (process.env.NODE_ENV === "production") {
-  if (!apps.length) {
-    // Initialize Firebase Admin SDK only if it's not already initialized
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-  }
+if (process.env.NODE_ENV === "production" && !apps.length) {
+  // Initialize Firebase Admin SDK only if it's not already initialized
+  initializeApp({
+    credential: cert(serviceAccount),
+  });
 }
 
-let hypixelData;
-let sortedItems;
-
-const page = async ({ params }) => {
+export default async function page({ params }){
   const useAdminDB = process.env.NODE_ENV === "production";
   const firestoreDB = useAdminDB ? admin.firestore() : getLocalFirestore();
 
-  hypixelData = hypixelData || (await getHypixelData(firestoreDB, useAdminDB));
+  const hypixelData = await getHypixelData(firestoreDB, useAdminDB);
 
   // sort the hundreds of items on the server to pass to the client profile component
-  sortedItems = sortedItems || (await sortItems(hypixelData));
+  const sortedItems = await sortItems(hypixelData);
 
   // get profile name from params if there
   const profileName = params?.player;
@@ -72,7 +64,7 @@ const page = async ({ params }) => {
     hypixelProfileData = await fetchProfile(firestoreDB, UUID, useAdminDB);
     // if database data is older than 1 minute get the new data from hypixel api
     if (!hypixelProfileData || Date.now() - hypixelProfileData.lastCache > CACHE_DURATION) {
-      const hypixelResponse = UUID ? await fetch(url, { cache: "no-store" }) : null;
+      const hypixelResponse = UUID ? await fetch(url) : null;
       // check if the response is ok and get the data as json, otherwise keep whatever it currently is
       hypixelProfileData = hypixelResponse?.ok ? await hypixelResponse.json() : hypixelProfileData;
 
@@ -101,5 +93,3 @@ const page = async ({ params }) => {
     </div>
   );
 };
-
-export default page;
