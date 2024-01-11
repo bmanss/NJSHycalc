@@ -37,7 +37,7 @@ export default async function page({ params }) {
   const sortedItems = await sortItems(hypixelData);
 
   // get profile name from params if there
-  const profileName = String(params?.player);
+  const profileName = params?.player ? String(params?.player) : null;
   // const UUID = profileName ? recentUUID[profileName] : null;
   let UUID;
   if (profileName && !recentUUID.hasOwnProperty(profileName)) {
