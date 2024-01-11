@@ -13,10 +13,10 @@ export async function fetchProfile(firestore, UUID, isAdmin) {
 // Set Profile
 export async function setProfile(firestore, UUID, data, isAdmin) {
   if (isAdmin) {
-    firestore.collection("profileData").doc(UUID).set(data);
+    await firestore.collection("profileData").doc(UUID).set(data);
   } else {
     const profileDocRef = doc(firestore, "profileData", UUID);
-    setDoc(profileDocRef, data);
+    await setDoc(profileDocRef, data);
   }
 }
 

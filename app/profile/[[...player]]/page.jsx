@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "production" && !apps.length) {
   });
 }
 
-export default async function page({ params }){
+export default async function page({ params }) {
   const useAdminDB = process.env.NODE_ENV === "production";
   const firestoreDB = useAdminDB ? admin.firestore() : getLocalFirestore();
 
@@ -76,7 +76,9 @@ export default async function page({ params }){
         hypixelProfile: hypixelProfileData,
       };
 
-      setProfile(firestoreDB, UUID, hypixelProfileData, useAdminDB);
+      setProfile(firestoreDB, UUID, hypixelProfileData, useAdminDB).catch((error) => {
+        console.error("Error setting profile:", error);
+      });
     }
   }
 
@@ -92,4 +94,4 @@ export default async function page({ params }){
       <Profile profileData={profileData} data={hypixelData} sortedItems={sortedItems} />
     </div>
   );
-};
+}
