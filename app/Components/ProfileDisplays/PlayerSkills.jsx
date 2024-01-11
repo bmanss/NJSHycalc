@@ -1,10 +1,10 @@
-'use client'
+"use client";
 import React from "react";
 import InputCounter from "../InputCounter";
 import { useProfileContext } from "../../context/ProfileContext";
 import { updateSkillBonus } from "../../lib/ProfileFunctions";
 import { ProfileActions } from "../../context/ProfileContext";
-export const PlayerSkills = ({skillCaps}) => {
+export const PlayerSkills = ({ skillCaps }) => {
   const profileContext = useProfileContext();
 
   // update base stats with new stat bonus from skill and update skills state
@@ -21,21 +21,21 @@ export const PlayerSkills = ({skillCaps}) => {
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: { ...updatedState } });
   };
   return (
-    <div className='TwoColumnGrid'>
-      {Object.entries(profileContext.getSkills()).map(([skill, level]) => (
-        <span key={`${skill}-${level}`} className='ItemWithCounter'>
-          <span key={skill}>
-            {skill.replaceAll("_", " ").toLowerCase()}{" "}
+    <div>
+      <div className='TwoColumnGrid'>
+        {Object.entries(profileContext.getSkills()).map(([skill, level]) => (
+          <span key={`${skill}-${level}`} className='ItemWithCounter'>
+            <span key={skill}>{skill.replaceAll("_", " ").toLowerCase()} </span>
+            <InputCounter
+              inputWidth={"50px"}
+              value={level}
+              min={0}
+              max={skillCaps[skill] ?? 500}
+              onChange={(value) => handleSkillLevelChange(skill, value)}
+            />
           </span>
-          <InputCounter
-            inputWidth={"50px"}
-            value={level}
-            min={0}
-            max={skillCaps[skill] ?? 500}
-            onChange={(value) => handleSkillLevelChange(skill, value)}
-          />
-        </span>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

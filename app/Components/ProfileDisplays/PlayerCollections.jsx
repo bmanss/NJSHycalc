@@ -14,7 +14,7 @@ export const PlayerCollections = () => {
   };
 
   return (
-    <div>
+    <div className='OneColumnGrid'>
       {Object.entries(profileContext.getCollections()).map(([category, collections]) => (
         <div key={category}>
           <span className='CollectionDisplay-Category'>{category.toLowerCase()}</span>

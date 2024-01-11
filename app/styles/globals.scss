@@ -49,7 +49,6 @@
 
 html,
 body {
-  
   overflow-x: hidden;
 }
 
@@ -67,7 +66,7 @@ body {
 
 *,
 *::before,
-*::after { 
+*::after {
   box-sizing: border-box;
 }
 
@@ -234,14 +233,16 @@ body {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  padding-top: 60px;
+  padding-top: 50px;
   width: 100%;
-  margin-left: 300px;
+  padding-left: 300px;
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
 .ContentContainer-Display {
+  display: flex;
+  // display: flex;0
   padding-top: 10px;
   height: 100%;
   overflow-y: auto;
@@ -256,6 +257,15 @@ body {
   grid-gap: 5px 50px;
   grid-template-columns: repeat(2, 1fr);
   padding: 10px 15px;
+  text-transform: capitalize;
+  width: fit-content;
+}
+
+.OneColumnGrid {
+  // background-color: red;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(1, 1fr);
   text-transform: capitalize;
   width: fit-content;
 }
@@ -275,7 +285,9 @@ body {
   border-bottom: 1px solid rgb(0, 0, 0);
   height: fit-content;
   padding: 10px;
-  margin-right: 15px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  // margin-right: 15px;
 }
 
 .ContentNav-Option {
@@ -297,4 +309,40 @@ body {
 .ContentNav-Option:hover {
   background-color: rgba(155, 155, 155, 0.164);
   color: aqua;
+}
+
+.MenuIcon {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  display: none;
+  cursor: pointer;
+  div {
+    border-radius: 5px;
+    width: 30px;
+    height: 3px;
+    background-color: #ffffff;
+    margin: 6px 0;
+  }
+}
+
+@media (max-width: 1206px) {
+  .ContentContainer-Display {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 950px) {
+  .MenuIcon {
+    display: inline-block;
+  }
+  .ContentContainer {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 612px) {
+  .TwoColumnGrid {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

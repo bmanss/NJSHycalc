@@ -38,9 +38,15 @@ const Profile = ({ sortedItems, data, profileData }) => {
     return false;
   });
   const [loading, setLoading] = useState(true);
+  const [statsVisible, setStatsVisible] = useState(true);
 
   // handle player data on component load
   useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 950) setStatsVisible(true);
+      else if (window.innerWidth <= 950) setStatsVisible(false);
+    }
+    window.addEventListener("resize", handleResize);
     // set profile context data on initial load
     const hypixelItems = {
       accessories: data.accessories ?? {},
@@ -71,6 +77,9 @@ const Profile = ({ sortedItems, data, profileData }) => {
       }, 1500);
     }
     setLoading(false);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const navigateProfile = (player) => {
@@ -144,11 +153,15 @@ const Profile = ({ sortedItems, data, profileData }) => {
       <div>
         <div style={{ height: "100vh" }}>
           <div className={InfoBarStyles["InfoBar"]}>
+            <button className='MenuIcon' onClick={() => setStatsVisible(!statsVisible)}>
+              <div />
+              <div />
+              <div />
+            </button>
             <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>
-              <div>{`${playerName} `}</div>
+              <div style={{paddingRight:'5px'}}>{`${playerName}`}</div>
               {profileContext.profiles.length > 0 && (
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <div>On </div>
                   <div className={InfoBarStyles["InfoBar-Cutename"]}>
                     {profileContext.profileState.activeProfile}
                     <div className={InfoBarStyles["InfoBar-Cutename-Dropdown"]}>
@@ -188,60 +201,62 @@ const Profile = ({ sortedItems, data, profileData }) => {
           </div>
           <div style={{ height: "100%" }}>
             <div style={{ display: "flex", height: "100%" }}>
-              <div className={StatBarStyles["StatsBar"]}>
-                <div className={StatBarStyles["StatsBar-Header"]}>Stats:</div>
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
-                  <span className={StatBarStyles["StatToggle"]}>
-                    <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
-                    <label htmlFor='checkbox'></label>
-                  </span>
-                </div>
-                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                  <div>God Potion</div>
-                  <div
-                    className='enabledBox'
-                    style={{ backgroundColor: godPotionEnabled ? "#2bff00" : "#ff0000", borderRadius: "2px" }}
-                    onClick={handleGodPotion}
-                  />
-                </div>
-                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                  <span>PowerStone: </span>
-                  <SearchBox
-                    maxWidth={"155px"}
-                    placeholder={"Powerstone"}
-                    itemList={powerstoneList()}
-                    selectedItem={profileContext.getPowerStone()}
-                    onItemChange={(value) => handlePowerstoneChange(value)}
-                  />
-                </div>
-                {Object.entries(trackedStats).map(([stat]) => (
-                  <span key={stat}>
-                    <span style={{ color: trackedStats[stat].color ?? "white" }}>
-                      {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : formatStat(stat)}:{" "}
+              {statsVisible && (
+                <div className={`${StatBarStyles["StatsBar"]} ${!statsVisible && "hidden"}`}>
+                  <div className={StatBarStyles["StatsBar-Header"]}>Stats:</div>
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
+                    <span className={StatBarStyles["StatToggle"]}>
+                      <input type='checkbox' id='checkbox' onChange={(e) => handleStatTypeChange(e.target.checked)} />
+                      <label htmlFor='checkbox'></label>
                     </span>
-                    <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
-                  </span>
-                ))}
-                <div className={StatBarStyles["StatsBar-Header"]} style={{ marginTop: "10px" }}>
-                  Damage Stats:
+                  </div>
+                  <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                    <div>God Potion</div>
+                    <div
+                      className='enabledBox'
+                      style={{ backgroundColor: godPotionEnabled ? "#2bff00" : "#ff0000", borderRadius: "2px" }}
+                      onClick={handleGodPotion}
+                    />
+                  </div>
+                  <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                    <span>PowerStone: </span>
+                    <SearchBox
+                      maxWidth={"155px"}
+                      placeholder={"Powerstone"}
+                      itemList={powerstoneList()}
+                      selectedItem={profileContext.getPowerStone()}
+                      onItemChange={(value) => handlePowerstoneChange(value)}
+                    />
+                  </div>
+                  {Object.entries(trackedStats).map(([stat]) => (
+                    <span key={stat}>
+                      <span style={{ color: trackedStats[stat].color ?? "white" }}>
+                        {trackedStats[stat].Symbol} {statAlias[stat] ? statAlias[stat].toLowerCase() : formatStat(stat)}:{" "}
+                      </span>
+                      <span>{profileContext.getFinalStats()[stat]?.toFixed(2) ?? 0}</span>
+                    </span>
+                  ))}
+                  <div className={StatBarStyles["StatsBar-Header"]} style={{ marginTop: "10px" }}>
+                    Damage Stats:
+                  </div>
+                  <div className={StatBarStyles["StatsBar-ItemGroup"]}>
+                    <span>Target Mob</span>
+                    <SearchBox
+                      maxWidth={"155px"}
+                      placeholder={"Mob Type"}
+                      itemList={mobList()}
+                      selectedItem={profileContext.getTargetMob()}
+                      onItemChange={(value) => handleMobChange(value)}
+                    />
+                  </div>
+                  {/* damage stats */}
+                  <span> Regular: {formatValue(profileContext.getFinalStats().hitValues?.regular)}</span>
+                  <span> Crit: {formatValue(profileContext.getFinalStats().hitValues.critHit)}</span>
+                  <span> First Strike: {formatValue(profileContext.getFinalStats().hitValues.firstStrike)}</span>
+                  <span> First Strike Crit: {formatValue(profileContext.getFinalStats().hitValues.firstStrikeCrit)}</span>
+                  <span> Ability: {formatValue(profileContext.getFinalStats().hitValues.magic)}</span>
                 </div>
-                <div className={StatBarStyles["StatsBar-ItemGroup"]}>
-                  <span>Target Mob</span>
-                  <SearchBox
-                    maxWidth={"155px"}
-                    placeholder={"Mob Type"}
-                    itemList={mobList()}
-                    selectedItem={profileContext.getTargetMob()}
-                    onItemChange={(value) => handleMobChange(value)}
-                  />
-                </div>
-                {/* damage stats */}
-                <span> Regular: {formatValue(profileContext.getFinalStats().hitValues?.regular)}</span>
-                <span> Crit: {formatValue(profileContext.getFinalStats().hitValues.critHit)}</span>
-                <span> First Strike: {formatValue(profileContext.getFinalStats().hitValues.firstStrike)}</span>
-                <span> First Strike Crit: {formatValue(profileContext.getFinalStats().hitValues.firstStrikeCrit)}</span>
-                <span> Ability: {formatValue(profileContext.getFinalStats().hitValues.magic)}</span>
-              </div>
+              )}
               <div className='ContentContainer'>
                 <div className='ContentNav'>
                   <span className={`ContentNav-Option ${navDisplay.baseStats && "active"}`} onMouseDown={() => handleNavChange("baseStats")}>
