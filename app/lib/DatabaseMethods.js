@@ -30,7 +30,7 @@ export async function getCollection(firestore, collectionName, isAdmin) {
 }
 
 export async function getUUID(firestore, profileName, isAdmin) {
-  const uuidCollectionRef = isAdmin ? firestore.collection("uuids") : collection(firestore, "uuids");
+  const uuidCollectionRef = isAdmin ? firestore.collection("profileData") : collection(firestore, "profileData");
   let queryResults = [];
   if (isAdmin) {
     queryResults = await uuidCollectionRef.where("name", "==", profileName).get();
@@ -39,19 +39,7 @@ export async function getUUID(firestore, profileName, isAdmin) {
     const q = query(uuidCollectionRef, where("name", "==", profileName));
     queryResults = await getDocs(q);
   }
-
+  
   const uuid = queryResults.docs.map((doc) => doc.id);
   return uuid[0];
-}
-
-export async function setUUID(firestore, UUID, profileName, isAdmin) {
-  const data = {
-    name: profileName
-  }
-  if (isAdmin) {
-    firestore.collection("uuids").doc(UUID).set(data);
-  } else {
-    const profileDocRef = doc(firestore, "uuids", UUID);
-    setDoc(profileDocRef, data);
-  }
 }

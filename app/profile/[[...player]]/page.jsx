@@ -37,7 +37,7 @@ export default async function page({ params }) {
   const sortedItems = await sortItems(hypixelData);
 
   // get profile name from params if there
-  const profileName = params?.player;
+  const profileName = String(params?.player);
   // const UUID = profileName ? recentUUID[profileName] : null;
   let UUID;
   if (profileName && !recentUUID.hasOwnProperty(profileName)) {
@@ -46,7 +46,6 @@ export default async function page({ params }) {
     if (!UUID) {
       const UUIDResponse = profileName ? await fetch(`https://api.mojang.com/users/profiles/minecraft/${profileName}`) : null;
       UUID = UUIDResponse?.ok ? (await UUIDResponse.json()).id : null;
-      UUID && setUUID(firestoreDB, UUID, profileName, useAdminDB);
     }
     recentUUID[profileName] = UUID;
   } else {
@@ -69,6 +68,7 @@ export default async function page({ params }) {
       hypixelProfileData = hypixelResponse?.ok ? await hypixelResponse.json() : hypixelProfileData;
 
       hypixelProfileData.lastCache = Date.now();
+      hypixelProfileData.name = profileName;
 
       // cache recently fetched profile
       fetchedProfiles[UUID] = {
