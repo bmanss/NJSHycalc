@@ -5,7 +5,7 @@ import { Buffer } from "buffer";
 import { loreColors } from "../constants/colors.js";
 import { getCollection } from "./DatabaseMethods.js";
 import { cache } from "react";
-import { unstable_cache } from 'next/cache';
+import { unstable_cache } from "next/cache";
 
 export async function parseNBT(encodedData) {
   return new Promise((resolve, reject) => {
@@ -55,38 +55,40 @@ export const sortItems = cache(async (items) => {
   return sortedItems;
 });
 
-export const getHypixelData = unstable_cache(async (firestoreDB, useAdmin) => {
-  console.log("cached items");
-  // try {
-  // set which method to use for getting collection data
-  const itemSnapshot = await getCollection(firestoreDB, "items", useAdmin);
-  const skillsSnapshot = await getCollection(firestoreDB, "skills", useAdmin);
-  const collectionsSnapshot = await getCollection(firestoreDB, "collections", useAdmin);
-  const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
-  itemSnapshot.forEach((doc) => {
-    hypixelData[doc.id] = doc.data();
-  });
-  skillsSnapshot.forEach((doc) => {
-    hypixelData.skills[doc.id] = doc.data();
-  });
-  collectionsSnapshot.forEach((doc) => {
-    hypixelData.collections[doc.id] = doc.data();
-  });
+export const getHypixelData = unstable_cache(
+  async (firestoreDB, useAdmin) => {
+    // try {
+    // set which method to use for getting collection data
+    const itemSnapshot = await getCollection(firestoreDB, "items", useAdmin);
+    const skillsSnapshot = await getCollection(firestoreDB, "skills", useAdmin);
+    const collectionsSnapshot = await getCollection(firestoreDB, "collections", useAdmin);
+    const hypixelData = { skills: {}, collections: {}, skillCaps: {} };
+    itemSnapshot.forEach((doc) => {
+      hypixelData[doc.id] = doc.data();
+    });
+    skillsSnapshot.forEach((doc) => {
+      hypixelData.skills[doc.id] = doc.data();
+    });
+    collectionsSnapshot.forEach((doc) => {
+      hypixelData.collections[doc.id] = doc.data();
+    });
 
-  const skillCaps = {};
-  for (const skill of Object.keys(hypixelData.skills)) {
-    skillCaps[skill] = hypixelData.skills[skill].maxLevel;
-  }
-  skillCaps.CATACOMBS = 50;
+    const skillCaps = {};
+    for (const skill of Object.keys(hypixelData.skills)) {
+      skillCaps[skill] = hypixelData.skills[skill].maxLevel;
+    }
+    skillCaps.CATACOMBS = 50;
 
-  hypixelData.skillCaps = skillCaps;
-  return hypixelData;
-  // } catch (err) {
-  //   console.error("Error fetching JSON data:", err);
-  //   return null;
-  //   // throw err;
-  // }
-},{revalidate: 3600});
+    hypixelData.skillCaps = skillCaps;
+    return hypixelData;
+    // } catch (err) {
+    //   console.error("Error fetching JSON data:", err);
+    //   return null;
+    //   // throw err;
+    // }
+  },
+  { revalidate: 3600 }
+);
 
 export function parseLore(loreString, key) {
   const lines = loreString.split("\n");
@@ -108,4 +110,113 @@ export function parseLore(loreString, key) {
     return lineOutput;
   });
   return output;
+}
+
+export async function filterItemList(hypixelItemList) {
+  const filteredList = {
+    helmet: {},
+    chestplate: {},
+    leggings: {},
+    boots: {},
+    weapon: {},
+    necklace: {},
+    cloak: {},
+    belt: {},
+    gloves: {},
+    accessories: {},
+  };
+
+  hypixelItemList.forEach((item) => {
+    item.name = item.name.replace(/[^a-zA-Z0-9\s/]/g, "");
+    if (item.id.includes("STARRED")) item.name = `⚚ ${item.name}`;
+
+    // remove unused attributes
+    item.requirements && delete item.requirements;
+    item.catacombs_requirements && delete item.catacombs_requirements;
+    item.salvages && delete item.salvages;
+    item.durability && delete item.durability;
+    item.npc_sell_price && delete item.npc_sell_price;
+    item.skin && delete item.skin;
+    item.soulbound && delete item.soulbound;
+    item.dungeon_item_conversion_cost && delete item.dungeon_item_conversion_cost;
+
+    for (let [prop, values] of Object.entries(item)) {
+      // modify this field and store it as essence_type instead (removes nested arrays)
+      if (prop == "upgrade_costs") {
+        // loop through first upgrade cost looking for essence type if not then fall back on the itemId
+        for (const [_, upgradeCost] of Object.entries(values[0])) {
+          if (upgradeCost.essence_type) item.essence_type = upgradeCost.essence_type;
+        }
+
+        // can maybe use the 'can have attributes property' idk if that's true for all crimson items tho
+        // default to the first item id
+        item.essence_type = item.essence_type;
+        if (!item.essence_type) {
+          // check that last upgrade for heavy pearls to set if its a crimson item
+          for (const costs of item.upgrade_costs[item.upgrade_costs.length - 1]) {
+            if (costs.item_id && costs.item_id === "HEAVY_PEARL") {
+              item.essence_type = "CRIMSON";
+            }
+          }
+        }
+
+        delete item.upgrade_costs;
+      }
+      // remove unused nested array from gemstone slots
+      else if (prop == "gemstone_slots") {
+        for (const slot of values) {
+          slot.costs && delete slot.costs;
+        }
+      }
+      // remove any nested arrays so firebase will accept the data
+      else if (Array.isArray(values)) {
+        item[prop] = 0;
+      }
+    }
+    switch (item.category) {
+      case "HELMET":
+        filteredList.helmet[item.id] = item;
+        break;
+      case "CHESTPLATE":
+        filteredList.chestplate[item.id] = item;
+        break;
+      case "LEGGINGS":
+        filteredList.leggings[item.id] = item;
+        break;
+      case "BOOTS":
+        filteredList.boots[item.id] = item;
+        break;
+      case "SWORD":
+      case "BOW":
+      case "FISHING_WEAPON":
+        filteredList.weapon[item.id] = item;
+        break;
+      case "NECKLACE":
+        filteredList.necklace[item.id] = item;
+        break;
+      case "CLOAK":
+        filteredList.cloak[item.id] = item;
+        break;
+      case "BELT":
+        filteredList.belt[item.id] = item;
+        break;
+      case "BRACELET":
+        item.category = "GLOVES";
+        filteredList.gloves[item.id] = item;
+        break;
+      case "GLOVES":
+        filteredList.gloves[item.id] = item;
+        break;
+      case "ACCESSORY":
+        filteredList.accessories[item.id] = item;
+        break;
+      default:
+        if (item.hasOwnProperty("stats")) {
+          filteredList.weapon[item.id] = item;
+        }
+        break;
+    }
+  });
+
+  return filteredList;
 }
