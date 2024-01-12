@@ -34,6 +34,15 @@ const modifyStats = (profileState, statValues) => {
   }
 };
 
+const gainStatsForSkill = (profileState, skill, stat, perLevel, gearPiece) => {
+  const skillLevel = profileState.playerSkills[skill];
+  profileState.finalStats[stat] += perLevel * skillLevel;
+  // might have to account for star values. will wait until i see a something that requires it
+  if (gearPiece) {
+    profileState.playerGear[gearPiece].nonDungeonStats[stat] += perLevel * skillLevel;
+  }
+};
+
 const modifyStatMultipliers = (profileState, multipliers) => {
   for (const [stat, value] of Object.entries(multipliers)) {
     profileState.statMultipliers[stat] += value;
@@ -47,9 +56,9 @@ const incrementAllStatMultipliers = (profileState, value) => {
 };
 
 const damageAgainstMobDesc = (amount, mobList) => {
-  return `${gray}Deal ${green}${amount}% ${gray}against ${mobList.map((mob) => {
+  return `${gray}Deal ${green}+${amount}% ${gray}against ${mobList.map((mob) => {
     return mob + " ";
-  })}`;
+  })} mobs`;
 };
 
 const buffWeapon = (profileState, stats) => {
@@ -104,7 +113,7 @@ export const valuedEffects = {
     },
   },
   GREED: {
-    ...valuedTemplate("Paid:",100000000),
+    ...valuedTemplate("Paid:", 100000000),
     name: "§6Ability: Greed",
     enabled: true,
     description: `${gray}The ${teal}ability damage bonus 
@@ -202,7 +211,7 @@ export const effects = {
   },
   DAMAGE_AGAINST_MOBS: (effectAmount, displayAmount, mobList) => {
     return {
-      name: `§6Ability:`,
+      name: `§6Ability: Mob damage`,
       enabled: true,
       description: damageAgainstMobDesc(displayAmount, mobList),
       processEffect: (profileState) => {
@@ -342,6 +351,31 @@ export const effects = {
       modifyPostMultiplier(profileState, 1.25);
     },
   },
+  STATS_FOR_SKILLS: (skill, statPerLevelPair, gearPiece) => {
+    return {
+      name: "§6Ability:",
+      enabled: true,
+      description: `${gray}Gains ${red}+4❁ Damage ${gray}per Taming level`,
+      processEffect: (profileState) => {
+        for (const [stat, perLevel] of Object.entries(statPerLevelPair)) {
+          gainStatsForSkill(profileState, skill, stat, perLevel, gearPiece);
+        }
+      },
+    };
+  },
+  COPY_PET_STATS: {
+    name: "§6Ability: Copy Pet Stats",
+    enabled: true,
+    description: `${gray}Copies the stats from your active pet`,
+    processEffect: (profileState) => {
+      const petStats = profileState.playerGear.pet.stats;
+      const weapon = profileState.playerGear.weapon;
+      for (const [stat, value] of Object.entries(petStats)) {
+        weapon.nonDungeonStats[stat] += value;
+        profileState.finalStats[stat] += value;
+      }
+    },
+  },
 };
 
 /**
@@ -386,4 +420,9 @@ export const itemEffectsMap = {
   CROWN_OF_GREED: [effects.CROWN_OF_GREED],
   EMERALD_BLADE: [valuedEffects.EMERALD_BLADE],
   MIDAS_STAFF: [valuedEffects.GREED],
+  DAEDALUS_AXE: [
+    effects.STATS_FOR_SKILLS("TAMING", { DAMAGE: 4 }, "weapon"),
+    effects.COPY_PET_STATS,
+    effects.DAMAGE_AGAINST_MOBS(2, 200, ["Mythological"]),
+  ],
 };
