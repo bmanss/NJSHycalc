@@ -8,7 +8,7 @@ import { itemsToRemove, customItems } from "@/app/constants/items";
 export const revalidate = 3600;
 export async function GET() {
   try {
-    const time = Date.now();
+    const time = new Date(Date.now());
     serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
     serviceAccount.client_email = process.env.CLIENT_EMAIL;
     serviceAccount.client_id = process.env.CLIENT_ID;
@@ -104,7 +104,7 @@ export async function GET() {
     }
     const successResponse = {
       success: "Data successfully updated.",
-      lastUpdate: time,
+      lastUpdate: time.toUTCString(),
     };
     return new Response(JSON.stringify(successResponse), {
       status: 200,
