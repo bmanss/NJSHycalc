@@ -87,8 +87,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
   };
 
   const loadDefault = () => {
-    // setPlayerName("Default-Profile");
-    // profileContext.setProfilesData({ UUID: null, profilesArray: null });
     profileContext.buildProfile();
     setGodPotionEnabled(false);
   };
@@ -172,7 +170,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
                       ))}
                     </div>
                   </div>
-                  {/* <div> Playing {profileContext.profilesData[selectedProfile]?.gameMode ?? "Normal"}</div> */}
                 </div>
               )}
             </div>
