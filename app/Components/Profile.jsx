@@ -46,6 +46,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
       if (window.innerWidth > 950) setStatsVisible(true);
       else if (window.innerWidth <= 950) setStatsVisible(false);
     }
+    if (window.innerWidth <= 950) setStatsVisible(false);
     window.addEventListener("resize", handleResize);
     // set profile context data on initial load
     const hypixelItems = {
@@ -157,7 +158,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
               <div />
             </button>
             <div className={InfoBarStyles["InfoBar-PlayerInfo"]}>
-              <div style={{paddingRight:'5px'}}>{`${playerName}`}</div>
+              <div style={{ paddingRight: "5px" }}>{`${playerName}`}</div>
               {profileContext.profiles.length > 0 && (
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <div className={InfoBarStyles["InfoBar-Cutename"]}>
