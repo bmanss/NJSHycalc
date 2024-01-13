@@ -32,6 +32,13 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
     }
   }, [selectedItem]);
 
+  useEffect(() => {
+    if (itemList !== undefined) {
+      setDisplayItems(itemList);
+      completeList.current = itemList;
+    }
+  }, [itemList]);
+
   const getItemTier = (tier) => {
     const tierIndex = tiers.indexOf(tier);
     if (tiers[tierIndex + 1]) {
