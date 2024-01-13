@@ -112,7 +112,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
 
           {/* Arrow list if bow */}
           {gearPiece.referenceCategory === "bow" && (
-            <span className='flex-row' style={{ alignItems: "center" }}>
+            <span style={{display:'flex', alignItems: "center" }}>
               <span className={styles["ItemCard-properties"]} style={{ marginBottom: "3px", marginRight: "5px", marginLeft: "5px" }}>
                 Arrow:{" "}
               </span>
