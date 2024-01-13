@@ -1,66 +1,62 @@
-
 .inputCounter {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    direction: row;
-  }
-  
-  .inputCounter input {
-    border-radius: 2px;
-    background-color: rgba(0, 0, 0, 0);
-    color: white;
-    font-size: 16px;
-    text-align: center;
-    width: 40px;
-    outline: none;
-    border: 0px solid;
-    transition: background-color 0.4s ease;
-  }
-  
-  .inputCounter input:hover {
-    background-color: rgba(29, 111, 235, 0.521);
-    /* Update the background color on hover */
-    /* Add any other styles for the hover effect */
-  }
-  
-  .inputCounter button {
-    border-radius: 2px;
-    align-items: center;
-    /* background-image: linear-gradient(144deg, rgba(121, 121, 122, 0.5), rgba(0, 0, 0, 0.9) 50%); */
-    background-color: rgba(0, 0, 0, 0);
-    border: 0;
-    color: #ffffff;
-    display: flex;
-    font-size: 18px;
-    justify-content: center;
-    width: 30px;
-    height: 18px;
-    cursor: pointer;
-    transition: background-color 0.4s ease;
-  }
-  
-  .inputCounter button:hover {
-    background-color: rgba(54, 116, 209, 0.705);
-  }
-  
-  .inputCounter button:active {
-    background-color: rgba(54, 116, 209, 0.705);
-    transform: scale(1.05);
-  }
+  margin: 0;
+  padding: 0;
+  display: flex;
+  direction: row;
+}
 
-  .EffectInput{
-    border-bottom: 2px solid white;
-    margin-right: 5px;
-    padding-bottom: 5px;
-    // background-color: red;
-    .inputCounter{
-      width: 100%;
-      input{
-        padding-left: 10px;
-        text-align: left;
-        font-size: 14px;
-      }
-      height: 30px;
+.inputCounter input {
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  width: 40px;
+  outline: none;
+  border: 0px solid;
+  transition: background-color 0.4s ease;
+}
+
+.inputCounter input:hover {
+  background-color: rgba(58, 58, 58, 0.521);
+}
+
+.inputCounter button {
+  border-radius: 2px;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: #ffffff;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  width: 30px;
+  height: 18px;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.inputCounter button:hover {
+  background-color: rgba(58, 58, 58, 0.521);
+}
+
+.inputCounter button:active {
+  background-color: rgba(58, 58, 58, 0.521);
+  transform: scale(1.05);
+}
+
+.EffectInput {
+  border-bottom: 2px solid white;
+  margin-right: 5px;
+  padding-bottom: 5px;
+  // background-color: red;
+  .inputCounter {
+    width: 100%;
+    input {
+      padding-left: 10px;
+      text-align: left;
+      font-size: 14px;
     }
+    height: 30px;
   }
+}
