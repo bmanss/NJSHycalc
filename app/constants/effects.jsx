@@ -342,7 +342,7 @@ export const effects = {
     },
   },
   CROWN_OF_GREED: {
-    name: "§6Ability: Zombie Bulwark",
+    name: "§6Ability: Greed",
     description: `${gray}Hits have ${red}+25% ${gray}base damage,
                   ${gray} but cost ${orange}100x ${gray} the weapon's
                   ${gray} base damage in ${orange}coins ${gray} from
