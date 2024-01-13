@@ -1,15 +1,37 @@
-const green = '#00ff1a';
-const red = '#FF554A';
-const darkRed = '#8c0000';
-const orange = '#ffa929';
-const lightBlue = '#00FFFF';
-const white = 'white';
-const magenta = '#FF54DA';
-const teal = '#26c9b9';
-const yellow = '#eef20f';
-const blue = '#4455FF';
-const darkGreen = '#1aad00';
-const purple = '#7800ab';
+// const green = '#00ff1a';
+// const red = '#FF554A';
+// const darkRed = '#8c0000';
+// const orange = '#ffa929';
+// const lightBlue = '#00FFFF';
+// const white = 'white';
+// const magenta = '#FF54DA';
+// const teal = '#26c9b9';
+// const yellow = '#eef20f';
+// const blue = '#4455FF';
+// const darkGreen = '#1aad00';
+// const purple = '#7800ab';
+
+const black = "§0";
+const blue = "§9";
+const darkGreen = "§2";
+const teal = "§3";
+const darkRed = "§4";
+const purple = "§5";
+const orange = "§6";
+const gray = "§7";
+const darkGray = "§8";
+const mediumBlue = "§1";
+const green = "§a";
+const lightBlue = "§b";
+const red = "§c";
+const magenta = "§d";
+const yellow = "§e";
+const white = "§f";
+
+function formatValue(value){
+    return value.toFixed(1);
+}
+
 export const pets = {
     TIGER: {
         baseStats: {
@@ -52,12 +74,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Gain ',
-                        <span key="ferocity" style={{ color: red }}>
-                            +{(initialVal[tier] * petLevel).toFixed(1)}%⫽ Ferocity.
-                        </span>
-                    ];
+                    return `${gray}Gain ${red}+${formatValue(initialVal[tier] * petLevel)}%⫽ Ferocity.`;
                 }
             },
             {
@@ -69,13 +86,7 @@ export const pets = {
                         EPIC: 0.55,
                         LEGENDARY: 0.55
                     }
-                    return [
-                        'Melee attacks reduce healing by ',
-                        <span key="ferocity" style={{ color: orange }}>
-                            {(initialVal[tier] * petLevel).toFixed(1)}%
-                        </span>,
-                        ' for 10 seconds.'
-                    ];
+                    return `${gray}Melee attacks reduce healing by ${orange}${formatValue(initialVal[tier] * petLevel)}%${gray} for 10 seconds.`;
                 }
             },
             {
@@ -91,13 +102,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 1
                     }
-                    return [
-                        'Deal ',
-                        <span key="ferocity" style={{ color: red }}>
-                            +{(initialVal[tier] * petLevel).toFixed(1)}%
-                        </span>,
-                        ' damage against targets with no other mobs within 15 blocks'
-                    ];
+                    return `${gray}Deal ${red}+${(initialVal[tier] * petLevel)}% ${gray}damage ${gray}against targets with no other mobs within 15 blocks`;
                 }
             }
         ]
@@ -138,17 +143,7 @@ export const pets = {
                         EPIC: { DAMAGE: 0.15, STRENGTH: 0.15 },
                         LEGENDARY: { DAMAGE: 0.2, STRENGTH: 0.2 },
                     }
-                    return [
-                        'Adds ',
-                        <span key="damage" style={{ color: red }}>
-                            +{(initialVal[tier].DAMAGE * petLevel).toFixed(1)} Damage
-                        </span>,
-                        ' and ',
-                        <span key="strength" style={{ color: red }}>
-                            +{(initialVal[tier].STRENGTH * petLevel).toFixed(1)} Strength
-                        </span>,
-                        ' to your weapons.'
-                    ];
+                    return `${gray}Adds ${red}+${formatValue(initialVal[tier].DAMAGE * petLevel)} Damage${gray} and ${red}+${formatValue(initialVal[tier].STRENGTH * petLevel)} Strength${gray} to your weapons.`;
                 }
             },
             {
@@ -171,13 +166,7 @@ export const pets = {
                         EPIC: 1,
                         LEGENDARY: 1
                     }
-                    return [
-                        'First strike, Triple-strike, and Combo are ',
-                        <span key="key" style={{ color: green }}>
-                            +{(initialVal[tier] * petLevel).toFixed(1)}%
-                        </span>,
-                        ' more effective.',
-                    ];
+                    return `${gray}First strike, Triple-strike, and Combo are ${green}+${formatValue(initialVal[tier] * petLevel)}%${gray} more effective.`;
                 },
             },
             {
@@ -193,13 +182,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 1.5
                     }
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: red }}>
-                            +{(initialVal[tier] * petLevel).toFixed(1)}% Damage
-                        </span>,
-                        ' against mobs that have attacked you.',
-                    ];
+                    return `${gray}Deal ${red}+${formatValue(initialVal[tier] * petLevel)}% Damage${gray} against mobs that have attacked you.`;
                 },
                 'action': 'baseMultiplierPerLevel',
                 'type': 'additive',
@@ -222,13 +205,7 @@ export const pets = {
                 name: 'Protective Skin',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives ',
-                        <span key="key" style={{ color: red }}>
-                            Heat
-                        </span>,
-                        ' immunity.',
-                    ];
+                    return `${gray}Gives ${red}Heat${gray} immunity.`;
                 },
             },
             {
@@ -239,14 +216,7 @@ export const pets = {
                         EPIC: 0.1,
                         LEGENDARY: 0.1
                     }
-                    return [
-                        'Every 5s while in combat the Balrog will strike nearby enemies with his fire whip dealing ',
-                        <span key="key" style={{ color: red }}>
-                            {(initialVal[tier] * petLevel).toFixed(1)}%
-                        </span>,
-                        ' of your damage as ',
-                        <span key="key2" style={{ color: white }}> True Damage</span>,
-                    ];
+                    return `${gray}Every 5s while in combat the Balrog will strike nearby enemies with his fire whip dealing ${red}${formatValue(initialVal[tier] * petLevel)}%${gray} of your damage as ${white}True Damage${gray}`;
                 },
             },
             {
@@ -264,14 +234,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 0.15
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>
-                            {(initialVal[tier] * petLevel).toFixed(1)}%
-                        </span>,
-                        ' on ALL stats when inside the ',
-                        <span key="key2" style={{ color: red }}>Magma Fields.</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} on ALL stats when inside the ${red}Magma Fields.`;
                 },
             }
         ]
@@ -299,12 +262,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 1
                     }
-                    return [
-                        'Increases your ',
-                        <span key="key" style={{ color: white }}>✦ Speed</span>,
-                        ' and speed cap by ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                    ];
+                    return `${gray}Increases your ${white}✦ Speed${gray} and speed cap by ${green}${formatValue(initialVal[tier] * petLevel)}`;
                 },
             },
             {
@@ -314,11 +272,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 0.15
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: magenta }}> ♣ Pet Luck</span>,
-                    ];
+                    return `${gray}Grants ${green}${formatValue(initialVal[tier] * petLevel)}${magenta} ♣ Pet Luck${gray}.`;
                 },
                 'action': 'none'
             },
@@ -336,11 +290,7 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 0.15
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: lightBlue }}> ✯Magic Find</span>,
-                    ];
+                    return `${gray}Grants ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} ${lightBlue}✯Magic Find${gray}.`;
                 },
             }
         ]
@@ -372,12 +322,7 @@ export const pets = {
                         EPIC: 0.1,
                         LEGENDARY: 0.1
                     }
-                    return [
-                        ' Increases all stats by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' while on the ',
-                        <span key="key2" style={{ color: red }}>Crimson Isle.</span>,
-                    ];
+                    return `${gray}Increases all stats by ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}while on the ${red}Crimson Isle.`;
                 },
             },
             {
@@ -398,12 +343,7 @@ export const pets = {
                         EPIC: 0.4,
                         LEGENDARY: 0.4
                     }
-                    return [
-                        'Upgrades ',
-                        <span key="key" style={{ color: red }}>Blaze Armor</span>,
-                        ' stats and ability by ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Upgrades ${red}Blaze Armor ${gray}stats and ability by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
             },
             {
@@ -415,9 +355,7 @@ export const pets = {
                 name: 'Fusion-Style Potato',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Double effects of Hot Potato Books.',
-                    ];
+                    return `${gray}Double effects of Hot Potato Books.`;
                 },
             }
         ]
@@ -446,11 +384,7 @@ export const pets = {
                 name: 'End Strike',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>+{(2 * petLevel).toFixed(1)}%</span>,
-                        ' more damage to end mobs.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(2 * petLevel)}%${gray} more damage to end mobs.`;
                 },
             },
             {
@@ -469,16 +403,7 @@ export const pets = {
                 name: 'One with the Dragons',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        ' Buffs the ',
-                        <span key="key" style={{ color: red }}>Aspect of the Dragons </span>,
-                        'sword by ',
-                        <span key="key2" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)} </span>,
-                        <span key="key3" style={{ color: red }}> ❁Damage</span>,
-                        ' and ',
-                        <span key="key4" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)} </span>,
-                        <span key="key5" style={{ color: red }}> ❁Strength</span>,
-                    ];
+                    return `${gray}Buffs the ${red}Aspect of the Dragons ${gray}sword by ${green}${formatValue(0.5 * petLevel)} ${red}❁Damage${gray} and ${green}${formatValue(0.3 * petLevel)} ${red}❁Strength${gray}.`;
                 },
             },
             {
@@ -499,10 +424,8 @@ export const pets = {
                     const initialVal = {
                         LEGENDARY: 0.1
                     }
-                    return [
-                        'Increases most stats by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases most stats by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
+
                 },
             }
         ]
@@ -521,11 +444,7 @@ export const pets = {
                 name: 'Blood Scent',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Deal up to ',
-                        <span key="key" style={{ color: red }}>+{(0.25 * petLevel).toFixed(1)}% ❁Damage</span>,
-                        ' based on the enemy\'s missing health.',
-                    ];
+                    return `${gray}Deal up to ${red}+${formatValue(0.25 * petLevel)}% ❁Damage${gray} based on the enemy\'s missing health.`;
                 },
                 'action': 'none'
             },
@@ -543,10 +462,7 @@ export const pets = {
                 name: 'Enhanced Scales',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the stats of Shark Armor by ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases the stats of Shark Armor by ${green}${formatValue(0.25 * petLevel)}%.`;
                 },
             },
             {
@@ -561,13 +477,7 @@ export const pets = {
                     }
                 },
                 description: (petLevel, tier) => {
-                    return [
-                        'On kill gain ',
-                        <span key="key" style={{ color: red }}>{(0.5 * petLevel).toFixed(1)} ❁Damage</span>,
-                        ' and  ',
-                        <span key="key2" style={{ color: white }}> ✦Speed</span>,
-                        ' for 5 seconds'
-                    ];
+                    return `${gray}On kill gain ${red}${formatValue(0.5 * petLevel)} ❁Damage${gray} and ${white}✦Speed${gray} for 5 seconds.`;
                 },
                 'action': 'none'
             }
@@ -591,11 +501,7 @@ export const pets = {
                 name: 'Gold\'s Power',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Adds ',
-                        <span key="key" style={{ color: red }}>+{(0.5 * (petLevel - 100) + 50).toFixed(1)} Strength</span>,
-                        ' to all golden weapons.',
-                    ];
+                    return `${gray}Adds ${red}+${formatValue(0.5 * (petLevel - 100) + 50)} Strength${gray} to all golden weapons.`;
                 },
                 'action': 'goldsPower',
                 'amountPerLevel': [
@@ -606,13 +512,7 @@ export const pets = {
                 name: 'Shining Scales',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: red }}>+10 Strength</span>,
-                        ' and ',
-                        <span key="key2" style={{ color: lightBlue }}>+2 Magic Find</span>,
-                        ' to your pet for each digit in your gold collection.',
-                    ];
+                    return `${gray}Grants ${red}+10 Strength${gray} and ${lightBlue}+2 Magic Find${gray} to your pet for each digit in your gold collection.`;
                 },
                 'action': 'shiningScales'
             },
@@ -620,12 +520,7 @@ export const pets = {
                 name: 'Dragon\'s Greed',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: red }}>+{(0.0025 * (petLevel - 100) + 0.25).toFixed(2)}% Strength</span>,
-                        ' per ',
-                        <span key="key2" style={{ color: lightBlue }}>5 Magic Find</span>,
-                    ];
+                    return `${gray}Grants ${red}+${(0.0025 * (petLevel - 100) + 0.25).toFixed(2)}% Strength${gray} per ${lightBlue}5 Magic Find${gray}.`;
                 },
                 'action': 'dragonsGreed',
                 'amountPerLevel': [
@@ -636,11 +531,7 @@ export const pets = {
                 name: 'Legendary Treasure',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: red }}>{(0.00125 * (petLevel - 100) + 0.12125).toFixed(2)}% Damage</span>,
-                        ' for every million coins in your bank.',
-                    ];
+                    return `${gray}Gain ${red}${(0.00125 * (petLevel - 100) + 0.12125).toFixed(2)}% Damage${gray} for every million coins in your bank.`;
                 },
                 'action': 'legendaryTreasure'
             }
@@ -666,11 +557,8 @@ export const pets = {
                         LEGENDARY: 0.3,
                         MYTHIC: 0.3
                     }
-                    return [
-                        'Take ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}% </span>,
-                        '  less damage from end monsters.',
-                    ];
+                    return `${gray}Take ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}less damage from end monsters.`;
+
                 },
                 'action': 'none'
             },
@@ -684,11 +572,7 @@ export const pets = {
                         LEGENDARY: 0.5,
                         MYTHIC: 0.5
                     }
-                    return [
-                        'Buffs the Transmission ability granting ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        ' Damage for 5s on use.',
-                    ];
+                    return `${gray}Buffs the Transmission ability granting ${red}${formatValue(initialVal[tier] * petLevel)} Damage${gray} for 5s on use.`;
                 },
                 'action': 'addStatPerLevel',
                 'stats': {
@@ -704,10 +588,7 @@ export const pets = {
                 name: 'Zealot Madness',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases your odds to find a special Zealot by ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases your odds to find a special Zealot by ${green}${formatValue(0.25 * petLevel)}%.${gray}`;
                 },
                 'action': 'none'
             },
@@ -715,11 +596,7 @@ export const pets = {
                 name: 'Enderman Slayer',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: teal }}>{(0.4 * petLevel).toFixed(1)}% ☯ Combat Wisdom</span>,
-                        ' against Endermen.',
-                    ];
+                    return `${gray}Grants ${teal}${formatValue(0.4 * petLevel)}% ☯ Combat Wisdom${gray} against Endermen.`;
                 },
                 'action': 'none'
             }
@@ -739,11 +616,7 @@ export const pets = {
                 name: 'Amplified Healing',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: darkRed }}>+{(0.25 * petLevel).toFixed(1)}♨ Vitality</span>,
-                        ', which increases your incoming healing.',
-                    ];
+                    return `${gray}Grants ${darkRed}+${formatValue(0.25 * petLevel)}♨ Vitality${gray}, which increases your incoming healing.`;
                 },
                 'action': 'none'
             },
@@ -751,10 +624,7 @@ export const pets = {
                 name: 'Zombie Arm',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the health and range of the Zombie Sword by ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the health and range of the Zombie Sword by ${green}${formatValue(0.5 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -762,10 +632,7 @@ export const pets = {
                 name: 'Reaper Soul',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the health and lifespan of the Reaper Scythe zombies by ',
-                        <span key="key" style={{ color: green }}>{(1 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the health and lifespan of the Reaper Scythe zombies by ${green}${formatValue(1 * petLevel)}%.`;
                 },
                 'action': 'none'
             }
@@ -784,11 +651,7 @@ export const pets = {
                 name: 'Last Stand',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'While less than 25% HP, deal ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' more damage.',
-                    ];
+                    return `${gray}While less than 25% HP, deal ${green}${formatValue(0.3 * petLevel)}% ${gray}more damage.`;
                 },
                 'action': 'baseMultiplierPerLevel',
                 'amountPerLevel': [
@@ -803,11 +666,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.25
                     }
-                    return [
-                        'Your iron plating causes ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' of attacks to ricochet and hit the attacker.',
-                    ];
+                    return `${gray}Your iron plating causes ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}of attacks to ricochet and hit the attacker.`;
                 },
                 'action': 'none'
             },
@@ -815,11 +674,7 @@ export const pets = {
                 name: 'Toss',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Every 5 hits, throw the enemy up into the air and deal ',
-                        <span key="key" style={{ color: green }}>{(200 + (3 * petLevel)).toFixed(1)}%</span>,
-                        ' damage (10s cooldown).',
-                    ];
+                    return `${gray}Every 5 hits, throw the enemy up into the air and deal ${green}${formatValue(200 + (3 * petLevel))}% ${gray}damage (10s cooldown).`;
                 },
                 'action': 'petAbility',
                 'baseAmount': [
@@ -844,9 +699,7 @@ export const pets = {
                 name: 'Kill Combo',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain buffs for combo kills. Effects stack as you increase your combo.'
-                    ];
+                    return `${gray}Gain buffs for combo kills. Effects stack as you increase your combo.`
                 },
             }
         ]
@@ -867,9 +720,7 @@ export const pets = {
                 name: 'Odyssey',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Mythological creatures you find and burrows you dig scale in difficulty and rewards based on your equipped Griffin\'s rarity.',
-                    ];
+                    return `${gray}Mythological creatures you find and burrows you dig scale in difficulty and rewards based on your equipped Griffin\'s rarity.`
                 },
                 'action': 'none'
             },
@@ -883,12 +734,7 @@ export const pets = {
                         EPIC: { REGEN: 'VI', STRENGTH: 'VIII' },
                         LEGENDARY: { REGEN: 'VII', STRENGTH: 'VIII' },
                     }
-                    return [
-                        'Permanent ',
-                        <span key="key" style={{ color: red }}>Regeneration {initialVal[tier].REGEN}</span>,
-                        ' and ',
-                        <span key="key2" style={{ color: darkRed }}>Regeneration {initialVal[tier].STRENGTH}.</span>,
-                    ];
+                    return `${gray}Permanent ${red}Regeneration ${initialVal[tier].REGEN}${gray} and ${darkRed}Regeneration ${initialVal[tier].STRENGTH}${gray}.`;
                 },
                 'action': 'none'
             },
@@ -900,11 +746,7 @@ export const pets = {
                         EPIC: 0.16,
                         LEGENDARY: 0.2
                     }
-                    return [
-                        'Heal nearby players for ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' of the final damage you receive. Excludes other griffins.',
-                    ];
+                    return `${gray}Heal nearby players for ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}of the final damage you receive. Excludes other griffins.`;
                 },
                 'action': 'none'
             },
@@ -912,13 +754,7 @@ export const pets = {
                 name: 'King of Kings',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: red }}>+{(1 + (0.14 * petLevel)).toFixed(1)}% ❁Strength </span>,
-                        ' when above ',
-                        <span key="key2" style={{ color: red }}>85%</span>,
-                        ' health.',
-                    ];
+                    return `${gray}Gain ${red}+${formatValue(1 + (0.14 * petLevel))}% ❁Strength ${gray}when above ${red}85% ${gray}health.`;
                 },
                 resultType: 'globalMultiplier-multi',
                 enabled: true,
@@ -944,9 +780,7 @@ export const pets = {
                 name: 'Rideable',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click your summoned pet to ride it!',
-                    ];
+                    return `${gray}Right-click your summoned pet to ride it!`
                 },
                 'action': 'none'
             },
@@ -959,10 +793,7 @@ export const pets = {
                         EPIC: 1.2,
                         LEGENDARY: 1.2,
                     }
-                    return [
-                        'Increases the speed of your mount by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the speed of your mount by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -970,11 +801,7 @@ export const pets = {
                 name: 'Ride Into Battle',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'While riding your horse, gain ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' bow damage.',
-                    ];
+                    return `${gray}While riding your horse, gain ${green}${formatValue(0.25 * petLevel)}% ${gray}bow damage.`;
                 },
                 'action': 'buffBowDamage',
                 'amountPerLevel': [
@@ -997,11 +824,7 @@ export const pets = {
                 name: 'Scavenger',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: orange }}>+{(0.05 * petLevel).toFixed(1)}</span>,
-                        ' per monster kill.',
-                    ];
+                    return `${gray}Gain ${orange}+${formatValue(0.05 * petLevel)} ${gray}per monster kill.`;
                 },
                 'action': 'none'
             },
@@ -1009,10 +832,7 @@ export const pets = {
                 name: 'Finder',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the chance for monsters to drop their armor by ',
-                        <span key="key" style={{ color: green }}>{(0.1 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases the chance for monsters to drop their armor by ${green}${formatValue(0.1 * petLevel)}%${gray}.`;
                 },
                 'action': 'none'
             },
@@ -1020,11 +840,7 @@ export const pets = {
                 name: 'Fury Claws',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>{(0.1 * petLevel).toFixed(1)}%</span>,
-                        <span key="key2" style={{ color: yellow }}> ⚔ Bonus Attack Speed.</span>,
-                    ];
+                    return `${gray}Grants ${green}${formatValue(0.1 * petLevel)}%${gray} ${yellow}⚔ Bonus Attack Speed.${gray}`;
                 },
                 resultType: 'globalMultiplier-multi',
                 enabled: true,
@@ -1049,11 +865,7 @@ export const pets = {
                 name: 'Jerry',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>50%</span>,
-                        ' chance to deal your regular damage.',
-                    ];
+                    return `${gray}Gain ${green}50% ${gray}chance to deal your regular damage.`;
                 },
                 'action': 'none'
             },
@@ -1061,11 +873,7 @@ export const pets = {
                 name: 'Jerry',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>100%</span>,
-                        ' chance to receive a normal amount of drops from mobs.',
-                    ];
+                    return `${gray}Gain ${green}100% ${gray}chance to receive a normal amount of drops from mobs.`;
                 },
                 'action': 'none'
             },
@@ -1077,11 +885,8 @@ export const pets = {
                         LEGENDARY: 0.1,
                         MYTHIC: 0.5
                     }
-                    return [
-                        'Actually adds ',
-                        <span key="key" style={{ color: red }}>{(initialVal[tier] * petLevel).toFixed(1)} Damage</span>,
-                        ' to the Aspect of the Jerry.',
-                    ];
+                    return `${gray}Actually adds ${red}${formatValue(initialVal[tier] * petLevel)} Damage${gray} to the Aspect of the Jerry.`;
+
                 },
                 'action': 'none'
             },
@@ -1104,9 +909,7 @@ export const pets = {
                 name: 'Jerry',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Tiny chance to find Jerry Candies when killing mobs.',
-                    ];
+                    return `${gray}Tiny chance to find Jerry Candies when killing mobs.`
                 },
             }
         ]
@@ -1131,11 +934,8 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2,
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' extra crimson essence.',
-                    ];
+                    return `${gray}Grants ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}extra crimson essence.`;
+
                 },
                 'action': 'none'
             },
@@ -1148,10 +948,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2,
                     }
-                    return [
-                        'Increases the odds of finding a Vanquisher by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases the odds of finding a Vanquisher by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -1159,11 +956,7 @@ export const pets = {
                 name: 'Kuudra Fortune',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: orange }}>+{(0.5 * petLevel).toFixed(1)}☘ Mining Fortune</span>,
-                        ' while on the Crimson Isle.',
-                    ];
+                    return `${gray}Gain ${orange}+${formatValue(0.5 * petLevel)}☘ Mining Fortune ${gray}while on the Crimson Isle.`;
                 },
                 'action': 'none'
             },
@@ -1171,10 +964,7 @@ export const pets = {
                 name: 'Trophy Bait',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the odds of fishing Trophy Fish by ',
-                        <span key="key" style={{ color: green }}>{(0.2 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the odds of fishing Trophy Fish by ${green}${formatValue(0.2 * petLevel)}%.`;
                 },
                 'action': 'buffMobType',
                 'mobType': 'Kuudra',
@@ -1184,10 +974,7 @@ export const pets = {
                 name: 'Kuudra Specialist',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases all damage to Kuudra by ',
-                        <span key="key" style={{ color: red }}>5%.</span>,
-                    ];
+                    return `${gray}Increases all damage to Kuudra by ${red}5%.`;
                 },
                 'action': 'buffMobType',
                 'mobType': 'Kuudra',
@@ -1216,11 +1003,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3,
                     }
-                    return [
-                        'Slime minions work ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Slime minions work ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}faster while on your island.`;
                 },
                 'action': 'none'
             },
@@ -1248,11 +1031,7 @@ export const pets = {
                         EPIC: 0.25,
                         LEGENDARY: 0.25,
                     }
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' more damage to slimes.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}more damage to slimes.`;
                 },
             },
             {
@@ -1269,10 +1048,7 @@ export const pets = {
                 },
                 name: 'Hot Ember',
                 description: (petLevel, tier) => {
-                    return [
-                        'Buffs the stats of Rekindled Ember Armor by ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Buffs the stats of Rekindled Ember Armor by ${green}${formatValue(0.5 * petLevel)}%${gray}`;
                 },
             }
         ]
@@ -1308,13 +1084,8 @@ export const pets = {
                         EPIC: 0.1,
                         LEGENDARY: 0.15
                     }
-                    return [
-                        'Before death, become immune and gain ',
-                        <span key="key" style={{ color: red }}>{((15 + initialVal[tier] * petLevel).toFixed(1))} Strength</span>,
-                        ' for ',
-                        <span key="key2" style={{ color: green }}>{(0.02 * petLevel).toFixed(1)}</span>,
-                        ' seconds 1 minute cooldown.'
-                    ];
+                    return `${gray}Before death, become immune and gain ${red}${formatValue(15 + initialVal[tier] * petLevel)} Strength ${gray} for ${green}${(0.02 * petLevel).toFixed(2)} seconds 
+                            ${gray}1 minute cooldown.`;
                 },
                 'action': 'none'
             },
@@ -1326,15 +1097,8 @@ export const pets = {
                         EPIC: { crit: 0.12, time: 0.02 },
                         LEGENDARY: { crit: 0.14, time: 0.03 },
                     }
-                    return [
-                        'On 4th melee strike, ignite mobs, dealing ',
-                        <span key="key" style={{ color: red }}>{(1 + initialVal[tier].crit * petLevel).toFixed(1)}x</span>,
-                        ' your ',
-                        <span key="key2" style={{ color: blue }}>Crit Damage</span>,
-                        ' each second for ',
-                        <span key="key3" style={{ color: green }}>{(initialVal[tier].time * petLevel).toFixed(1)}</span>,
-                        ' seconds.'
-                    ];
+                    return `${gray}On 4th melee strike, ignite mobs, dealing ${red}${formatValue(1 + initialVal[tier].crit * petLevel)}x ${gray}your ${blue}Crit Damage ${gray} each
+                            ${gray}second for ${green}${formatValue(initialVal[tier].time * petLevel)} ${gray}seconds.`;
                 },
                 'action': 'petAbility'
             },
@@ -1342,9 +1106,7 @@ export const pets = {
                 name: 'Magic Bird',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'You may always fly on your Private Island.',
-                    ];
+                    return `${gray}You may always fly on your Private Island.`
                 },
                 'action': 'none'
             },
@@ -1352,9 +1114,7 @@ export const pets = {
                 name: 'Eternal Coins',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Don\'t lose coins from death.',
-                    ];
+                    return `${gray}Don\'t lose coins from death.`
                 },
                 'action': 'none'
             }
@@ -1374,11 +1134,7 @@ export const pets = {
                 name: 'Bacon Farmer',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Pig minions work ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Pig minions work ${green}${formatValue(0.3 * petLevel)}% ${gray}faster while on your island.`;
                 },
                 'action': 'none'
             },
@@ -1398,12 +1154,7 @@ export const pets = {
                 name: 'Pork Master',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Buffs the Pigman Sword by ',
-                        <span key="key" style={{ color: red }}>{(0.4 * petLevel).toFixed(1)} ❁Damage </span>,
-                        ' and ',
-                        <span key="key2" style={{ color: red }}>{(0.25 * petLevel).toFixed(1)} ❁Strength.</span>,
-                    ];
+                    return `${gray}Pig minions work ${green}${formatValue(0.3 * petLevel)}% ${gray}faster while on your island.`;
                 },
             },
             {
@@ -1416,11 +1167,7 @@ export const pets = {
                     return (value / 100);
                 },
                 description: (petLevel, tier) => {
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' extra damage to monsters level 100 and up.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(0.25 * petLevel)}% ${gray}extra damage to monsters level 100 and up.`;
                 },
                 'action': 'baseMultiplierPerLevel',
                 'amountPerLevel': [
@@ -1443,9 +1190,7 @@ export const pets = {
                 name: 'Morph',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click your summoned pet to morph into it!',
-                    ];
+                    return `${gray}Right-click your summoned pet to morph into it!`;
                 },
                 'action': 'none'
             },
@@ -1453,11 +1198,7 @@ export const pets = {
                 name: 'CHEESE!',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'As a Rat, you smell ',
-                        <span key="key" style={{ color: yellow }}>CHEESE</span>,
-                        ' nearby! Yummy!'
-                    ];
+                    return `${gray}As a Rat, you smell ${yellow}CHEESE ${gray}nearby! Yummy!`;
                 },
                 'action': 'none'
             },
@@ -1465,14 +1206,9 @@ export const pets = {
                 name: 'Rat\'s Blessing',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Has a chance to grant a random player ',
-                        <span key="key" style={{ color: lightBlue }}>{(2 + 0.05 * petLevel).toFixed(1)}</span>,
-                        ' for ',
-                        <span key="key2" style={{ color: green }}>{(20 + 0.4 * petLevel).toFixed(1)}</span>,
-                        ' seconds after finding a yummy piece of Cheese! If the player gets a drop during this buff, you have a ',
-                        <span key="key3" style={{ color: green }}>20%</span>,
-                    ];
+                    return `${gray}Has a chance to grant a random player ${lightBlue}${(2 + 0.05 * petLevel)}${gray} for ${green}${(20 + 0.4 * petLevel)}
+                            ${gray}seconds after finding a yummy piece of Cheese! 
+                            ${gray} If the player gets a drop during this buff, you have a ${green}20%${gray}.`;
                 },
                 'action': 'none'
             },
@@ -1480,9 +1216,7 @@ export const pets = {
                 name: 'Extreme Speed',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'The Rat is TWO times faster.',
-                    ];
+                    return `${gray}The Rat is TWO times faster.`;
                 },
                 'action': 'none'
             }
@@ -1501,9 +1235,7 @@ export const pets = {
                 name: 'Rideable',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click your summoned pet to ride it!',
-                    ];
+                    return `${gray}Right-click your summoned pet to ride it!`;
                 },
                 'action': 'none'
             },
@@ -1511,10 +1243,7 @@ export const pets = {
                 name: 'Run',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the speed of your mount by ',
-                        <span key="key" style={{ color: green }}>{(1.5 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the speed of your mount by ${green}${formatValue(1.5 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -1522,11 +1251,7 @@ export const pets = {
                 name: 'Ride Into Battle',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'While riding your horse, gain ',
-                        <span key="key" style={{ color: green }}>+{(0.4 * petLevel).toFixed(1)}%</span>,
-                        ' bow damage.',
-                    ];
+                    return `${gray}While riding your horse, gain ${green}+${formatValue(0.4 * petLevel)}%${gray} bow damage.`;
                 },
                 'action': 'buffBowDamage',
                 'amountPerLevel': [
@@ -1549,11 +1274,7 @@ export const pets = {
                 name: 'Blizzard',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Slow all enemies within ',
-                        <span key="key" style={{ color: green }}>{(4 + 0.04 * petLevel).toFixed(1)}</span>,
-                        ' blocks.',
-                    ];
+                    return `${gray}Slow all enemies within ${green}${formatValue(4 + 0.04 * petLevel)}${gray} blocks.`;
                 },
                 'action': 'none'
             },
@@ -1561,11 +1282,7 @@ export const pets = {
                 name: 'Frostbite',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Your freezing aura slows enemy attacks causing you to take ',
-                        <span key="key" style={{ color: green }}>{(0.15 * petLevel).toFixed(1)}%</span>,
-                        ' reduced damage.',
-                    ];
+                    return `${gray}Your freezing aura slows enemy attacks causing you to take ${green}${formatValue(0.15 * petLevel)}%${gray} reduced damage.`;
                 },
                 'action': 'none'
             },
@@ -1573,13 +1290,7 @@ export const pets = {
                 name: 'Snow Cannon',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Your snowman fires a snowball dealing ',
-                        <span key="key" style={{ color: green }}>5x</span>,
-                        ' your ',
-                        <span key="key2" style={{ color: red }}>Strength</span>,
-                        ' when a mob gets close to you. (1s cooldown)'
-                    ];
+                    return `${gray}Your snowman fires a snowball dealing ${green}5x${gray} your ${red}Strength${gray} when a mob gets close to you. (1s cooldown)`;
                 },
                 'action': 'none'
             }
@@ -1605,11 +1316,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2,
                     }
-                    return [
-                        'Increase arrow damage by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' which is tripled while in Dungeons',
-                    ];
+                    return `${gray}Increase arrow damage by ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} which is tripled while in Dungeons.`;
                 },
                 'action': 'buffArrowDamage'
             },
@@ -1622,15 +1329,8 @@ export const pets = {
                         EPIC: 0.17,
                         LEGENDARY: 0.3,
                     }
-                    return [
-                        'Gain a combo stack for every bow hit granting ',
-                        <span key="key" style={{ color: red }}>+3 Strength</span>,
-                        ' Max ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        ' stacks, stacks disappear after ',
-                        <span key="key4" style={{ color: green }}>8</span>,
-                        ' seconds.'
-                    ];
+                    return `${gray}Gain a combo stack for every bow hit granting ${red}+3 Strength${gray} 
+                            ${gray}Max ${green}${formatValue(initialVal[tier] * petLevel)}${gray} stacks, stacks disappear after ${green}8${gray} seconds.`;
                 },
                 'action': 'none'
             },
@@ -1638,13 +1338,7 @@ export const pets = {
                 name: 'Skeletal Defense',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Your skeleton shoots an arrow dealing ',
-                        <span key="key" style={{ color: green }}>30x</span>,
-                        ' your ',
-                        <span key="key2" style={{ color: blue }}>Crit Damage </span>,
-                        ' when a mob gets close to you (5s cooldown).'
-                    ];
+                    return `${gray}Your skeleton shoots an arrow dealing ${green}30x${gray} your ${blue}Crit Damage${gray} when a mob gets close to you (5s cooldown).`;
                 },
                 'action': 'none'
             }
@@ -1663,11 +1357,7 @@ export const pets = {
                 name: 'One With the Spider',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: red }}>{(0.1 * petLevel).toFixed(1)} Strength</span>,
-                        ' for every nearby spider. (max 10 spiders).',
-                    ];
+                    return `${gray}Gain ${red}${(0.1 * petLevel)} Strength${gray} for every nearby spider. (max 10 spiders).`;
                 },
                 'action': 'none'
             },
@@ -1675,10 +1365,7 @@ export const pets = {
                 name: 'Web-Weaver',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
-                    return [
-                        'Upon hitting a monster it becomes slowed by ',
-                        <span key="key" style={{ color: green }}>{(0.4 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Upon hitting a monster it becomes slowed by ${green}${formatValue(0.4 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -1686,11 +1373,7 @@ export const pets = {
                 name: 'Spider Whisperer',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Spider and tarantula minions work ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%.</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Spider and tarantula minions work ${green}${formatValue(0.3 * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             }
@@ -1709,9 +1392,7 @@ export const pets = {
                 name: 'Spirit Assistance ',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Spawns and assists you when you are ghost in dungeons.',
-                    ];
+                    return `${gray}Spawns and assists you when you are ghost in dungeons.`;
                 },
                 'action': 'none'
             },
@@ -1719,10 +1400,7 @@ export const pets = {
                 name: 'Spirit Cooldowns',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Reduces the cooldown of your ghost abilities in dungeons by ',
-                        <span key="key" style={{ color: green }}>{(5 + 0.45 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Reduces the cooldown of your ghost abilities in dungeons by ${green}${formatValue(5 + 0.45 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -1730,10 +1408,7 @@ export const pets = {
                 name: 'Half Life',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        ' If you are the first player to die in a dungeon, the score penalty for that death is reduced to ',
-                        <span key="key" style={{ color: green }}>1.</span>,
-                    ];
+                    return `${gray}If you are the first player to die in a dungeon, the score penalty for that death is reduced to ${green}1.`;
                 },
                 'action': 'none'
             }
@@ -1753,11 +1428,7 @@ export const pets = {
                 name: 'Webbed Cells',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Anti-healing is ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' less effective against you.',
-                    ];
+                    return `${gray}Anti-healing is ${green}${formatValue(0.3 * petLevel)}%${gray} less effective against you.`;
                 },
                 'action': 'none'
             },
@@ -1765,10 +1436,7 @@ export const pets = {
                 name: 'Eight Legs',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        ' Decreases the Mana Cost of Spider, Tarantula and Spirit Boots boots by ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Decreases the Mana Cost of Spider, Tarantula and Spirit Boots boots by ${green}${formatValue(0.5 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -1776,12 +1444,7 @@ export const pets = {
                 name: 'Arachnid Slayer',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}% </span>,
-                        <span key="key2" style={{ color: teal }}>☯ Combat Wisdom</span>,
-                        ' against Spiders.'
-                    ];
+                    return `${gray}Grants ${green}${formatValue(0.5 * petLevel)}% ${teal}☯ Combat Wisdom${gray} against Spiders.`;
                 },
                 'action': 'none'
             }
@@ -1808,21 +1471,14 @@ export const pets = {
                 name: 'Turtle Tactics',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain  ',
-                        <span key="key" style={{ color: green }}>{(3 + 0.27 * petLevel).toFixed(1)}% Defense.</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(3 + 0.27 * petLevel)}% Defense.${gray}`;
                 },
             },
             {
                 name: 'Genius Amniote',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain  ',
-                        <span key="key" style={{ color: green }}>{(5 + 0.25 * petLevel).toFixed(1)} Defense.</span>,
-                        ' for every player around you, up to 4 nearby players.',
-                    ];
+                    return `${gray}Gain ${green}${formatValue(5 + 0.25 * petLevel)} Defense.${gray} for every player around you, up to 4 nearby players.`;
                 },
                 'action': 'none'
             },
@@ -1830,9 +1486,7 @@ export const pets = {
                 name: 'Unflippable',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain immunity to knockback.',
-                    ];
+                    return `${gray}Gain immunity to knockback.${gray}`;
                 },
                 'action': 'none'
             },
@@ -1840,13 +1494,7 @@ export const pets = {
                 name: 'Turtle Shell',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'When under ',
-                        <span key="key" style={{ color: red }}>33%</span>,
-                        ' maximum HP, you take ',
-                        <span key="key2" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' less damage.'
-                    ];
+                    return `${gray}When under ${red}33%${gray} maximum HP, you take ${green}${formatValue(0.25 * petLevel)}%${gray} less damage.`;
                 },
                 'action': 'none'
             }
@@ -1874,11 +1522,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3,
                     }
-                    return [
-                        'Take ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' less damage from wolves.',
-                    ];
+                    return `${gray}Take ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} less damage from wolves.`;
                 },
                 'action': 'none'
             },
@@ -1891,12 +1535,7 @@ export const pets = {
                         EPIC: 0.15,
                         LEGENDARY: 0.15,
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}% </span>,
-                        <span key="key2" style={{ color: blue }}>Crit Damage </span>,
-                        ' for every nearby wolf (max 10 wolves).',
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}% ${blue}Crit Damage${gray} for every nearby wolf (max 10 wolves).`;
                 },
                 'action': 'none'
             },
@@ -1904,13 +1543,7 @@ export const pets = {
                 name: 'Combat Wisdom Boost',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    const initialVal = {
-                        LEGENDARY: 1
-                    }
-                    return [
-                        'Grants ',
-                        <span key="key2" style={{ color: teal }}>+{(0.3 * petLevel).toFixed(1)}☯ Combat Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}+${formatValue(0.3 * petLevel)}☯ Combat Wisdom.${gray}`;
                 },
                 'action': 'none'
             }
@@ -1929,15 +1562,12 @@ export const pets = {
                 name: 'Chomp',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Heal ',
-                        <span key="key" style={{ color: red }}>+{(0.25 * petLevel).toFixed(1)} Health</span>,
-                        '  per Zombie kill.',
-                    ];
+                    return `${gray}Heal ${red}+${formatValue(0.25 * petLevel)} Health${gray} per Zombie kill.`;
                 },
                 'action': 'none'
             },
             {
+                name: 'Rotten Blade',
                 resultType: 'postMultiplier',
                 condition: {
                     requirement: 'targetMob',
@@ -1953,7 +1583,6 @@ export const pets = {
                     const value = percentage[tier] * petLevel;
                     return 1 + (value / 100);
                 },
-                name: 'Rotten Blade',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
                     const initialVal = {
@@ -1961,11 +1590,7 @@ export const pets = {
                         EPIC: 0.25,
                         LEGENDARY: 0.25,
                     }
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' more damage to zombies.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} more damage to zombies.`;
                 },
             },
             {
@@ -1981,10 +1606,7 @@ export const pets = {
                 name: 'Living Dead',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases all undead armor sets by ',
-                        <span key="key" style={{ color: green }}>{(0.2 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases all undead armor sets by ${green}${formatValue(0.2 * petLevel)}%.${gray}`;
                 },
             }
         ]
@@ -2012,13 +1634,7 @@ export const pets = {
                         EPIC: { INTEL: 0.14, STRENGTH: 0.11 },
                         LEGENDARY: { INTEL: 0.19, STRENGTH: 0.14 },
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: lightBlue }}>{(1 + initialVal[tier].INTEL * petLevel).toFixed(1)} ✎Intelligence</span>,
-                        ' and ',
-                        <span key="key2" style={{ color: red }}>{(1 + initialVal[tier].STRENGTH * petLevel).toFixed(1)} ❁Strength </span>,
-                        ' for each nearby bee. (max 15 bees)'
-                    ];
+                    return `${gray}Gain ${lightBlue}${formatValue(1 + initialVal[tier].INTEL * petLevel)} ✎Intelligence${gray} and ${red}${formatValue(1 + initialVal[tier].STRENGTH * petLevel)} ❁Strength${gray} for each nearby bee. (max 15 bees)`;
                 },
                 'action': 'none'
             },
@@ -2031,11 +1647,8 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 1,
                     }
-                    return [
-                        'Has ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' chance for flowers to drop an extra one',
-                    ];
+                    return `${gray}Has ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} chance for flowers to drop an extra one`;
+
                 },
                 'action': 'none'
             },
@@ -2043,12 +1656,7 @@ export const pets = {
                 name: 'Weaponized Honey',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>{(5 + 0.2 * petLevel).toFixed(1)}</span>,
-                        ' of received damage as ',
-                        <span key="key2" style={{ color: orange }}>Absorption.</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(5 + 0.2 * petLevel)}${gray} of received damage as ${orange}Absorption.`;
                 },
                 'action': 'none'
             }
@@ -2073,10 +1681,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.5
                     }
-                    return [
-                        'Reduces fall damage by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Reduces fall damage by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -2089,11 +1694,7 @@ export const pets = {
                         EPIC: 1,
                         LEGENDARY: 1
                     }
-                    return [
-                        'Killing chickens has a ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' chance to drop an egg.',
-                    ];
+                    return `${gray}Killing chickens has a ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} chance to drop an egg.`;
                 },
                 'action': 'none'
             },
@@ -2101,14 +1702,7 @@ export const pets = {
                 name: 'Mighty Chickens',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    const initialVal = {
-                        LEGENDARY: 1
-                    }
-                    return [
-                        ' Chicken Minions work ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Chicken Minions work ${green}${formatValue(0.3 * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             }
@@ -2153,12 +1747,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        ' for every ',
-                        <span key="key2" style={{ color: white }}>100 ✦ Speed.</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}${gray} for every ${white}100 ✦ Speed.`;
                 },
             },
             {
@@ -2178,23 +1767,14 @@ export const pets = {
                 name: 'Walking Fortress',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: red }}>{(0.01 * petLevel).toFixed(1)} Health</span>,
-                        ' for every ',
-                        <span key="key2" style={{ color: green }}>10 Defense.</span>,
-                    ];
+                    return `${gray}Gain ${red}${formatValue(0.01 * petLevel)} Health${gray} for every ${green}10 Defense.${gray}`;
                 },
             },
             {
                 name: 'Trunk Efficiency',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        ' Grants ',
-                        <span key="key" style={{ color: orange }}>+{(1.8 * petLevel).toFixed(1)} Farming Fortune,</span>,
-                        ' which increases your chance for multiple drops.',
-                    ];
+                    return `${gray}Grants ${orange}+${formatValue(1.8 * petLevel)} Farming Fortune,${gray} which increases your chance for multiple drops.`;
                 },
                 'action': 'none'
             }
@@ -2219,11 +1799,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Mushroom and Mycelium minions work ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Mushroom and Mycelium minions work ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             },
@@ -2231,11 +1807,7 @@ export const pets = {
                 name: 'Mushroom Eater',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
-                    return [
-                        'When Breaking crops, there is a ',
-                        <span key="key" style={{ color: green }}>{(1 * petLevel).toFixed(1)}%</span>,
-                        ' chance that a mushroom will drop.',
-                    ];
+                    return `${gray}When Breaking crops, there is a ${green}${formatValue(1 * petLevel)}%${gray} chance that a mushroom will drop.`;
                 },
                 'action': 'none'
             },
@@ -2243,12 +1815,7 @@ export const pets = {
                 name: 'Farming Strength',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: orange }}>+1 Farming Fortune</span>,
-                        ' per every ',
-                        <span key="key2" style={{ color: red }}>{(40 - 0.2 * petLevel).toFixed(1)} Strength.</span>,
-                    ];
+                    return `${gray}Gain ${orange}+1 Farming Fortune${gray} per every ${red}${formatValue(40 - 0.2 * petLevel)} Strength.`;
                 },
                 'action': 'none'
             }
@@ -2266,9 +1833,7 @@ export const pets = {
                 name: 'Ridable',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click your summoned pet to ride it!',
-                    ];
+                    return `${gray}Right-click your summoned pet to ride it!`;
                 },
                 'action': 'none'
             },
@@ -2283,10 +1848,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.5
                     }
-                    return [
-                        'Increases the speed of your mount by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Increases the speed of your mount by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -2299,10 +1861,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.5
                     }
-                    return [
-                        ' While holding an Enchanted Carrot on a Stick, increase the speed of your mount by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}While holding an Enchanted Carrot on a Stick, increase the speed of your mount by ${green}${formatValue(initialVal[tier] * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -2310,9 +1869,7 @@ export const pets = {
                 name: 'Trample',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'While on your private island, break all the crops your pig rides over.',
-                    ];
+                    return `${gray}While on your private island, break all the crops your pig rides over.`;
                 },
                 'action': 'none'
             }
@@ -2352,11 +1909,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.5
                     }
-                    return [
-                        'Jump potions also give ',
-                        <span key="key" style={{ color: green }}>+{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: white }}> ✦ Speed.</span>,
-                    ];
+                    return `${gray}Jump potions also give ${green}+${formatValue(initialVal[tier] * petLevel)}${gray} ${white}✦ Speed.`;
                 },
                 'action': 'none'
             },
@@ -2369,10 +1922,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        ' Grants ',
-                        <span key="key2" style={{ color: teal }}>+{(initialVal[tier] * petLevel).toFixed(1)} ☯ Farming Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}${formatValue(initialVal[tier] * petLevel)} ☯ Farming Wisdom.`;
                 },
                 'action': 'none'
             },
@@ -2380,11 +1930,7 @@ export const pets = {
                 name: 'Efficient Farming',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Farming minions work ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Farming minions work ${green}${formatValue(0.3 * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             }
@@ -2402,9 +1948,7 @@ export const pets = {
                 name: 'Ridable',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click your summoned pet to ride it!',
-                    ];
+                    return `${gray}Right-click your summoned pet to ride it!`;
                 },
                 'action': 'none'
             },
@@ -2412,9 +1956,7 @@ export const pets = {
                 name: 'Tunneller',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'The Armadillo breaks all stone or ore in its path while you are riding it in the Crystal Hollows.',
-                    ];
+                    return `${gray}The Armadillo breaks all stone or ore in its path while you are riding it in the Crystal Hollows.`;
                 },
                 'action': 'none'
             },
@@ -2422,9 +1964,7 @@ export const pets = {
                 name: 'Earth Surfer',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'The Armadillo moves faster based on your Speed.',
-                    ];
+                    return `${gray}The Armadillo moves faster based on your Speed.`;
                 },
                 'action': 'none'
             },
@@ -2437,11 +1977,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Every ',
-                        <span key="key" style={{ color: green }}>{(60 - initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        ' seconds, the next gemstone you mine gives 2x drops.',
-                    ];
+                    return `${gray}Every ${formatValue(60 - initialVal[tier] * petLevel)} seconds, the next gemstone you mine gives 2x drops.`;
                 },
                 'action': 'none'
             },
@@ -2449,17 +1985,7 @@ export const pets = {
                 name: 'Mobile Tank',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    const initialVal = {
-                        LEGENDARY: 1
-                    }
-                    return [
-                        'For every ',
-                        <span key="key" style={{ color: green }}>{(100 - 0.5 * petLevel).toFixed(1)}</span>,
-                        ' gain ',
-                        <span key="key2" style={{ color: white }}>+1 ✦ Speed</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: orange }}>+1  Mining Speed.</span>,
-                    ];
+                    return `${gray}For every ${green}${formatValue(100 - 0.5 * petLevel)} ${gray}gain ${white}+1✦ Speed ${gray}and ${orange}+1 Mining Speed.`;
                 },
                 'action': 'none'
             }
@@ -2486,10 +2012,7 @@ export const pets = {
                         LEGENDARY: 0.2,
                         MYTHIC: 0.2
                     }
-                    return [
-                        'Increases drop chance of candies from mobs by ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases drop chance of candies from mobs by ${green}${formatValue(initialVal[tier] * petLevel)}%`;
                 },
                 'action': 'none'
             },
@@ -2503,15 +2026,7 @@ export const pets = {
                         LEGENDARY: { INTEL: 0.3, SPEED: 0.5 },
                         MYTHIC: { INTEL: 0.3, SPEED: 0.5 },
                     }
-                    return [
-                        'During night, gain ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier].INTEL * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: lightBlue }}> Intelligence, </span>,
-                        <span key="key3" style={{ color: green }}>{(initialVal[tier].SPEED * petLevel).toFixed(1)}</span>,
-                        <span key="key4" style={{ color: white }}> ✦ Speed</span>,
-                        ' , and Night Vision.',
-
-                    ];
+                    return `${gray}During night, gain ${green}${formatValue(initialVal[tier].INTEL * petLevel)}${lightBlue} Intelligence, ${green}${formatValue(initialVal[tier].SPEED * petLevel)}${white} ✦Speed${gray}, and Night Vision.`;
                 },
                 'action': 'addStatPerLevel',
                 'stats': {
@@ -2531,11 +2046,7 @@ export const pets = {
                 name: 'Wings of Steel',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>+{(0.5 * petLevel).toFixed(1)}%</span>,
-                        ' damage to Spooky enemies during the Spooky Festival.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(0.5 * petLevel)}%${gray} damage to Spooky enemies during the Spooky Festival.`;
                 },
                 'action': 'none'
             },
@@ -2543,10 +2054,8 @@ export const pets = {
                 name: 'Sonar',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        <span key="key" style={{ color: green }}>+{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' chance to fish up spooky sea creatures',
-                    ];
+                    return `${green}+${formatValue(0.25 * petLevel)}% ${gray}chance to fish up spooky sea creatures`;
+
                 },
                 'action': 'none'
             }
@@ -2572,12 +2081,7 @@ export const pets = {
                         LEGENDARY: 1,
                         MYTHIC: 1
                     }
-                    return [
-                        'Gain more exp orbs for breaking end stone and gain a ',
-                        <span key="key1" style={{ color: green }}>+{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' chance to get an extra block dropped.',
-
-                    ];
+                    return `${gray}Gain more exp orbs for breaking end stone and gain a ${green}+${formatValue(initialVal[tier] * petLevel)}% ${gray}chance to get an extra block dropped.`;
                 },
                 'action': 'none'
             },
@@ -2591,12 +2095,7 @@ export const pets = {
                         LEGENDARY: 0.1,
                         MYTHIC: 0.1
                     }
-                    return [
-                        <span key="key" style={{ color: blue }}>Transmission Abilities</span>,
-                        ' cost ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' less mana.',
-                    ];
+                    return `${blue}Transmission Abilities${gray} cost ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} less mana.`;
                 },
                 'action': 'none'
             },
@@ -2604,14 +2103,7 @@ export const pets = {
                 name: 'Mite Bait',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain a ',
-                        <span key="key" style={{ color: green }}>{(0.03 * petLevel).toFixed(1)}%</span>,
-                        ' chance to dig up a bonus ',
-                        <span key="key2" style={{ color: red }}>Nest Endermite</span>,
-                        ' per ',
-                        <span key="key3" style={{ color: magenta }}>+1 ♣ Pet Luck</span>,
-                    ];
+                    return `${gray}Gain a ${green}${formatValue(0.03 * petLevel)}%${gray} chance to dig up a bonus ${red}Nest Endermite${gray} per ${magenta}+1 ♣ Pet Luck${gray}.`;
                 },
                 'action': 'none'
             },
@@ -2619,12 +2111,7 @@ export const pets = {
                 name: 'Sacrificer',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases the odds of rolling for bonus items in the ',
-                        <span key="key" style={{ color: red }}>Draconic Altar</span>,
-                        ' by ',
-                        <span key="key2" style={{ color: green }}>{(0.1 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases the odds of rolling for bonus items in the ${red}Draconic Altar${gray} by ${green}${formatValue(0.1 * petLevel)}%`;
                 },
                 'action': 'none'
             }
@@ -2649,13 +2136,7 @@ export const pets = {
                         EPIC: 1,
                         LEGENDARY: 1,
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: orange }}> Mining Speed</span>,
-                        ' when mining ',
-                        <span key="key3" style={{ color: yellow }}>Mithril</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}${orange} Mining Speed${gray} when mining ${yellow}Mithril`;
                 },
                 'action': 'none'
             },
@@ -2668,13 +2149,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' more ',
-                        <span key="key2" style={{ color: darkGreen }}>Mithril Powder</span>,
-                        ' while mining.'
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} more ${darkGreen}Mithril Powder${gray} while mining.`;
                 },
                 'action': 'none'
             },
@@ -2690,11 +2165,7 @@ export const pets = {
                 name: 'Danger Averse',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases your combat stats by ',
-                        <span key="1" style={{ color: green }}>{(0.2 * petLevel).toFixed(1)}%</span>,
-                        ' on mining islands.',
-                    ];
+                    return `${gray}Increases your combat stats by ${green}${formatValue(0.2 * petLevel)}%${gray} on mining islands.`;
                 },
             }
         ]
@@ -2712,9 +2183,7 @@ export const pets = {
                 name: 'Rideable',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Right-click on your summoned pet to ride it!',
-                    ];
+                    return `${gray}Right-click on your summoned pet to ride it!`;
                 },
                 'action': 'none'
             },
@@ -2722,9 +2191,7 @@ export const pets = {
                 name: 'Sailing Stone',
                 minRarity: 'COMMON',
                 description: (petLevel, tier) => {
-                    return [
-                        'Sneak to move your rock to your location (15s cooldown)',
-                    ];
+                    return `${gray}Sneak to move your rock to your location (15s cooldown)`;
                 },
                 'action': 'none'
             },
@@ -2751,10 +2218,7 @@ export const pets = {
                         EPIC: 0.25,
                         LEGENDARY: 0.25
                     }
-                    return [
-                        'While sitting on your rock, gain ',
-                        <span key="key" style={{ color: green }}>+{(initialVal[tier] * petLevel).toFixed(1)}% ❈Defense</span>,
-                    ];
+                    return `${gray}While sitting on your rock, gain ${green}+${formatValue(initialVal[tier] * petLevel)}% ❈Defense`;
                 },
             },
             {
@@ -2767,11 +2231,7 @@ export const pets = {
                 name: 'Steady Ground',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'While sitting on your rock, gain ',
-                        <span key="key" style={{ color: green }}>+{(0.3 * petLevel).toFixed(1)}%</span>,
-                        <span key="key2" style={{ color: red }}> ❁Damage</span>,
-                    ];
+                    return `${gray}While sitting on your rock, gain ${green}+${formatValue(0.3 * petLevel)}%${red} ❁Damage`;
                 },
             }
         ]
@@ -2793,10 +2253,7 @@ export const pets = {
                         EPIC: 1.25,
                         LEGENDARY: 1.25
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: orange }}>+{(initialVal[tier] * petLevel).toFixed(1)} ☘ Mining Fortune.</span>,
-                    ];
+                    return `${gray}Gain ${orange}+${formatValue(initialVal[tier] * petLevel)} ☘ Mining Fortune.`;
                 },
                 'action': 'none'
             },
@@ -2809,12 +2266,7 @@ export const pets = {
                         EPIC: 0.03,
                         LEGENDARY: 0.03
                     }
-                    return [
-                        'When mining, there is a ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' chance to mine up a treasure burrow.',
-
-                    ];
+                    return `${gray}When mining, there is a ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} chance to mine up a treasure burrow.`;
                 },
                 'action': 'none'
             },
@@ -2822,11 +2274,7 @@ export const pets = {
                 name: 'Wormhole',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives a ',
-                        <span key="key" style={{ color: green }}>{(1 * petLevel).toFixed(1)}%</span>,
-                        ' chance to mine 2 adjacent stone or hard stone.',
-                    ];
+                    return `${gray}Gives a ${green}${formatValue(1 * petLevel)}%${gray} chance to mine 2 adjacent stone or hard stone.`;
                 },
                 'action': 'none'
             },
@@ -2834,12 +2282,7 @@ export const pets = {
                 name: 'Gemstone Power',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key2" style={{ color: green }}>+{(0.2 * petLevel).toFixed(1)}%</span>,
-                        ' more Gemstone Powder.',
-
-                    ];
+                    return `${gray}Gain ${green}${formatValue(0.2 * petLevel)}%${gray} more Gemstone Powder.`;
                 },
                 'action': 'none'
             }
@@ -2879,12 +2322,7 @@ export const pets = {
                         EPIC: 0.15,
                         LEGENDARY: 0.15
                     }
-                    return [
-                        'Boosts your ',
-                        <span key="key" style={{ color: white }}>❂True Defense</span>,
-                        ' by ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                    ];
+                    return `${gray}Boosts your ${white}❂True Defense${gray} by ${green}${formatValue(initialVal[tier] * petLevel)}`;
                 },
             },
             {
@@ -2896,10 +2334,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3,
                     }
-                    return [
-                        'Grants ',
-                        <span key="key2" style={{ color: teal }}>+{(initialVal[tier] * petLevel).toFixed(1)} ☯Mining Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}+${formatValue(initialVal[tier] * petLevel)} ☯Mining Wisdom.`;
                 },
                 'action': 'none'
             },
@@ -2907,9 +2342,7 @@ export const pets = {
                 name: 'Dexterity',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives permanent haste III.',
-                    ];
+                    return `${gray}Gives permanent haste III.`;
                 },
                 'action': 'none'
             }
@@ -2934,11 +2367,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Red Sand minions work ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Red Sand minions work ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             },
@@ -2951,15 +2380,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.5
                     }
-                    return [
-                        'Converts all ',
-                        <span key="key" style={{ color: white }}>✦ Speed</span>,
-                        ' over 100 into ',
-                        <span key="key2" style={{ color: orange }}>☘ Mining Fortune</span>,
-                        ' for Non-Ores at ',
-                        <span key="key3" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' efficiency.'
-                    ];
+                    return `${gray}Converts all ${white}✦ Speed${gray} over 100 into ${orange}☘ Mining Fortune${gray} for Non-Ores at ${green}${formatValue(initialVal[tier] * petLevel)}% ${gray}efficiency.`;
                 },
                 'action': 'none'
             },
@@ -2967,15 +2388,8 @@ export const pets = {
                 name: 'Slow But Efficient',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Reduces the mana cost of ',
-                        <span key="key" style={{ color: blue }}>Utility Abilities</span>,
-                        ' by ',
-                        <span key="key2" style={{ color: green }}>{(0.01 * petLevel).toFixed(1)}%</span>,
-                        ' for every 15 ',
-                        <span key="key3" style={{ color: white }}>✦ Speed</span>,
-                        ' converted.'
-                    ];
+                    return `${gray}Reduces the mana cost of ${blue}Utility Abilities ${gray}by ${green}${formatValue(0.01 * petLevel)}% ${gray}for every 15 ${white}✦ Speed ${gray}converted`;
+
                 },
                 'action': 'none'
             }
@@ -2997,11 +2411,7 @@ export const pets = {
                 name: 'Stronger Bones',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Take ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' less damage from Skeletons',
-                    ];
+                    return `${gray}Take ${green}${formatValue(0.3 * petLevel)}%${gray} less damage from Skeletons`;
                 },
                 'action': 'none'
             },
@@ -3020,23 +2430,14 @@ export const pets = {
                 name: 'Wither Blood',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Deal ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' more damage against wither mobs.',
-                    ];
+                    return `${gray}Deal ${green}${formatValue(0.25 * petLevel)}%${gray} more damage against wither mobs`;
                 },
             },
             {
                 name: 'Death\'s Touch',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Upon hitting an enemy inflict the wither effect for ',
-                        <span key="key" style={{ color: green }}>{(2 * petLevel).toFixed(1)}%</span>,
-                        ' damage over 3 seconds. Does not stack',
-
-                    ];
+                    return `${gray}Upon hitting an enemy inflict the wither effect for ${green}${formatValue(2 * petLevel)}%${gray} damage over 3 seconds. Does not stack`;
                 },
                 'action': 'petAbility'
             }
@@ -3062,11 +2463,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.25
                     }
-                    return [
-                        'Regen ',
-                        <span key="key" style={{ color: red }}>{(initialVal[tier] * petLevel).toFixed(1)} ❤Health</span>,
-                        ' per second.',
-                    ];
+                    return `${gray}Regen ${red}${formatValue(initialVal[tier] * petLevel)} ❤Health ${gray}per second.`;
                 },
                 'action': 'none'
             },
@@ -3092,15 +2489,7 @@ export const pets = {
                         EPIC: { strength: 0.5, crit: 0.25 },
                         LEGENDARY: { strength: 0.5, crit: 0.4 }
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>+{(initialVal[tier].strength * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁Strength</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: green }}>+{(initialVal[tier].crit * petLevel).toFixed(1)}</span>,
-                        <span key="key4" style={{ color: blue }}> ☠Crit Damage </span>,
-                        'when mid air.'
-                    ];
+                    return `${gray}Grants ${green}+${formatValue(initialVal[tier].strength * petLevel)}${red} ❁Strength${gray} and ${green}+${formatValue(initialVal[tier].crit * petLevel)}${blue} ☠Crit Damage ${gray}when mid air.`;
                 },
                 'action': 'addStatPerLevel',
                 'stats': {
@@ -3123,11 +2512,7 @@ export const pets = {
                 name: 'Long Neck',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'See enemies from afar and gain ',
-                        <span key="key" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' dodge chance.',
-                    ];
+                    return `${gray}See enemies from afar and gain ${green}${formatValue(0.25 * petLevel)}% ${gray}dodge chance.`;
                 },
                 'action': 'none'
             }
@@ -3153,12 +2538,7 @@ export const pets = {
                         EPIC: 0.6,
                         LEGENDARY: 0.6
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: green }}>+{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: orange }}> ☘Foraging Fortune,</span>,
-                        ' which increases your chances at double logs.',
-                    ];
+                    return `${gray}Grants ${green}+${formatValue(initialVal[tier] * petLevel)}${orange} ☘Foraging Fortune,${gray} which increases your chances at double logs.`;
                 },
                 'action': 'none'
             },
@@ -3183,12 +2563,7 @@ export const pets = {
                         EPIC: 1,
                         LEGENDARY: 1
                     }
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: green }}>+{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: white }}> ✦Speed</span>,
-                        ' while in The Park.',
-                    ];
+                    return `${gray}Increases ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} ${white}✦Speed${gray} while in The Park.`;
                 },
                 'action': 'addStatPerLevel',
                 'stats': {
@@ -3204,10 +2579,7 @@ export const pets = {
                 name: 'Evolves Axes',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Reduce the cooldown of Jungle Axe and Treecapitator by ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}Reduce the cooldown of Jungle Axe and Treecapitator by ${green}${formatValue(0.5 * petLevel)}%.`;
                 },
                 'action': 'none'
             }
@@ -3233,10 +2605,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: teal }}>+{(initialVal[tier] * petLevel).toFixed(1)} ☯Foraging Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}+${formatValue(initialVal[tier] * petLevel)} ☯Foraging Wisdom.`;
                 },
                 'action': 'none'
             },
@@ -3249,11 +2618,7 @@ export const pets = {
                         EPIC: 0.3,
                         LEGENDARY: 0.3
                     }
-                    return [
-                        'Foraging minions work ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' faster while on your island.',
-                    ];
+                    return `${gray}Foraging minions work ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} faster while on your island.`;
                 },
                 'action': 'none'
             },
@@ -3261,11 +2626,7 @@ export const pets = {
                 name: 'Tree Essence',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases your ',
-                        <span key="key" style={{ color: green }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' chance to get exp from breaking a log.',
-                    ];
+                    return `${gray}Increases your ${green}${formatValue(0.3 * petLevel)}%${gray} chance to get exp from breaking a log.`;
                 },
                 'action': 'none'
             }
@@ -3281,13 +2642,7 @@ export const pets = {
                 name: 'Heart of the Sea',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: teal }}>+{(0.1 * petLevel).toFixed(1)}% Sea Creature Chance </span>,
-                        ' to your pet for each ',
-                        <span key="key2" style={{ color: purple }}>Heart of the Mountain</span>,
-                        ' level.',
-                    ];
+                    return `${gray}Grants ${teal}${formatValue(0.1 * petLevel)}% Sea Creature Chance${gray} to your pet for each.`;
                 },
                 'action': 'none'
             },
@@ -3295,10 +2650,7 @@ export const pets = {
                 name: 'Expert Cave Fisher',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'The fishing speed reduction from being underground is attenuated by ',
-                        <span key="key" style={{ color: green }}>{(1 * petLevel).toFixed(1)}%.</span>,
-                    ];
+                    return `${gray}The fishing speed reduction from being underground is attenuated by ${green}${formatValue(1 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -3320,13 +2672,7 @@ export const pets = {
                 name: 'Gift of the Ammonite',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Each Mining and Fishing level grants ',
-                        <span key="key" style={{ color: lightBlue }}>+{(0.005 * petLevel).toFixed(2)} ☂Fishing Speed,</span>,
-                        <span key="key2" style={{ color: white }}> +{(0.02 * petLevel).toFixed(1)} ✦Speed</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: green }}> +{(0.02 * petLevel).toFixed(1)} ❈Defense.</span>,
-                    ];
+                    return `${gray}Each Mining and Fishing level grants ${lightBlue}+${formatValue((0.005 * petLevel))} ☂Fishing Speed,${white} +${formatValue((0.02 * petLevel))} ✦Speed${gray} and ${green}+${formatValue((0.02 * petLevel))} ❈Defense.`;
                 },
             }
         ]
@@ -3362,14 +2708,7 @@ export const pets = {
                 name: 'Cold Breeze',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives ',
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁ Strength</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: blue }}>☠ Crit Damage</span>,
-                        ' when near snow.',
-                    ];
+                    return `${gray}Gives ${green}${formatValue((0.5 * petLevel))}${red} ❁ Strength${gray} and ${blue}☠ Crit Damage${gray} when near snow.`;
                 },
             },
             {
@@ -3390,12 +2729,7 @@ export const pets = {
                         EPIC: 0.5,
                         LEGENDARY: 0.75,
                     }
-                    return [
-                        'Gain ',
-                        <span key="key2" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' of your strength as ',
-                        <span key="key3" style={{ color: green }}> ❈Defense.</span>,
-                    ];
+                    return `${gray}Gain ${green}${formatValue(initialVal[tier] * petLevel)}%${gray} of your ${red}strength ${gray}as ${green} ❈Defense.`;
                 },
             },
             {
@@ -3414,13 +2748,7 @@ export const pets = {
                 name: 'Yeti Fury',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Buff the Yeti Sword by ',
-                        <span key="key" style={{ color: green }}>{(1 * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁Damage</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: lightBlue }}> ✎Intelligence.</span>,
-                    ];
+                    return `${gray}Buff the Yeti Sword by ${green}${formatValue((1 * petLevel))}${red} ❁Damage${gray} and ${lightBlue} ✎Intelligence.`;
                 },
             }
         ]
@@ -3444,10 +2772,7 @@ export const pets = {
                         EPIC: 2,
                         LEGENDARY: 2
                     }
-                    return [
-                        'All potions heal ',
-                        <span key="key" style={{ color: red }}>+{(initialVal[tier] * petLevel).toFixed(1)} ❤HP.</span>,
-                    ];
+                    return `${gray}All potions heal ${red}+${formatValue(initialVal[tier] * petLevel)} ❤HP.`;
                 },
                 'action': 'none'
             },
@@ -3477,12 +2802,7 @@ export const pets = {
                         EPIC: 25,
                         LEGENDARY: 20,
                     }
-                    return [
-                        ' Gain ',
-                        <span key="key" style={{ color: green }}>+{(0.01 * petLevel).toFixed(2)} ❈Defense</span>,
-                        ' per ',
-                        <span key="key2" style={{ color: red }}>{initialVal[tier]} Max ❤Health.</span>,
-                    ];
+                    return `${gray}Gain ${green}+${formatValue((0.01 * petLevel))} ❈Defense${gray} per ${red}${formatValue(initialVal[tier])} Max ❤Health.`;
                 },
             },
             {
@@ -3497,10 +2817,7 @@ export const pets = {
                 name: 'Archimedes',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ',
-                        <span key="key" style={{ color: red }}>+{(0.2 * petLevel).toFixed(1)}% Max ❤Health.</span>,
-                    ];
+                    return `${gray}Gain ${red}+${formatValue((0.2 * petLevel))}% Max ❤Health.`;
                 },
             }
         ]
@@ -3524,15 +2841,7 @@ export const pets = {
                         EPIC: 0.1,
                         LEGENDARY: 0.1
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: lightBlue }}>+{(initialVal[tier] * petLevel).toFixed(1)}% ☂Fishing Speed</span>,
-                        ' for each player within ',
-                        <span key="key2" style={{ color: green }}>30</span>,
-                        ' blocks, up to ',
-                        <span key="key3" style={{ color: green }}>5</span>,
-                        ' players.'
-                    ];
+                    return `${gray}Grants ${lightBlue}+${formatValue((initialVal[tier] * petLevel))}% ☂Fishing Speed${gray} for each player within ${green}30${gray} blocks, up to ${green}5${gray} players.`;
                 },
                 'action': 'none'
             },
@@ -3545,10 +2854,7 @@ export const pets = {
                         EPIC: 0.1,
                         LEGENDARY: 0.1
                     }
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: teal }}>+{(initialVal[tier] * petLevel).toFixed(1)}% Sea Creature Chance.</span>,
-                    ];
+                    return `${gray}Grants ${teal}+${formatValue((initialVal[tier] * petLevel))}% Sea Creature Chance.${gray}`;
                 },
                 'action': 'none'
             },
@@ -3556,11 +2862,7 @@ export const pets = {
                 name: 'Splash Surprise',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Stun sea creatures for ',
-                        <span key="key" style={{ color: green }}>5s</span>,
-                        ' after fishing them up.',
-                    ];
+                    return `${gray}Stun sea creatures for ${green}5s${gray} after fishing them up.`;
                 },
                 'action': 'none'
             }
@@ -3585,10 +2887,7 @@ export const pets = {
                         LEGENDARY: 0.8,
                         MYTHIC: 0.8
                     }
-                    return [
-                        'Grants ',
-                        <span key="key2" style={{ color: lightBlue }}>+{(initialVal[tier] * petLevel).toFixed(1)} ☂Fishing Speed.</span>,
-                    ];
+                    return `${gray}Grants ${lightBlue}+${formatValue((initialVal[tier] * petLevel))} ☂Fishing Speed.`;
                 },
                 'action': 'none'
             },
@@ -3617,14 +2916,7 @@ export const pets = {
                         LEGENDARY: 1,
                         MYTHIC: 1
                     }
-                    return [
-                        'Gives ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁Strength</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: green }}> ❈Defense</span>,
-                        ` when near ${tier === 'MYTHIC' ? 'Lava.' : 'Water.'}`,
-                    ];
+                    return `${gray}Gives ${green}${formatValue((initialVal[tier] * petLevel))}${red} ❁Strength${gray} and ${green}❈Defense${gray} when near ${tier === 'MYTHIC' ? 'Lava.' : 'Water.'}`;
                 },
                 'action': 'addStatPerLevel',
                 'stats': {
@@ -3665,10 +2957,7 @@ export const pets = {
                 name2: { minRarity: 'MYTHIC', name: 'Magmatic Diver' },
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        `Increases the stats of ${tier === 'MYTHIC' ? 'Magma Lord Armor ' : 'Diver\'s Armor'} by `,
-                        <span key="key2" style={{ color: green }}>{(0.2 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Increases the stats of ${red}${tier === 'MYTHIC' ? 'Magma Lord Armor ' : 'Diver\'s Armor'} ${gray}by ${green}${formatValue((0.2 * petLevel))}%${gray}.`;
                 },
             }
         ]
@@ -3693,11 +2982,7 @@ export const pets = {
                         EPIC: 1,
                         LEGENDARY: 1
                     }
-                    return [
-                        'Gain a ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier] * petLevel).toFixed(1)}%</span>,
-                        ' hance to get double drops from squids.'
-                    ];
+                    return `${gray}Gain a ${green}${formatValue((initialVal[tier] * petLevel))}%${gray} chance to get double drops from squids.`;
                 },
                 'action': 'none'
             },
@@ -3727,24 +3012,15 @@ export const pets = {
                         EPIC: { strength: 0.2, damage: 0.4 },
                         LEGENDARY: { strength: 0.2, damage: 0.4 },
                     }
-                    return [
-                        'Buffs the Ink Wand by ',
-                        <span key="key" style={{ color: green }}>{(initialVal[tier].damage * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁Damage</span>,
-                        ' and ',
-                        <span key="key3" style={{ color: green }}>{(initialVal[tier].strength * petLevel).toFixed(1)}</span>,
-                        <span key="key4" style={{ color: red }}> ❁Strength.</span>,
-                    ];
+                    return `${gray}Buffs the Ink Wand by ${green}${formatValue(initialVal[tier].damage * petLevel)} ${red}❁Damage${gray} 
+                            ${gray}and ${green}${formatValue(initialVal[tier].strength * petLevel)} ${red}❁Strength`;
                 },
             },
             {
                 name: 'Fishing Wisdom Boost',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ',
-                        <span key="key" style={{ color: teal }}>+{(0.3 * petLevel).toFixed(1)} ☯Fishing Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}+${formatValue((0.3 * petLevel))} ☯Fishing Wisdom.${gray}`;
                 },
                 'action': 'none'
             }
@@ -3771,14 +3047,7 @@ export const pets = {
                         LEGENDARY: 0.2,
                         MYTHIC: 1.2
                     }
-                    return [
-                        'Zaps your enemies for ', 
-                        <span key="key" style={{ color: lightBlue }}>{(initialVal[tier] * petLevel).toFixed(1)}x</span>,
-                        ' your ',
-                        <span key="key2" style={{ color: lightBlue }}> ✎Intelligence</span>,
-                        ' every ',
-                        <span key="key3" style={{ color: green }}>3s.</span>,
-                    ];
+                    return `${gray}Zaps your enemies for ${lightBlue}${formatValue((initialVal[tier] * petLevel))}x${gray} your${lightBlue} ✎Intelligence${gray} every ${green}3s.${gray}`;
                 },
                 'action': 'none'
             },
@@ -3792,10 +3061,7 @@ export const pets = {
                         LEGENDARY: 0.3,
                         MYTHIC: 0.3
                     }
-                    return [
-                        'Grants ', 
-                        <span key="key" style={{ color: teal }}>{(initialVal[tier] * petLevel).toFixed(1)} ☯Enchanting Wisdom.</span>,
-                    ];
+                    return `${gray}Grants ${teal}${formatValue((initialVal[tier] * petLevel))} ☯Enchanting Wisdom.${gray}`;
                 },
                 'action': 'none'
             },
@@ -3803,13 +3069,7 @@ export const pets = {
                 name: 'Mana Pool',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Regenerate ', 
-                        <span key="key" style={{ color: lightBlue }}>{(0.3 * petLevel).toFixed(1)}%</span>,
-                        ' extra ',
-                        <span key="key2" style={{ color: lightBlue }}>✎Mana,</span>,
-                        ' doubled when near or in water.'
-                    ];
+                    return `${gray}Regenerate ${lightBlue}${formatValue((0.3 * petLevel))}%${gray} extra ${lightBlue}✎Mana,${gray} doubled when near or in water.`;
                 },
                 'action': 'none'
             },
@@ -3817,14 +3077,7 @@ export const pets = {
                 name: 'Lucky Seven',
                 minRarity: 'MYTHIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ', 
-                        <span key="key" style={{ color: lightBlue }}>+{(0.07 * petLevel).toFixed(1)}%</span>,
-                        ' chance to find ',
-                        <span key="key2" style={{ color: purple }}>ultra rare</span>,
-                        ' books in ',
-                        <span key="key3" style={{ color: magenta }}>SuperPairs.</span>,
-                    ];
+                    return `${gray}Gain ${lightBlue}+${formatValue((0.07 * petLevel))}%${gray} chance to find ${purple}ultra rare${gray} books in ${magenta}SuperPairs.`;
                 },
                 'action': 'none'
             }
@@ -3842,10 +3095,7 @@ export const pets = {
                 name: 'Radiant Scyphozoa',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'While in dungeons, reduces the mana cost of Power Orbs by ', 
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}While in dungeons, reduces the mana cost of Power Orbs by ${green}${formatValue(0.5 * petLevel)}%.`;
                 },
                 'action': 'none'
             },
@@ -3853,16 +3103,7 @@ export const pets = {
                 name: 'Stored Energy',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'While in dungeons, for every ', 
-                        <span key="key" style={{ color: red }}>2,000 HP</span>,
-                        ' you heal teammates, the cooldown of ',
-                        <span key="key2" style={{ color: green }}>Wish</span>,
-                        ' is reduced by ',
-                        <span key="key3" style={{ color: green }}>{(0.01 * petLevel).toFixed(1)}s</span>,
-                        ' up to ',
-                        <span key="key4" style={{ color: green }}>30s</span>,
-                    ];
+                    return `${gray}While in dungeons, for every ${red}2,000 HP${gray} you heal teammates, the cooldown of ${green}Wish${gray} is reduced by ${green}${formatValue((0.01 * petLevel))}s${gray} up to ${green}30s.`;
                 },
                 'action': 'none'
             },
@@ -3870,10 +3111,7 @@ export const pets = {
                 name: 'Powerful Potions',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'While in dungeons, increase the effectiveness of Dungeon Potions by ', 
-                        <span key="key" style={{ color: green }}>{(0.5 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}While in dungeons, increase the effectiveness of Dungeon Potions by ${green}${formatValue((0.5 * petLevel))}%.`;
                 },
                 'action': 'none'
             }
@@ -3897,12 +3135,7 @@ export const pets = {
                         EPIC: 15,
                         LEGENDARY: 20
                     }
-                    return [
-                        'Adds ', 
-                        <span key="key" style={{ color: green }}>{(((petLevel/100) * (initialVal[tier] - 1)) + 1).toFixed(0)}</span>,
-                        ' level(s) to intimidation accessories.',
-                        
-                    ];
+                    return `${gray}Adds ${green}${formatValue((((petLevel/100) * (initialVal[tier] - 1)) + 1))}${gray} level(s) to intimidation accessories.`;
                 },
                 'action': 'none'
             },
@@ -3910,10 +3143,7 @@ export const pets = {
                 name: 'Repeat',
                 minRarity: 'EPIC',
                 description: (petLevel, tier) => {
-                    return [
-                        'Boosts potions duration by ', 
-                        <span key="key" style={{ color: green }}>{(5 + 0.35 * petLevel).toFixed(1)}%</span>, 
-                    ];
+                    return `${gray}Boosts potions duration by ${green}${formatValue((5 + 0.35 * petLevel))}%.`;
                 },
                 'action': 'none'
             },
@@ -3921,13 +3151,7 @@ export const pets = {
                 name: 'Bird Discourse',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives ', 
-                        <span key="key" style={{ color: green }}>+{(5 + 0.25 * petLevel).toFixed(1)}</span>,
-                        <span key="key2" style={{ color: red }}> ❁Strength</span>,
-                        ' to players within 20 Blocks (doesn\'t stack).',
-                        
-                    ];
+                    return `${gray}Gives ${green}+${formatValue((5 + 0.25 * petLevel))}${red} ❁Strength${gray} to players within 20 Blocks (doesn't stack).`;
                 },
                 'action': 'none'
             },
@@ -3935,10 +3159,7 @@ export const pets = {
                 name: 'Parrot Feather Infusion',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'When summoned or in your pets menu, boost the duration of consumed God Potions by ', 
-                        <span key="key" style={{ color: green }}>+{(0.2 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}When summoned or in your pets menu, boost the duration of consumed God Potions by ${green}+${formatValue((0.2 * petLevel))}%.`;
                 },
                 'action': 'none'
             }
@@ -3964,12 +3185,7 @@ export const pets = {
                         EPIC: 0.2,
                         LEGENDARY: 0.2
                     }
-                    return [
-                        'Reduces the ', 
-                        <span key="key" style={{ color: lightBlue }}>✎Mana</span>,
-                        ' cost of abilities by ',
-                        <span key="key2" style={{ color: green }}>{(0.2 * petLevel).toFixed(1)}%</span>,
-                    ];
+                    return `${gray}Reduces the ${lightBlue}✎Mana ${gray}cost of abilities by ${green}${formatValue(0.2 * petLevel)}`;
                 },
                 'action': 'none'
             },
@@ -3977,12 +3193,7 @@ export const pets = {
                 name: 'Overheal',
                 minRarity: 'RARE',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives a ', 
-                        <span key="key" style={{ color: green }}>{(0.1 * petLevel).toFixed(1)}%</span>,
-                        ' shield after not taking damage for ',
-                        <span key="key2" style={{ color: green }}>10s.</span>,
-                    ];
+                    return `${gray}Gives a ${green}+${formatValue((0.1 * petLevel))}%${gray} shield after not taking damage for ${green}10s.`;
                 },
                 'action': 'none'
             },
@@ -3990,13 +3201,7 @@ export const pets = {
                 name: 'Dungeon Wizard',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Increases your total ', 
-                        <span key="key" style={{ color: lightBlue }}>✎Mana</span>,
-                        ' by ',
-                        <span key="key2" style={{ color: green }}>{(0.25 * petLevel).toFixed(1)}%</span>,
-                        ' while in Dungeons.'
-                    ];
+                    return `${gray}Increases your total ${lightBlue}✎Mana ${gray}by ${green}+${formatValue((0.25 * petLevel))}%${gray} while in Dungeons.`;
                 },
                 'action': 'none'
             }
@@ -4014,12 +3219,7 @@ export const pets = {
                 name: 'Winter Spirit',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gain ', 
-                        <span key="key" style={{ color: magenta }}>double</span>,
-                        ' pet ',
-                        <span key="key2" style={{ color: green }}>EXP.</span>,
-                    ];
+                    return `${gray}Gain ${magenta}double${gray} pet ${green}EXP.`;
                 },
                 'action': 'none'
             },
@@ -4027,14 +3227,7 @@ export const pets = {
                 name: 'Infused',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Gives ', 
-                        <span key="key" style={{ color: lightBlue }}>+{(0.75 * petLevel).toFixed(1)} ☂Fishing Speed </span>,
-                        ' and ',
-                        <span key="key2" style={{ color: teal }}>+10 Sea Creature Chance </span>,
-                        '  while on ',
-                        <span key="key3" style={{ color: red }}>{'Jerry\'s'} Workshop.</span>,
-                    ];
+                    return `${gray}Gives ${lightBlue}+${formatValue((0.75 * petLevel))} ☂Fishing Speed ${gray}and ${teal}+10 Sea Creature Chance ${gray}while on ${red}Jerry's Workshop.`;
                 },
                 'action': 'none'
             },
@@ -4042,13 +3235,7 @@ export const pets = {
                 name: 'Snow Power',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ', 
-                        <span key="key" style={{ color: green }}>+{(0.1 * petLevel).toFixed(1)}%</span>,
-                        ' bonus gift chance during the ',
-                        <span key="key2" style={{ color: red }}>Gift Attack</span>,
-                        ' event. ',
-                    ];
+                    return `${gray}Grants Bonus gift chance during the ${red}Gift Attack${gray} event is ${green}${formatValue(0.1 * petLevel)}%.${gray}`;
                 },
                 'action': 'none'
             },
@@ -4056,12 +3243,7 @@ export const pets = {
                 name: 'Icy Wind',
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return [
-                        'Grants ', 
-                        <span key="key" style={{ color: green }}>+{(0.2 * petLevel).toFixed(1)}%</span>,
-                        ' chance of getting double ',
-                        <span key="key2" style={{ color: lightBlue }}>Ice Essence.</span>,
-                    ];
+                    return `${gray}Chance of getting double ${lightBlue}Ice Essence${gray} is ${green}${formatValue(0.2 * petLevel)}%.`;
                 },
                 'action': 'none'
             }

@@ -13,6 +13,7 @@ import { ProfileActions } from "../context/ProfileContext";
 import { setNewPet, getPetStats } from "../lib/ProfileFunctions";
 import petStyles from "../styles/PetDisplay.module.scss";
 import itemCardStyles from "../styles/ItemCard.module.scss";
+import { parseLore } from "../lib/Util";
 
 const PetDisplay = ({ displayOnlyPet }) => {
   const profileContext = useProfileContext();
@@ -43,8 +44,8 @@ const PetDisplay = ({ displayOnlyPet }) => {
         <SearchBox selectedItem={pet} itemList={petList()} onItemChange={(value) => handlePetChange({ ...pet, name: value })} />
       )}
 
-      <div style={{ marginLeft: "5px" }}>
-        <div className='flex-row' style={{ alignItems: "center" }}>
+      <div style={{ paddingLeft: "5px" }}>
+        <div style={{ display:'flex', alignItems: "center" }}>
           <span>Level: </span>
           <InputCounter
             value={pet.level}
@@ -54,23 +55,20 @@ const PetDisplay = ({ displayOnlyPet }) => {
             onChange={(value) => handlePetChange({ ...pet, level: value })}
           />
         </div>
-        <span>
+        <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
           <span>Rarity: </span>
           {displayOnlyPet ? (
             <span>{pet.tier}</span>
           ) : (
-            <select
-              className={itemCardStyles["itemCard-items-dropdown"]}
-              value={pet.tier ?? "COMMON"}
-              onChange={(e) => handlePetChange({ ...pet, tier: e.target.value })}>
-              {tiers.slice(tiers.indexOf(pet.minRarity), tiers.indexOf(pet.maxRarity) + 1).map((tier) => (
-                <option style={{ color: "white" }} key={tier} value={tier}>
-                  {tier}
-                </option>
-              ))}
-            </select>
+            <SearchBox
+              selectedItem={pet.tier ?? "COMMON"}
+              onItemChange={(e) => handlePetChange({ ...pet, tier: e })}
+              itemList={tiers.slice(tiers.indexOf(pet.minRarity), tiers.indexOf(pet.maxRarity) + 1)}
+              maxWidth={'150px'}
+              placeholder={'Select Rarity'}
+            />
           )}
-        </span>
+        </div>
         <div>
           {Object.entries(pet.stats).map(
             ([stat, value]) =>
@@ -104,7 +102,7 @@ const PetDisplay = ({ displayOnlyPet }) => {
                         onClick={() => abilityStatusChanged(ability)}></div>
                     )}
                   </div>
-                  {ability.description && <div style={{ marginBottom: "15px" }}>{ability.description(pet.level, pet.tier)}</div>}
+                  {ability.description && <div style={{ marginBottom: "15px" }}>{parseLore(ability.description(pet.level, pet.tier))}</div>}
                 </div>
               )
           )}
