@@ -45,6 +45,9 @@ export async function GET() {
 
     // remove unused stuff from skills api data
     for (const [skill, values] of Object.entries(skillsApiData)) {
+      values.levels.forEach((level) => {
+        level.unlocks && delete level.unlocks;
+      });
       simplifiedSkills[skill] = {
         maxLevel: values.maxLevel,
         levels: values.levels,
@@ -98,6 +101,9 @@ export async function GET() {
       const categoryCollections = {};
       const docRef = firestoreDB.collection("collections").doc(category);
       for (const [item, collectionInfo] of Object.entries(skyblockCollection.items)) {
+        collectionInfo.tiers.forEach((tier) => {
+          tier.unlocks && delete tier.unlocks;
+        });
         categoryCollections[item] = collectionInfo;
       }
       await docRef.set(categoryCollections);
