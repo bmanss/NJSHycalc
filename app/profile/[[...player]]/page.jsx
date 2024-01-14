@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === "production" && !apps.length) {
 export default async function page({ params }) {
   const useAdminDB = process.env.NODE_ENV === "production";
   const firestoreDB = useAdminDB ? admin.firestore() : getLocalFirestore();
-  const data = await fetch(`${process.env.DOMAIN}/api/DatabaseItems`);
+  const data = await fetch(`${process.env.DOMAIN}/api/DatabaseItems`, {revalidate: 3600});
   
   const hypixelData = await data.json();
   // sort the hundreds of items on the server to pass to the client profile component
@@ -76,7 +76,6 @@ export default async function page({ params }) {
         lastFetched: Date.now(),
         hypixelProfile: hypixelProfileData,
       };
-
       setProfile(firestoreDB, UUID, hypixelProfileData, useAdminDB).catch((error) => {
         console.error("Error setting profile:", error);
       });
