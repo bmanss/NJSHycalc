@@ -347,3 +347,23 @@ body {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+.arrow {
+  background-color: transparent;
+  border: solid rgb(255, 255, 255);
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  outline: none;
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+

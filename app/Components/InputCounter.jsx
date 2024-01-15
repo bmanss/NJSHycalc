@@ -42,14 +42,14 @@ export const InputCounter = ({ value, onChange, min, max, inputWidth, floating, 
         onChange={(e) => handleSetCounter(e.target.value)}
         onBlur={(e) => updateValue(e.target.value)}></input>
       {!isStatic && (
-        <span style={{ display: "flex", flexDirection: "column" }}>
+        <div className={styles['inputCounter-Arrows']}>
           <button onClick={() => updateValue(parseFloat(counterValue) + (step || 1))}>
-            <Image width={15} height={15} src='/arrowUp.png' alt='arrowUp' />
+            <div className='arrow up' />
           </button>
           <button onClick={() => updateValue(parseFloat(counterValue) - (step || 1))}>
-            <Image width={15} height={15} src='/arrowDown.png' alt='arrowDown' />
+            <div className='arrow down' />
           </button>
-        </span>
+        </div>
       )}
     </span>
   );

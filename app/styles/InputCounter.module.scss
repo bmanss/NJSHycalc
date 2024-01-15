@@ -2,7 +2,11 @@
   margin: 0;
   padding: 0;
   display: flex;
-  direction: row;
+}
+
+.inputCounter-Arrows {
+  display: flex;
+  flex-direction: column;
 }
 
 .inputCounter input {
@@ -18,18 +22,18 @@
 }
 
 .inputCounter input:hover {
-  background-color: rgba(58, 58, 58, 0.521);
+  background-color: rgba(51, 51, 51, 0.664);
 }
 
 .inputCounter button {
   border-radius: 2px;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0);
+  justify-content: center;
+  background-color: transparent;
   border: 0;
   color: #ffffff;
   display: flex;
   font-size: 18px;
-  justify-content: center;
   width: 30px;
   height: 18px;
   cursor: pointer;
@@ -37,11 +41,11 @@
 }
 
 .inputCounter button:hover {
-  background-color: rgba(58, 58, 58, 0.521);
+  background-color: rgba(51, 51, 51, 0.664);
 }
 
 .inputCounter button:active {
-  background-color: rgba(58, 58, 58, 0.521);
+  background-color: rgba(51, 51, 51, 0.664);
   transform: scale(1.05);
 }
 
