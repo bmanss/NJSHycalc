@@ -33,16 +33,23 @@ export const InputCounter = ({ value, onChange, min, max, inputWidth, floating, 
     }
   }
 
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      updateValue(counterValue);
+    }
+  }
+
   return (
     <span className={styles["inputCounter"]}>
       <input
         style={{ width: inputWidth && inputWidth }}
         readOnly={isStatic ? true : false}
         value={counterValue}
+        onKeyDown={handleKeyDown}
         onChange={(e) => handleSetCounter(e.target.value)}
         onBlur={(e) => updateValue(e.target.value)}></input>
       {!isStatic && (
-        <div className={styles['inputCounter-Arrows']}>
+        <div className={styles["inputCounter-Arrows"]}>
           <button onClick={() => updateValue(parseFloat(counterValue) + (step || 1))}>
             <div className='arrow up' />
           </button>
