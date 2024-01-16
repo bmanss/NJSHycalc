@@ -1272,15 +1272,17 @@ export const reforges = {
       RARE: {
         DAMAGE: 165,
         STRENGTH: 165,
+        INTELLIGENCE: 65
       },
       EPIC: {
         DAMAGE: 165,
         STRENGTH: 165,
+        INTELLIGENCE: 100
       },
       LEGENDARY: {
         DAMAGE: 165,
         STRENGTH: 165,
-        INTELLIGENCE: 65,
+        INTELLIGENCE: 150,
       },
     },
     withered: {
