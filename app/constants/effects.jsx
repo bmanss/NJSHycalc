@@ -75,7 +75,7 @@ const buffWeapon = (profileState, stats) => {
   }
 };
 
-function valuedTemplate(text, maxValue) {
+export function valuedTemplate(text, maxValue) {
   return {
     valued: true,
     value: 0,
