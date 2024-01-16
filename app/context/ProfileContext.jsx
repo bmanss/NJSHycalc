@@ -103,7 +103,7 @@ const profileReducer = (state, action) => {
       break;
   }
   ProfilesFunctions.finalStats(updatedState, updatedState.dungeonMode);
-  console.log(updatedState);
+  // console.log(updatedState);
   return updatedState;
 };
 
