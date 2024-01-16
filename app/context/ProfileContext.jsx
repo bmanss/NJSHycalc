@@ -24,6 +24,7 @@ const initialProfileState = {
   activeProfile: "",
   targetMob: "None",
   dungeonMode: false,
+  godPotion: false,
 };
 
 export const ProfileActions = {
@@ -39,7 +40,8 @@ export const ProfileActions = {
   SET_TARGET_MOB: "SET_TARGET_MOB",
   SET_DUNGEON_MODE: "SET_DUNGEON_MODE",
   SET_ADDITIONAL_MULIPLIERS: "SET_ADDITIONAL_MULIPLIERS",
-  UPDATE_STATS: "UPDATE_STATS"
+  SET_GOD_POTION: "SET_GOD_POTION",
+  UPDATE_STATS: "UPDATE_STATS",
 };
 
 const profileReducer = (state, action) => {
@@ -87,14 +89,20 @@ const profileReducer = (state, action) => {
     case ProfileActions.UPDATE_STATS:
       updatedState = { ...state };
       break;
+    case ProfileActions.SET_GOD_POTION:
+      if (action.payload) {
+        console.log(updatedState.basePlayerStats);
+        ProfilesFunctions.addStats(updatedState.basePlayerStats, ProfilesFunctions.godPotionStats);
+      } else {
+        ProfilesFunctions.removeStats(updatedState.basePlayerStats, ProfilesFunctions.godPotionStats);
+      }
+      updatedState = { ...state, godPotion: action.payload };
+      break;
     default:
       break;
   }
   ProfilesFunctions.finalStats(updatedState, updatedState.dungeonMode);
-  //   const finalStats = ProfilesFunctions.getFinalStats(updatedState);
-  // updatedState.finalPlayerStats = finalStats;
   // console.log(updatedState);
-  //   console.log(ProfilesFunctions.finalStats(updatedState));
   return updatedState;
 };
 
@@ -132,6 +140,9 @@ export const ProfileProvider = ({ children }) => {
   const getAdditionalMultiplers = () => {
     return profileState.additionalMultiplers;
   };
+  const godPotionStatus = () => {
+    return profileState.godPotion;
+  };
   const isDungeonMode = () => {
     return profileState.dungeonMode;
   };
@@ -152,7 +163,7 @@ export const ProfileProvider = ({ children }) => {
    * @param profilesArray - An array of profiles to process.
    */
   const setProfilesData = ({ UUID, profilesArray }) => {
-    if (!profilesArray){
+    if (!profilesArray) {
       profilesData = {};
       profiles = [];
       return;
@@ -190,16 +201,16 @@ export const ProfileProvider = ({ children }) => {
         profile?.inventory?.bag_contents?.talisman_bag && (await parseNBT(profile.inventory.bag_contents.talisman_bag.data)).value.i.value.value;
       const powerstone = profile?.accessory_bag_storage?.selected_power ?? "none";
       const tuningSlot_0 = profile?.accessory_bag_storage?.tuning && profile.accessory_bag_storage.tuning.slot_0;
-      const calculatedSkills = await ProfilesFunctions.calculateSkillLevels(profile,hypixelSkills);
+      const calculatedSkills = await ProfilesFunctions.calculateSkillLevels(profile, hypixelSkills);
       const abiphoneContacts = profile?.nether_island_player_data?.abiphone?.active_contacts;
       const collectionsData = profile?.collection && profile.collection;
       const essencePerks = profile?.player_data?.perks && ProfilesFunctions.parseEssencePerks(profile.player_data.perks);
       const petData = profile?.pets_data?.pets && ProfilesFunctions.parsePetApiData(profile.pets_data.pets);
-      (await armor) && ProfilesFunctions.parseApiGear(parsedGear, armor, "armor",hypixelItems);
-      (await equipment) && ProfilesFunctions.parseApiGear(parsedGear, equipment, "equipment",hypixelItems);
-      (await inventory) && ProfilesFunctions.parseApiGear(parsedGear, [inventory[0]], "weapon",hypixelItems);
+      (await armor) && ProfilesFunctions.parseApiGear(parsedGear, armor, "armor", hypixelItems);
+      (await equipment) && ProfilesFunctions.parseApiGear(parsedGear, equipment, "equipment", hypixelItems);
+      (await inventory) && ProfilesFunctions.parseApiGear(parsedGear, [inventory[0]], "weapon", hypixelItems);
 
-      parsedAccessories = accessoryBag && ProfilesFunctions.parseAPIAccessoryBag(accessoryBag, abiphoneContacts,hypixelItems?.accessories);
+      parsedAccessories = accessoryBag && ProfilesFunctions.parseAPIAccessoryBag(accessoryBag, abiphoneContacts, hypixelItems?.accessories);
 
       if (petData?.activePet) parsedGear.pet = ProfilesFunctions.parsePet(petData.activePet);
 
@@ -238,7 +249,10 @@ export const ProfileProvider = ({ children }) => {
       parsedProfile.playerGear = parsedGear;
       parsedProfile.playerSkills = calculatedSkills;
       parsedProfile.additionalMultiplers = ProfilesFunctions.allMultipliers();
-      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(collectionsData,ProfilesFunctions.defaultCollections(hypixelCollections));
+      parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(
+        collectionsData,
+        ProfilesFunctions.defaultCollections(hypixelCollections)
+      );
       dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: parsedProfile });
     }
     // if no rawData build profile for default state
@@ -254,6 +268,7 @@ export const ProfileProvider = ({ children }) => {
         additionalMultiplers: ProfilesFunctions.allMultipliers(),
         targetMob: "None",
         powerstone: "None",
+        godPotion: false,
       };
       dispatchProfileUpdate({ type: ProfileActions.SET_MULTIPLE, payload: defaultProfile });
     }
@@ -281,6 +296,7 @@ export const ProfileProvider = ({ children }) => {
     isDungeonMode: isDungeonMode,
     setHypixelData: setHypixelData,
     getHypixelItem: getHypixelItem,
+    godPotionStatus:godPotionStatus,
     profiles: profiles,
     profileState: profileState,
   };
