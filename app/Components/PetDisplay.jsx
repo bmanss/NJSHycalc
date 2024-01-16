@@ -103,6 +103,7 @@ const PetDisplay = ({ displayOnlyPet }) => {
                     )}
                   </div>
                   {ability.description && <div style={{ marginBottom: "15px" }}>{parseLore(ability.description(pet.level, pet.tier))}</div>}
+                  {ability.valued && ability.valuedDisplay(() => profileContext.dispatchProfileUpdate({ type: ProfileActions.UPDATE_STATS}))}
                 </div>
               )
           )}
