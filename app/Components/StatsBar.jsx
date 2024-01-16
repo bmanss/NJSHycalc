@@ -67,6 +67,12 @@ const StatsBar = () => {
           onItemChange={(value) => handlePowerstoneChange(value)}
         />
       </div>
+      <div>
+        <span style={{ color: trackedStats["DEFENSE"].color }}>{trackedStats['DEFENSE'].Symbol}</span>
+        <span style={{ color: trackedStats["HEALTH"].color }}>{trackedStats['HEALTH'].Symbol}</span>
+        <span className={StatBarStyles['EHP-text']}>EHP</span>:
+        <span style={{paddingLeft:'5px'}}>{formatValue(profileContext.getFinalStats().HEALTH * (1 + profileContext.getFinalStats().DEFENSE / 100))}</span>
+      </div>
       {Object.entries(trackedStats).map(([stat]) => (
         <span key={stat}>
           <span style={{ color: trackedStats[stat].color ?? "white" }}>
