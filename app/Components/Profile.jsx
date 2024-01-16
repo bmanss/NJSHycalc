@@ -57,7 +57,6 @@ const Profile = ({ sortedItems, data, profileData }) => {
     if (profileData.hypixelProfiles?.profiles) {
       profileContext.setProfilesData({ UUID: profileData.UUID, profilesArray: profileData.hypixelProfiles.profiles });
       profileContext.buildActiveProfile();
-      setGodPotionEnabled(true);
     } else {
       loadDefault();
       setPlayerName("Default-Profile");
@@ -80,12 +79,10 @@ const Profile = ({ sortedItems, data, profileData }) => {
 
   const loadDefault = () => {
     profileContext.buildProfile();
-    setGodPotionEnabled(false);
   };
 
   const changeProfile = async (profile) => {
     profileContext.buildProfile(profile);
-    setGodPotionEnabled(true);
     profileContext.dispatchProfileUpdate({ type: ProfileActions.SET_ACTIVE_PROFILE, payload: profile });
   };
 
