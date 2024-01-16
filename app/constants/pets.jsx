@@ -1,15 +1,4 @@
-// const green = '#00ff1a';
-// const red = '#FF554A';
-// const darkRed = '#8c0000';
-// const orange = '#ffa929';
-// const lightBlue = '#00FFFF';
-// const white = 'white';
-// const magenta = '#FF54DA';
-// const teal = '#26c9b9';
-// const yellow = '#eef20f';
-// const blue = '#4455FF';
-// const darkGreen = '#1aad00';
-// const purple = '#7800ab';
+import { valuedTemplate } from "./effects";
 
 const black = "§0";
 const blue = "§9";
@@ -485,9 +474,9 @@ export const pets = {
     },
     'GOLDEN DRAGON': {
         baseStats: {
-            ATTACK_SPEED: 25,
-            STRENGTH: 25,
-            MAGIC_FIND: 15
+            ATTACK_SPEED: 0,
+            STRENGTH: 0,
+            MAGIC_FIND: 0
         },
         statsPerLevel: {
             ATTACK_SPEED: 0.25,
@@ -499,41 +488,76 @@ export const pets = {
         abilities: [
             {
                 name: 'Gold\'s Power',
+                enabled:true,
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
                     return `${gray}Adds ${red}+${formatValue(0.5 * (petLevel - 100) + 50)} Strength${gray} to all golden weapons.`;
                 },
-                'action': 'goldsPower',
-                'amountPerLevel': [
-                    0.5
-                ]
+                //TODO: account for stars
+                processEffect: (profileState) => {
+                    const weapon = profileState.playerGear.weapon;
+                    const pet = profileState.playerGear.pet;
+
+                    const strengthValue = 0.5 * (pet.level - 100) + 50;
+                    if (weapon.material.includes('GOLD')){
+                        weapon.nonDungeonStats.STRENGTH += strengthValue;
+                        profileState.finalStats.STRENGTH += strengthValue;
+                    }
+                },
             },
             {
                 name: 'Shining Scales',
+                enabled:true,
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
                     return `${gray}Grants ${red}+10 Strength${gray} and ${lightBlue}+2 Magic Find${gray} to your pet for each digit in your gold collection.`;
                 },
-                'action': 'shiningScales'
+                processEffect: (profileState) => {
+                    const pet = profileState.playerGear.pet;
+                    const goldCollection = profileState.playerCollections.MINING['Gold Ingot'].amount;
+                    const goldDigits = String(goldCollection).length;
+                    const strengthValue = Number(goldDigits) * 10;
+                    const mfValue = Number(goldDigits) * 2;
+                    pet.stats.STRENGTH += strengthValue;
+                    pet.stats.MAGIC_FIND += mfValue;
+
+                    profileState.finalStats.STRENGTH += strengthValue;
+                    profileState.finalStats.MAGIC_FIND += mfValue;
+                },
             },
             {
                 name: 'Dragon\'s Greed',
+                enabled: true,
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
                     return `${gray}Grants ${red}+${(0.0025 * (petLevel - 100) + 0.25).toFixed(2)}% Strength${gray} per ${lightBlue}5 Magic Find${gray}.`;
                 },
-                'action': 'dragonsGreed',
-                'amountPerLevel': [
-                    0.0025
-                ]
+                processEffect: (profileState) => {
+                    const magicFindCap = 50;
+                    const pet = profileState.playerGear.pet;
+                    const strengthPerMagic = 0.0025 * (pet.level - 100) + 0.25;
+                    const magicValue = Math.min(profileState.finalStats.MAGIC_FIND,magicFindCap ) / 5
+                    const strengthMulti = strengthPerMagic * magicValue;
+                    profileState.statMultipliers.STRENGTH += strengthMulti / 100;
+                },
             },
             {
+                ...valuedTemplate("Bank:"),
                 name: 'Legendary Treasure',
+                enabled:true,
+                value: 0,
                 minRarity: 'LEGENDARY',
                 description: (petLevel, tier) => {
-                    return `${gray}Gain ${red}${(0.00125 * (petLevel - 100) + 0.12125).toFixed(2)}% Damage${gray} for every million coins in your bank.`;
+                    return `${gray}Gain ${red}${(0.00125 * (petLevel - 100) + 0.125).toFixed(2)}% Damage${gray} for every million coins in your bank.`;
                 },
-                'action': 'legendaryTreasure'
+                processEffect(profileState){
+                    if (this.value === 0) this.value = profileState.bankBalance;
+                    const pet = profileState.playerGear.pet;
+                    const millions = Math.floor(this.value / 1000000);
+                    const damageMulti = millions * (0.00125 * (pet.level - 100) + 0.125);
+                    profileState.damageMultipliers.regularBaseMulti += damageMulti / 100;
+                    profileState.damageMultipliers.magicBaseMulti += damageMulti / 100;
+                },
             }
         ]
     },
