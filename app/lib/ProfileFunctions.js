@@ -19,7 +19,7 @@ const dungeonBoostedStats = ["HEALTH", "DEFENSE", "INTELLIGENCE", "STRENGTH", "C
 
 // weapons that for some reason do no benefit from multipliers
 const MODIFIER_EXCLUDED_MAGIC_WEAPONS = ["ASPECT_OF_THE_DRAGON", "GOLEM_SWORD"];
-const PET_SCORE_MILESTONES = [10, 25, 50, 75, 100, 130, 175, 225, 275, 325];
+const PET_SCORE_MILESTONES = [10, 25, 50, 75, 100, 130, 175, 225, 275, 325, 375, 450, 500];
 const PET_SCORE_POINTS = {
   COMMON: 1,
   UNCOMMON: 2,
@@ -257,6 +257,7 @@ export function defaultPlayerStats() {
     ABILITY_MULTIPLIER: 1,
     critEffectiveness: 1,
     godPotion: true,
+    MAGIC_FIND: 5, //TODO remove this is for account upgrades
     essencePerks: defaultEssencePerks(),
     // multipliers: { ...initialDamageMultipliers },
     // statMultipliers: { ...initialStatMultipliers },
@@ -364,7 +365,7 @@ export function parseEssencePerks(perksData) {
   return perks;
 }
 
-export async function parseApiGear(playerGear, armorData, gearType,hypixelItems) {
+export async function parseApiGear(playerGear, armorData, gearType, hypixelItems) {
   // console.log(hypixelItems);
   const category = categoryGroup[gearType];
   armorData.forEach(async (data, index) => {
@@ -390,7 +391,7 @@ export async function parseApiGear(playerGear, armorData, gearType,hypixelItems)
       : undefined;
     armorPiece.starLevel = (extraAttributes.upgrade_level?.value || extraAttributes.dungeon_item_level?.value) ?? 0;
     const referenceData = hypixelItems[armorType][extraAttributes.id.value];
-    await addItemReferenceData(armorPiece,referenceData);
+    await addItemReferenceData(armorPiece, referenceData);
 
     // add gem slots after reference data has set the allowed slots
     if (extraAttributes.gems) {
@@ -409,7 +410,7 @@ export async function parseApiGear(playerGear, armorData, gearType,hypixelItems)
   });
 }
 
-export async function addItemReferenceData(item,referenceData) {
+export async function addItemReferenceData(item, referenceData) {
   // const HypixelData = JSON.parse(localStorage.getItem("HypixelData"));
   // let referenceData = HypixelData?.[item.category]?.[item.id];
   if (!referenceData) {
@@ -592,7 +593,7 @@ export async function addGearModifierStats(gearPiece, playerskills) {
   }
 }
 
-export async function calculateSkillLevels(profileData,hypixelSills) {
+export async function calculateSkillLevels(profileData, hypixelSills) {
   const calculatedSkills = defaultSkillS();
   const playerSkillXpValues = profileData?.player_data?.experience;
   if (!playerSkillXpValues) return calculatedSkills;
@@ -730,29 +731,18 @@ export function getSkillStatBoost(skill, level) {
 }
 
 // parse the pets section of the api obtaining the pet score and any active pet
-export function parsePetApiData(petsApi) {
+export function parsePetApiData(petsApi, highestPetScore) {
   let magicFindBonus = 0;
-  let petScore = 0;
   let activePet = undefined;
-  const uniquePetRarityMap = new Map();
 
   // add and filter pets taking the highest rarity
   petsApi.forEach((pet) => {
-    if (
-      !uniquePetRarityMap.has(pet.type) ||
-      (uniquePetRarityMap.has(pet.type) && tiers.indexOf(pet.tier) > tiers.indexOf(uniquePetRarityMap.get(pet.type)))
-    ) {
-      uniquePetRarityMap.set(pet.type, pet.tier);
-    }
     if (pet.active) activePet = pet;
-  });
-
-  uniquePetRarityMap.forEach((value, key) => {
-    petScore += PET_SCORE_POINTS[value] ?? 0;
+    return;
   });
 
   for (const milestone of PET_SCORE_MILESTONES) {
-    if (petScore >= milestone) {
+    if (highestPetScore >= milestone) {
       magicFindBonus += 1;
     } else {
       break;
@@ -771,7 +761,7 @@ export function addStats(baseStats, newStats) {
 
 export function changeGearPiece(currentGear, newGear, newReferenceData) {
   // get new item's data
-  addItemReferenceData(newGear,newReferenceData);
+  addItemReferenceData(newGear, newReferenceData);
 
   // reset modifiers if categories are not the same, mainly for changing from sword or bow
   if (currentGear.referenceCategory !== newGear.referenceCategory) resetModifiers(newGear);
@@ -892,7 +882,7 @@ export function getSlayerBonusStats(profileData) {
 }
 
 // TODO: Tuning
-export function parseAPIAccessoryBag(accessoryBagData, abiphoneContacts,hypixelAccessories) {
+export function parseAPIAccessoryBag(accessoryBagData, abiphoneContacts, hypixelAccessories) {
   // const hypixelData = JSON.parse(localStorage.getItem("HypixelData"));
   const accessorySets = accessories.sets;
   const dynamicAccessories = accessories.dynamic;
@@ -1161,7 +1151,7 @@ export function getPowerstoneStats(powerstone, magicalPower) {
 
 export function parsePet(petAPiData) {
   const pet = { ...initialPetState };
-  const name = petAPiData.type.replaceAll('_',' ') ?? "";
+  const name = petAPiData.type.replaceAll("_", " ") ?? "";
 
   // make sure pet is supported
   if (!pets[name]) return pet;
@@ -1282,7 +1272,7 @@ function calculatePetLevel(petXp, tier) {
   return level;
 }
 
-export function calculateDamage(profileState,dungeonMode) {
+export function calculateDamage(profileState, dungeonMode) {
   const playerGear = profileState.playerGear;
   const playerSkills = profileState.playerSkills;
   const targetMob = profileState.targetMob;
@@ -1469,6 +1459,7 @@ export function finalStats(profileState) {
     finalStats.HEALTH += skills.CATACOMBS * 2;
   }
 
+  getPetStats(pet);
   for (const gear of ["helmet", "chestplate", "leggings", "boots", "weapon"]) {
     const gearPiece = playerGear[gear];
     addGearModifierStats(gearPiece, skills);
@@ -1548,8 +1539,8 @@ export function finalStats(profileState) {
   }
 
   // update tiered effect description once the numbers of items with that tier is recorded
-  for (const effect of tieredEffects){
-    effect.updateDescription(armorSets[effect.name])
+  for (const effect of tieredEffects) {
+    effect.updateDescription(armorSets[effect.name]);
   }
 
   profileState.armorSets = armorSets;
@@ -1849,7 +1840,7 @@ export function finalStats(profileState) {
     }
   }
 
-  calculateDamage(profileState,dungeonMode);
+  calculateDamage(profileState, dungeonMode);
 
   return { normal: finalStats, dungeon: finalStats };
 }
