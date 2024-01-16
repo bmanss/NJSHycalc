@@ -243,11 +243,11 @@ export const ProfileProvider = ({ children }) => {
 
       // god potion
       ProfilesFunctions.addStats(updatedStats, ProfilesFunctions.godPotionStats);
-
       parsedProfile.basePlayerStats = updatedStats;
       parsedProfile.powerstone = powerstone;
       parsedProfile.playerGear = parsedGear;
       parsedProfile.playerSkills = calculatedSkills;
+      parsedProfile.godPotion = true;
       parsedProfile.additionalMultiplers = ProfilesFunctions.allMultipliers();
       parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(
         collectionsData,
