@@ -7,7 +7,6 @@ import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { fetchProfile, setProfile, getUUID, setUUID } from "@/app/lib/DatabaseMethods";
 import { getLocalFirestore } from "@/app/firestoreConfig";
 
-
 // 1 min in milliseconds
 const CACHE_DURATION = 60 * 1000;
 
@@ -31,8 +30,8 @@ if (process.env.NODE_ENV === "production" && !apps.length) {
 export default async function page({ params }) {
   const useAdminDB = process.env.NODE_ENV === "production";
   const firestoreDB = useAdminDB ? admin.firestore() : getLocalFirestore();
-  const data = await fetch(`${process.env.DOMAIN}/api/DatabaseItems`, {revalidate: 3600});
-  
+  const data = await fetch(`${process.env.DOMAIN}/api/DatabaseItems`, { next: { revalidate: 3600 }});
+
   const hypixelData = await data.json();
   // sort the hundreds of items on the server to pass to the client profile component
   const sortedItems = await sortItems(hypixelData);
