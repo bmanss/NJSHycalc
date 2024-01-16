@@ -25,6 +25,7 @@ const initialProfileState = {
   targetMob: "None",
   dungeonMode: false,
   godPotion: false,
+  bankBalance: 0,
 };
 
 export const ProfileActions = {
@@ -102,7 +103,7 @@ const profileReducer = (state, action) => {
       break;
   }
   ProfilesFunctions.finalStats(updatedState, updatedState.dungeonMode);
-  // console.log(updatedState);
+  console.log(updatedState);
   return updatedState;
 };
 
@@ -177,6 +178,7 @@ export const ProfileProvider = ({ children }) => {
       if (profilesArray[i].selected) {
         profileState.activeProfile = profilesArray[i].cute_name;
       }
+      profileSlotData.banking = profilesArray[i].banking ?? {};
       data[profilesArray[i].cute_name] = profileSlotData;
     }
     profiles = Object.keys(data);
@@ -194,6 +196,7 @@ export const ProfileProvider = ({ children }) => {
       let parsedGear = ProfilesFunctions.defaultGear();
       let parsedAccessories = {};
       const profile = profilesData[CuteName].data;
+      const banking = profilesData[CuteName].banking;
       const armor = profile?.inventory?.inv_armor && (await parseNBT(profile.inventory.inv_armor.data)).value.i.value.value;
       const equipment = profile?.inventory?.equipment_contents && (await parseNBT(profile.inventory.equipment_contents.data)).value.i.value.value;
       const inventory = profile?.inventory?.inv_contents && (await parseNBT(profile.inventory.inv_contents.data)).value.i.value.value;
@@ -205,7 +208,8 @@ export const ProfileProvider = ({ children }) => {
       const abiphoneContacts = profile?.nether_island_player_data?.abiphone?.active_contacts;
       const collectionsData = profile?.collection && profile.collection;
       const essencePerks = profile?.player_data?.perks && ProfilesFunctions.parseEssencePerks(profile.player_data.perks);
-      const petData = profile?.pets_data?.pets && ProfilesFunctions.parsePetApiData(profile.pets_data.pets);
+      const highestPetScore = profile?.leveling?.highest_pet_score ?? 0;
+      const petData = profile?.pets_data?.pets && ProfilesFunctions.parsePetApiData(profile.pets_data.pets,highestPetScore);
       (await armor) && ProfilesFunctions.parseApiGear(parsedGear, armor, "armor", hypixelItems);
       (await equipment) && ProfilesFunctions.parseApiGear(parsedGear, equipment, "equipment", hypixelItems);
       (await inventory) && ProfilesFunctions.parseApiGear(parsedGear, [inventory[0]], "weapon", hypixelItems);
@@ -213,12 +217,10 @@ export const ProfileProvider = ({ children }) => {
       parsedAccessories = accessoryBag && ProfilesFunctions.parseAPIAccessoryBag(accessoryBag, abiphoneContacts, hypixelItems?.accessories);
 
       if (petData?.activePet) parsedGear.pet = ProfilesFunctions.parsePet(petData.activePet);
-
+      
       const magicalPower = ProfilesFunctions.getMagicalPower(parsedAccessories);
       const updatedStats = ProfilesFunctions.defaultPlayerStats();
-
       updatedStats.MAGIC_FIND += petData?.magicFindBonus ?? 0;
-
       updatedStats.essencePerks = essencePerks;
 
       updatedStats.MAGICAL_POWER = magicalPower;
@@ -248,6 +250,7 @@ export const ProfileProvider = ({ children }) => {
       parsedProfile.playerGear = parsedGear;
       parsedProfile.playerSkills = calculatedSkills;
       parsedProfile.godPotion = true;
+      parsedProfile.bankBalance = banking?.balance ?? 0;
       parsedProfile.additionalMultiplers = ProfilesFunctions.allMultipliers();
       parsedProfile.playerCollections = ProfilesFunctions.parseCollectionsData(
         collectionsData,
