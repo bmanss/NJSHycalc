@@ -20,7 +20,7 @@ const loading = () => {
         </div>
         <div className='ContentContainer'>
           <div className='ContentNav'>
-            <span className={`ContentNav-Option`}>Stat Extras</span>
+            <span className={`ContentNav-Option`}>All Stats</span>
             <span className={`ContentNav-Option`}>Skills</span>
             <span className={`ContentNav-Option`}>Collections</span>
             <span className={`ContentNav-Option active`}>Armor</span>

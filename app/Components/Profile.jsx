@@ -159,7 +159,7 @@ const Profile = ({ sortedItems, data, profileData }) => {
               <div className='ContentContainer'>
                 <div className='ContentNav'>
                   <span className={`ContentNav-Option ${navDisplay.baseStats && "active"}`} onMouseDown={() => handleNavChange("baseStats")}>
-                    Stat Extras
+                    All Stats
                   </span>
                   <span className={`ContentNav-Option ${navDisplay.skills && "active"}`} onMouseDown={() => handleNavChange("skills")}>
                     Skills
