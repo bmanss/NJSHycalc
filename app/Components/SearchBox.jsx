@@ -5,6 +5,8 @@ import { rarityColor } from "../constants/colors";
 import { tiers } from "../lib/ProfileFunctions";
 import styles from "../styles/SearchBox.module.scss";
 
+const dropdownHeight = 280; // 300px
+
 const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder, inputFontSize, maxWidth }) => {
   const item = selectedItem || itemList[0];
   const [dropDownVisible, setDropdownVisible] = useState(false);
@@ -136,8 +138,8 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           scrollRef.current.scrollTop = scrollOffset;
         }
         // scroll down to the next item
-        else if (scrollOffset >= scrollRef.current.scrollTop + 300) {
-          scrollRef.current.scrollTop = scrollOffset + 25 - 300;
+        else if (scrollOffset >= scrollRef.current.scrollTop + dropdownHeight) {
+          scrollRef.current.scrollTop = scrollOffset + 25 - dropdownHeight;
         }
       }
       return nextIndex;
@@ -145,7 +147,6 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   };
 
   const getOpenDirection = () => {
-    const dropdownHeight = 300; // 300px
     const rect = inputRef.current.getBoundingClientRect();
     const windowHeight = window.innerHeight
     const totalElementHeight = rect.y + dropdownHeight + rect.height;
