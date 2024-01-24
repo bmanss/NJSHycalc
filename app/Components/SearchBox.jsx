@@ -7,21 +7,28 @@ import styles from "../styles/SearchBox.module.scss";
 
 const dropdownHeight = 280; // 300px
 
+const formatItemName = (item) => {
+  const name = item.name || item;
+  return name.replaceAll("_", " ").toLowerCase();
+};
 const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder, inputFontSize, maxWidth }) => {
   const item = selectedItem || itemList[0];
   const [dropDownVisible, setDropdownVisible] = useState(false);
   const [displayItems, setDisplayItems] = useState(itemList);
+  const [displayItemName, setDisplayItemName] = useState(item.name || item);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [tier, setTier] = useState(recombob ? tiers[tiers.indexOf(item.tier) + 1 != -1 || tiers.indexOf(item.tier)] : item.tier ?? "COMMON");
+  const [openDirection, setOpenDirection] = useState("down");
   const completeList = useRef(itemList);
   const actualItem = useRef(item);
-  const [displayItemName, setDisplayItemName] = useState(item.name || item);
   const inputFocusedRef = useRef(false);
   const dropdownFocusedRef = useRef(false);
   const indicatorFocusedRef = useRef(false);
   const scrollRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [tier, setTier] = useState(recombob ? tiers[tiers.indexOf(item.tier) + 1 != -1 || tiers.indexOf(item.tier)] : item.tier ?? "COMMON");
   const inputRef = useRef(null);
-  const [openDirection,setOpenDirection] = useState('down');
+  const searchBoxRef = useRef(null);
+  const actualIndex = useRef(0);
+
   useEffect(() => {
     getItemTier(actualItem.current.tier);
   }, [recombob]);
@@ -29,18 +36,25 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   useEffect(() => {
     if (selectedItem !== undefined) {
       const item = selectedItem;
-      setDisplayItemName(item?.name || item);
+      const displayName = item?.name || item;
+      setDisplayItemName(displayName);
       actualItem.current = item;
       getItemTier(item.tier);
+      const index = itemList.findIndex((item) => (item.name || item) === displayName);
+      actualIndex.current = index;
+      setActiveIndex(index);
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = index * 25;
+      }
     }
-  }, [selectedItem]);
+  }, [JSON.stringify(selectedItem)]);
 
   useEffect(() => {
     if (itemList !== undefined) {
       setDisplayItems(itemList);
       completeList.current = itemList;
     }
-  }, [itemList]);
+  }, [JSON.stringify(itemList)]);
 
   const getItemTier = (tier) => {
     const tierIndex = tiers.indexOf(tier);
@@ -64,15 +78,19 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
 
   const handleItemSelect = (index) => {
     const item = displayItems[index];
+    actualIndex.current = index;
     setDropdownVisible(false);
     dropdownFocusedRef.current = false;
     setDisplayItems(completeList.current);
     setDisplayItemName(item.name || item);
     onItemChange && onItemChange(item.id || item);
+    if (searchBoxRef.current) {
+      searchBoxRef.current.focus();
+    }
   };
 
   const resetDisplay = () => {
-    setActiveIndex(0);
+    setActiveIndex(actualIndex.current);
     setDropdownVisible(false);
     setDisplayItemName(actualItem.current.name || actualItem.current);
     setDisplayItems(completeList.current);
@@ -86,6 +104,11 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   };
 
   const openSearchBox = () => {
+    setTimeout(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = activeIndex * 25;
+      }
+    }, 1);
     setDropdownVisible(true);
     setDisplayItemName("");
     setOpenDirection(getOpenDirection());
@@ -109,7 +132,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleInputKeyDown = (event) => {
     if ((event.key === "Tab" || event.key === "Enter") && displayItems[0]) {
       inputFocusedRef.current = false;
       handleItemSelect(activeIndex);
@@ -122,12 +145,13 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
     }
   };
 
-  const handleKeyNavigation = (key) => {
+  const handleKeyNavigation = (event) => {
+    event.preventDefault();
     setActiveIndex((cur) => {
       let nextIndex = cur;
-      if (key.key === "ArrowUp") {
+      if (event.key === "ArrowUp") {
         nextIndex = Math.max(0, cur - 1);
-      } else if (key.key === "ArrowDown") {
+      } else if (event.key === "ArrowDown") {
         nextIndex = Math.min(cur + 1, displayItems.length - 1);
       }
       const scrollOffset = 25 * nextIndex;
@@ -142,21 +166,26 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           scrollRef.current.scrollTop = scrollOffset + 25 - dropdownHeight;
         }
       }
+      if (!dropDownVisible) {
+        handleItemSelect(Math.min(nextIndex, displayItems.length - 1));
+      }
       return nextIndex;
     });
   };
 
   const getOpenDirection = () => {
     const rect = inputRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight
+    const windowHeight = window.innerHeight;
     const totalElementHeight = rect.y + dropdownHeight + rect.height;
-    return totalElementHeight >= windowHeight ? 'up' : 'down';
+    return totalElementHeight >= windowHeight ? "up" : "down";
   };
 
   return (
     <div
       className={styles["SearchBox"]}
       style={{ maxWidth: maxWidth && maxWidth }}
+      tabIndex={-1}
+      ref={searchBoxRef}
       onKeyDown={(e) => {
         handleKeyNavigation(e);
       }}>
@@ -166,7 +195,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           ref={inputRef}
           className={`${styles["SearchBox-Input"]}`}
           onMouseDown={handleSearchBoxClick}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleInputKeyDown}
           readOnly={!inputFocusedRef.current}
           onBlur={() => handleFocusLost(inputFocusedRef)}
           style={{
@@ -186,7 +215,6 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           {dropDownVisible ? "-" : "+"}
         </span>
       </div>
-
       {dropDownVisible && (
         <ul
           onMouseDown={() => {
@@ -205,7 +233,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
               onMouseMoveCapture={() => setActiveIndex(index)}
               style={{ color: rarityColor[item.tier] ?? "white", backgroundColor: index === activeIndex && "rgb(32, 113, 124)" }}
               key={index}>
-              {item.name?.replaceAll("_", " ").toLowerCase() || item.replaceAll("_", " ").toLowerCase()}
+              {formatItemName(item)}
             </li>
           ))}
         </ul>
