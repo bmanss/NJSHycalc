@@ -499,7 +499,7 @@ export const pets = {
                     const pet = profileState.playerGear.pet;
 
                     const strengthValue = 0.5 * (pet.level - 100) + 50;
-                    if (weapon.material.includes('GOLD')){
+                    if (weapon?.material?.includes('GOLD')){
                         weapon.nonDungeonStats.STRENGTH += strengthValue;
                         profileState.finalStats.STRENGTH += strengthValue;
                     }
