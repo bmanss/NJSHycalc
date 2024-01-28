@@ -146,7 +146,9 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   };
 
   const handleKeyNavigation = (event) => {
-    event.preventDefault();
+    if (event.target.tagName !== 'INPUT' || event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
     setActiveIndex((cur) => {
       let nextIndex = cur;
       if (event.key === "ArrowUp") {
