@@ -92,7 +92,6 @@ const profileReducer = (state, action) => {
       break;
     case ProfileActions.SET_GOD_POTION:
       if (action.payload) {
-        console.log(updatedState.basePlayerStats);
         ProfilesFunctions.addStats(updatedState.basePlayerStats, ProfilesFunctions.godPotionStats);
       } else {
         ProfilesFunctions.removeStats(updatedState.basePlayerStats, ProfilesFunctions.godPotionStats);
