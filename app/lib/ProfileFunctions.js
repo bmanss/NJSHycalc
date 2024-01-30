@@ -1031,7 +1031,7 @@ export function getRarityFromLore(lore) {
 export function getMagicalPower(accessoryList) {
   let magicalPower = 0;
   for (let accessory in accessoryList) {
-    if (accessory.includes("ABICASE")) magicalPower += accessoryList[accessory].ContactCount;
+    if (accessory.includes("ABICASE")) magicalPower += accessoryList[accessory].ContactCount ?? 0;
 
     switch (accessoryList[accessory].tier) {
       case "COMMON":
