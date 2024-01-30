@@ -5,13 +5,15 @@ import { rarityColor } from "../constants/colors";
 import { tiers } from "../lib/ProfileFunctions";
 import styles from "../styles/SearchBox.module.scss";
 
-const dropdownHeight = 280; // 300px
+
+const dropdownMaxHeight = 280;
 
 const formatItemName = (item) => {
   const name = item.name || item;
   return name.replaceAll("_", " ").toLowerCase();
 };
 const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder, inputFontSize, maxWidth }) => {
+  const dropdownHeight = Math.min(itemList.length * 25,dropdownMaxHeight);
   const item = selectedItem || itemList[0];
   const [dropDownVisible, setDropdownVisible] = useState(false);
   const [displayItems, setDisplayItems] = useState(itemList);
@@ -24,7 +26,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
   const inputFocusedRef = useRef(false);
   const dropdownFocusedRef = useRef(false);
   const indicatorFocusedRef = useRef(false);
-  const scrollRef = useRef(null);
+  const dropdownRef = useRef(null);
   const inputRef = useRef(null);
   const searchBoxRef = useRef(null);
   const actualIndex = useRef(0);
@@ -43,8 +45,8 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
       const index = itemList.findIndex((item) => (item.name || item) === displayName);
       actualIndex.current = index;
       setActiveIndex(index);
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = index * 25;
+      if (dropdownRef.current) {
+        dropdownRef.current.scrollTop = index * 25;
       }
     }
   }, [JSON.stringify(selectedItem)]);
@@ -81,6 +83,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
     actualIndex.current = index;
     setDropdownVisible(false);
     dropdownFocusedRef.current = false;
+    actualItem.current = item.name || item;
     setDisplayItems(completeList.current);
     setDisplayItemName(item.name || item);
     onItemChange && onItemChange(item.id || item);
@@ -105,8 +108,8 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
 
   const openSearchBox = () => {
     setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = activeIndex * 25;
+      if (dropdownRef.current) {
+        dropdownRef.current.scrollTop = activeIndex * 25;
       }
     }, 1);
     setDropdownVisible(true);
@@ -158,14 +161,14 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
       }
       const scrollOffset = 25 * nextIndex;
       // 300 is height of dropdown and 25 is the height if each dropdown item
-      if (scrollRef.current) {
+      if (dropdownRef.current) {
         // scroll up to the next item
-        if (scrollOffset < scrollRef.current.scrollTop) {
-          scrollRef.current.scrollTop = scrollOffset;
+        if (scrollOffset < dropdownRef.current.scrollTop) {
+          dropdownRef.current.scrollTop = scrollOffset;
         }
         // scroll down to the next item
-        else if (scrollOffset >= scrollRef.current.scrollTop + dropdownHeight) {
-          scrollRef.current.scrollTop = scrollOffset + 25 - dropdownHeight;
+        else if (scrollOffset >= dropdownRef.current.scrollTop + dropdownHeight) {
+          dropdownRef.current.scrollTop = scrollOffset + 25 - dropdownHeight;
         }
       }
       if (!dropDownVisible) {
@@ -227,7 +230,7 @@ const SearchBox = ({ itemList, selectedItem, onItemChange, recombob, placeholder
           }}
           tabIndex={0}
           className={`${styles["SearchBox-Dropdown"]} ${styles[openDirection]}`}
-          ref={scrollRef}>
+          ref={dropdownRef}>
           {displayItems.map((item, index) => (
             <li
               onClick={() => handleItemSelect(index)}
