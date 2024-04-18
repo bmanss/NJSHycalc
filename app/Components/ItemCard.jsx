@@ -248,20 +248,6 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
                             <div
                               className={styles["Itemcard-Gemslots-Gem-image-Container"]}
                               onClick={() => {
-                                updateGem(slotName, properties.type, gemType, "FINE");
-                              }}>
-                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Fine {gemType.toLowerCase()}</div>
-                              <Image
-                                height={25}
-                                width={25}
-                                alt=''
-                                className={styles["Itemcard-Gemslots-Gem-image"]}
-                                src={`/gemstones/fine/${gemType.toLowerCase()}.png`}
-                              />
-                            </div>
-                            <div
-                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                              onClick={() => {
                                 updateGem(slotName, properties.type, gemType, "FLAWED");
                               }}>
                               <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawed {gemType.toLowerCase()}</div>
@@ -271,6 +257,20 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
                                 alt=''
                                 className={styles["Itemcard-Gemslots-Gem-image"]}
                                 src={`/gemstones/flawed/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "FINE");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Fine {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/fine/${gemType.toLowerCase()}.png`}
                               />
                             </div>
                             <div
