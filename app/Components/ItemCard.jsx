@@ -12,7 +12,7 @@ import { createGearPiece, changeGearPiece } from "../lib/ProfileFunctions";
 import { parseLore } from "../lib/Util";
 import Image from "next/image";
 import styles from "../styles/ItemCard.module.scss";
-import { formatStat,formatValue } from "../lib/Util";
+import { formatStat, formatValue } from "../lib/Util";
 const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOnly }) => {
   const profileContext = useProfileContext();
   const [selectedEnchant, setSelectedEnchant] = useState(enchantmentList && enchantmentList[0]);
@@ -112,7 +112,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
 
           {/* Arrow list if bow */}
           {gearPiece.referenceCategory === "bow" && (
-            <span style={{display:'flex', alignItems: "center" }}>
+            <span style={{ display: "flex", alignItems: "center" }}>
               <span className={styles["ItemCard-properties"]} style={{ marginBottom: "3px", marginRight: "5px", marginLeft: "5px" }}>
                 Arrow:{" "}
               </span>
@@ -130,7 +130,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
             <span className={styles["ItemCard-stat"]}>Reforge:</span>
             <SearchBox
               itemList={reforgeList}
-              placeholder={'Select Reforge'}
+              placeholder={"Select Reforge"}
               selectedItem={gearPiece.modifier}
               onItemChange={(e) => updateModifier(gearPiece.category, "modifier", e)}
             />
@@ -176,7 +176,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
           {gearPiece.nonDungeonStats &&
             Object.entries(gearPiece.nonDungeonStats).map(
               ([stat, value]) =>
-              value !== undefined &&
+                value !== undefined &&
                 value !== 0 && (
                   <div key={stat} className='flex-row'>
                     <span className={styles["ItemCard-stat"]}>{statAlias[stat] ? statAlias[stat] : formatStat(stat)}: </span>
@@ -197,7 +197,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
 
                     {/* Reforge stats additions */}
                     {gearPiece.reforgeStats[stat] && (
-                      <span style={{color: "#0048ff", marginRight: "1px" }}>{`(${gearPiece.reforgeStats[stat] > 0 ? "+" : ""}${
+                      <span style={{ color: "#0048ff", marginRight: "1px" }}>{`(${gearPiece.reforgeStats[stat] > 0 ? "+" : ""}${
                         gearPiece.reforgeStats[stat]
                       })`}</span>
                     )}
@@ -218,95 +218,99 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
             <div className={styles["Itemcard-Gemslots"]}>
               {Object.entries(gearPiece.gemSlots).map(([slotName, properties]) => (
                 <span className={styles["Itemcard-Gemslots-Gem"]} key={slotName}>
-                  <span className={styles["Itemcard-Gemslots-Popup"]}>
-                    {gemstoneSlots[properties.type].gems.map((gemType) => (
-                      <div key={`${slotName}${gemType}`} className={styles["Itemcard-Gemslots-Gems-Container"]}>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, undefined, undefined);
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Remove {gemType.toLowerCase()}</div>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-Remove"]}>X</div>
-                        </div>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, gemType, "ROUGH");
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Rough {gemType.toLowerCase()}</div>
-                          <Image
-                            height={25}
-                            width={25}
-                            alt=''
-                            className={styles["Itemcard-Gemslots-Gem-image"]}
-                            src={`/gemstones/rough/${gemType.toLowerCase()}.png`}
-                          />
-                        </div>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, gemType, "FINE");
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Fine {gemType.toLowerCase()}</div>
-                          <Image
-                            height={25}
-                            width={25}
-                            alt=''
-                            className={styles["Itemcard-Gemslots-Gem-image"]}
-                            src={`/gemstones/fine/${gemType.toLowerCase()}.png`}
-                          />
-                        </div>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, gemType, "FLAWED");
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawed {gemType.toLowerCase()}</div>
-                          <Image
-                            height={25}
-                            width={25}
-                            alt=''
-                            className={styles["Itemcard-Gemslots-Gem-image"]}
-                            src={`/gemstones/flawed/${gemType.toLowerCase()}.png`}
-                          />
-                        </div>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, gemType, "FLAWLESS");
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawless {gemType.toLowerCase()}</div>
-                          <Image
-                            height={25}
-                            width={25}
-                            alt=''
-                            className={styles["Itemcard-Gemslots-Gem-image"]}
-                            src={`/gemstones/flawless/${gemType.toLowerCase()}.png`}
-                          />
-                        </div>
-                        <div
-                          className={styles["Itemcard-Gemslots-Gem-image-Container"]}
-                          onClick={() => {
-                            updateGem(slotName, properties.type, gemType, "PERFECT");
-                          }}>
-                          <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Perfect {gemType.toLowerCase()}</div>
-                          <Image
-                            height={25}
-                            width={25}
-                            alt=''
-                            className={styles["Itemcard-Gemslots-Gem-image"]}
-                            src={`/gemstones/perfect/${gemType.toLowerCase()}.png`}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </span>
-                  <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>[</span>
-                  <span className={styles["Itemcard-Gemslots-Gem-Symbol"]} style={{ color: gemstones[properties.gem]?.color ?? "#828282" }}>
-                    {gemstoneSlots[properties.type].symbol}
-                  </span>
-                  <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>]</span>
+                  {gemstoneSlots[properties.type] && (
+                    <>
+                      <span className={styles["Itemcard-Gemslots-Popup"]}>
+                        {gemstoneSlots[properties.type].gems.map((gemType) => (
+                          <div key={`${slotName}${gemType}`} className={styles["Itemcard-Gemslots-Gems-Container"]}>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, undefined, undefined);
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Remove {gemType.toLowerCase()}</div>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-Remove"]}>X</div>
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "ROUGH");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Rough {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/rough/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "FINE");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Fine {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/fine/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "FLAWED");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawed {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/flawed/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "FLAWLESS");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Flawless {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/flawless/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                            <div
+                              className={styles["Itemcard-Gemslots-Gem-image-Container"]}
+                              onClick={() => {
+                                updateGem(slotName, properties.type, gemType, "PERFECT");
+                              }}>
+                              <div className={styles["Itemcard-Gemslots-Gem-image-text"]}>Perfect {gemType.toLowerCase()}</div>
+                              <Image
+                                height={25}
+                                width={25}
+                                alt=''
+                                className={styles["Itemcard-Gemslots-Gem-image"]}
+                                src={`/gemstones/perfect/${gemType.toLowerCase()}.png`}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </span>
+                      <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>[</span>
+                      <span className={styles["Itemcard-Gemslots-Gem-Symbol"]} style={{ color: gemstones[properties.gem]?.color ?? "#828282" }}>
+                        {gemstoneSlots[properties.type].symbol}
+                      </span>
+                      <span style={{ color: gemCutColor[properties.cut] ?? "#828282", fontWeight: "700" }}>]</span>
+                    </>
+                  )}
                 </span>
               ))}
             </div>
@@ -373,7 +377,7 @@ const ItemCard = ({ itemList, gearPiece, reforgeList, enchantmentList, displayOn
               </div>
               <div>
                 {effect.description && parseLore(effect.description, effect.name)}
-                {effect.valued && effect.valuedDisplay(() => profileContext.dispatchProfileUpdate({ type: ProfileActions.UPDATE_STATS}))}
+                {effect.valued && effect.valuedDisplay(() => profileContext.dispatchProfileUpdate({ type: ProfileActions.UPDATE_STATS }))}
                 <br />
               </div>
             </div>
